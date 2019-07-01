@@ -97,6 +97,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PreprocessorDefinitions>IMGUI_IMPL_OPENGL_LOADER_GLEW;GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -126,6 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PreprocessorDefinitions>IMGUI_IMPL_OPENGL_LOADER_GLEW;GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -143,14 +145,30 @@
     <ClCompile Include="src\exceptions\Exceptions.cpp" />
     <ClCompile Include="src\exceptions\Throws.cpp" />
     <ClCompile Include="src\graphics\Context.cpp" />
+    <ClCompile Include="src\graphics\FragmentShader.cpp" />
     <ClCompile Include="src\graphics\IndexBuffer.cpp" />
+    <ClCompile Include="src\graphics\Mesh.cpp" />
+    <ClCompile Include="src\graphics\MeshFactory.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
+    <ClCompile Include="src\graphics\Shader.cpp" />
+    <ClCompile Include="src\graphics\ShaderProgram.cpp" />
+    <ClCompile Include="src\graphics\ShaderUniform.cpp" />
+    <ClCompile Include="src\graphics\Vertex.cpp" />
+    <ClCompile Include="src\graphics\VertexArray.cpp" />
+    <ClCompile Include="src\graphics\VertexAttribute.cpp" />
     <ClCompile Include="src\graphics\VertexBuffer.cpp" />
+    <ClCompile Include="src\graphics\VertexLayout.cpp" />
+    <ClCompile Include="src\graphics\VertexShader.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
+    <ClCompile Include="src\platform\opengl\HelperMethods.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLContext.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLFragmentShader.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLIndexBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLRenderer.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLShaderProgram.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexBuffer.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLVertexShader.cpp" />
     <ClCompile Include="src\platform\win64\Win64Application.cpp" />
     <ClCompile Include="src\platform\win64\Win64Window.cpp" />
     <ClCompile Include="src\scenegraph\Layer.cpp" />
@@ -193,18 +211,35 @@
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\core\DefaultEnums.h" />
     <ClInclude Include="src\core\Timer.h" />
+    <ClInclude Include="src\debug\Debug.h" />
     <ClInclude Include="src\Events\Event.h" />
     <ClInclude Include="src\exceptions\Exceptions.h" />
     <ClInclude Include="src\exceptions\Throws.h" />
     <ClInclude Include="src\graphics\Context.h" />
+    <ClInclude Include="src\graphics\FragmentShader.h" />
     <ClInclude Include="src\graphics\IndexBuffer.h" />
+    <ClInclude Include="src\graphics\Mesh.h" />
+    <ClInclude Include="src\graphics\MeshFactory.h" />
     <ClInclude Include="src\graphics\Renderer.h" />
+    <ClInclude Include="src\graphics\Shader.h" />
+    <ClInclude Include="src\graphics\ShaderProgram.h" />
+    <ClInclude Include="src\graphics\ShaderUniform.h" />
+    <ClInclude Include="src\graphics\Vertex.h" />
+    <ClInclude Include="src\graphics\VertexArray.h" />
+    <ClInclude Include="src\graphics\VertexAttribute.h" />
     <ClInclude Include="src\graphics\VertexBuffer.h" />
+    <ClInclude Include="src\graphics\VertexLayout.h" />
+    <ClInclude Include="src\graphics\VertexShader.h" />
     <ClInclude Include="src\graphics\Window.h" />
+    <ClInclude Include="src\platform\opengl\HelperMethods.h" />
     <ClInclude Include="src\platform\opengl\OpenGLContext.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLFragmentShader.h" />
     <ClInclude Include="src\platform\opengl\OpenGLIndexBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLRenderer.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLShaderProgram.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLVertexArray.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexBuffer.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLVertexShader.h" />
     <ClInclude Include="src\platform\win64\Win64Application.h" />
     <ClInclude Include="src\platform\win64\Win64Window.h" />
     <ClInclude Include="src\scenegraph\Layer.h" />
