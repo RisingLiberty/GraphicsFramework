@@ -135,6 +135,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\controllers\LayerController.cpp" />
+    <ClCompile Include="src\controllers\SceneController.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
@@ -145,12 +147,16 @@
     <ClCompile Include="src\platform\opengl\OpenGLContext.cpp" />
     <ClCompile Include="src\platform\win64\Win64Application.cpp" />
     <ClCompile Include="src\platform\win64\Win64Window.cpp" />
+    <ClCompile Include="src\scenegraph\Layer.cpp" />
+    <ClCompile Include="src\scenegraph\Scene.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\platform\win64\DefaultWndClass.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\controllers\LayerController.h" />
+    <ClInclude Include="src\controllers\SceneController.h" />
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\core\Timer.h" />
     <ClInclude Include="src\Events\Event.h" />
@@ -161,6 +167,8 @@
     <ClInclude Include="src\platform\opengl\OpenGLContext.h" />
     <ClInclude Include="src\platform\win64\Win64Application.h" />
     <ClInclude Include="src\platform\win64\Win64Window.h" />
+    <ClInclude Include="src\scenegraph\Layer.h" />
+    <ClInclude Include="src\scenegraph\Scene.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\platform\win64\DefaultWndClass.h" />
   </ItemGroup>
