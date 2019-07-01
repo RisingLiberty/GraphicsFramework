@@ -18,7 +18,7 @@ public:
 	void Bind() const;
 	void UnBind() const;
 
-	unsigned int GetID() const { return m_id; }
+	unsigned int GetId() const { return m_id; }
 
 	template <typename T>
 	void SetUniform(const std::string& name, const T& uniform)
@@ -36,6 +36,11 @@ public:
 	void SetUniform<int>(const std::string& name, const int& uniform)
 	{
 		GLCALL(glUniform1i(GetUniformLocation(name), uniform));
+	}
+
+	void SetVector4Uniform(const std::string& name, float x, float y, float z, float w)
+	{
+		GLCALL(glUniform4f(GetUniformLocation(name), x, y, z, w));
 	}
 
 	//template <>
