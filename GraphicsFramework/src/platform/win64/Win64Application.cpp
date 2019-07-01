@@ -6,6 +6,7 @@
 #include "core/Timer.h"
 
 #include "graphics/Context.h"
+#include "graphics/Renderer.h"
 
 #include "controllers/SceneController.h"
 
@@ -66,7 +67,6 @@ void Win64Application::Run()
 			if (frame_time > SECONDS_PER_UPDATE)
 			{
 				this->Update(m_timer->GetDeltaTimeInSeconds());
-				this->Draw();
 				frame_time = 0;
 				++frame_count;
 			}
@@ -75,9 +75,11 @@ void Win64Application::Run()
 		{
 			this->CalculateFrameStats();
 			this->Update(m_timer->GetDeltaTimeInSeconds());
-			this->Draw();
 			++frame_count;
 		}
+
+		Context::GetCurrent()->GetRenderer()->ClearAllBuffers();
+		this->Draw();
 	}
 
 	std::cin.get();
