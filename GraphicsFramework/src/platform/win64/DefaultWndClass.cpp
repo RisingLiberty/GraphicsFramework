@@ -3,7 +3,7 @@
 
 DefaultWndClass::DefaultWndClass(WNDPROC wndProc, HINSTANCE hInst, LPCWSTR name)
 {
-	style = CS_HREDRAW | CS_VREDRAW;
+	style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 	lpfnWndProc = wndProc;
 	hInstance = hInst;
 	hCursor = LoadCursor(NULL, IDC_ARROW);
@@ -16,10 +16,14 @@ DefaultWndClass::DefaultWndClass(WNDPROC wndProc, HINSTANCE hInst, LPCWSTR name)
 	hbrBackground = 0;
 	lpszMenuName = 0;
 
-	RegisterClass(this);
+	if (RegisterClassW(this))
+	{
+		DWORD err = GetLastError();
+		ThrowIfFailedWindow(HRESULT_FROM_WIN32(err));
+	}
 }
 
 DefaultWndClass::~DefaultWndClass()
 {
-	UnregisterClass(lpszClassName, hInstance);
+	UnregisterClassW(lpszClassName, hInstance);
 }
