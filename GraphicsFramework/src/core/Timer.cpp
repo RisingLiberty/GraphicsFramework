@@ -52,8 +52,10 @@ void Timer::Tick()
 	}
 
 	TimePoint curr_time = HighResClock::now();
+
 	//Time difference between this frame and the previous
-	m_delta_time = (float)(curr_time - m_prev_time_point).count();
+	using ms = std::chrono::duration<float, std::milli>;
+	m_delta_time = std::chrono::duration_cast<ms>(curr_time - m_prev_time_point).count();
 
 	//Prepare for next frame
 	m_prev_time_point = curr_time;
@@ -83,7 +85,7 @@ float Timer::GetDeltaTime() const
 
 float Timer::GetDeltaTimeInSeconds() const
 {
-	return (float)m_delta_time / 1000.0f;
+	return (float)m_delta_time * 0.001f;
 }
 
 float Timer::GetPausedTime() const
