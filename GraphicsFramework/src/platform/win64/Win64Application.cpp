@@ -3,9 +3,12 @@
 #include "Win64Application.h"
 #include "Win64Window.h"
 
-#include "Core/Timer.h"
+#include "core/Timer.h"
 
 #include "graphics/Context.h"
+
+#include "controllers/SceneController.h"
+
 
 namespace
 {
@@ -18,7 +21,6 @@ Win64Application::Win64Application()
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	m_timer = std::make_unique<Timer>();
 	Context::Create(Context::API::OpenGL, m_window->GetHandle());
 }
 
