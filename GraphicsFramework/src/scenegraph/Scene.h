@@ -8,8 +8,8 @@ public:
 	Scene(const std::string& name);
 	virtual ~Scene();
 
-	void Update(float dTime);
-	void Draw();
+	virtual void Update(float dTime);
+	virtual void Draw();
 
 	const std::string& GetName() const;
 
