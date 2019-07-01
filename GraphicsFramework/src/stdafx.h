@@ -5,6 +5,9 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/rotating_file_sink.h>
 
+// Imgui headers
+#include <imgui/imgui.h>
+
 // stl headers
 #include <iostream>
 #include <fstream>
