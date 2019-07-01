@@ -13,6 +13,7 @@ public:
 
 	int EventLoop() override;
 	void* GetHandle() const override;
+	void Present() override;
 private:
 	HWND m_handle;
 	HINSTANCE m_hinstance;

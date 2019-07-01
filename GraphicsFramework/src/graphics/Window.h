@@ -12,6 +12,7 @@ public:
 
 	virtual int EventLoop() = 0;
 	virtual void* GetHandle() const = 0;
+	virtual void Present() = 0;
 
 	void SetEventCallback(const WindowEventCallback& callback);
 

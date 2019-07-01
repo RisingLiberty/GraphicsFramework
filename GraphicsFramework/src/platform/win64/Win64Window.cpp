@@ -135,3 +135,9 @@ void* Win64Window::GetHandle() const
 {
 	return m_handle;
 }
+
+
+void Win64Window::Present()
+{
+	SwapBuffers(m_hdc);
+}
