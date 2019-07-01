@@ -5,12 +5,6 @@
 #include "Timer.h"
 #include "controllers/SceneController.h"
 
-namespace
-{
-	const float UPDATE_FREQUENCY = 60;
-	const float SECONDS_PER_UPDATE = 1.0f / UPDATE_FREQUENCY;
-}
-
 Application::Application()
 {
 	m_timer = std::make_unique<Timer>();
