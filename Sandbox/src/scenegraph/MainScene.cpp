@@ -8,3 +8,13 @@ MainScene::MainScene(const std::string& name) :
 }
 
 MainScene::~MainScene() = default;
+
+void MainScene::Update(float dTime)
+{
+	Scene::Update(dTime);
+}
+
+void MainScene::Draw()
+{
+	Scene::Draw();
+}
