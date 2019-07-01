@@ -2,6 +2,8 @@
 
 #include "Scene.h"
 
+#include "controllers/LayerController.h"
+
 Scene::Scene() = default;
 
 Scene::~Scene() = default;
