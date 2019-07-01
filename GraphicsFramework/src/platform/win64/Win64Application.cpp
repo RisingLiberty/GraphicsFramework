@@ -60,7 +60,7 @@ void Win64Application::Run()
 
 		m_timer->Tick();
 
-		if (m_are_frames_capped == AreFramesCapped::Yes)
+		if (m_are_frames_capped == AreFramesCapped::YES)
 		{
 			frame_time += m_timer->GetDeltaTimeInSeconds();
 
@@ -78,8 +78,10 @@ void Win64Application::Run()
 			++frame_count;
 		}
 
+		//this->Draw();
 		Context::GetCurrent()->GetRenderer()->ClearAllBuffers();
-		this->Draw();
+		Context::GetCurrent()->GetRenderer()->Present();
+		m_window->Present();
 	}
 
 	std::cin.get();
