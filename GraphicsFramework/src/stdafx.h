@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef INCLUDE_EXTERNAL_HEADERS
 // spdlog headers
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/basic_file_sink.h>
@@ -12,6 +13,7 @@
 #include "vendor/imgui/imgui_impl_dx12.h"
 #include "vendor/imgui/imgui_impl_vulkan.h"
 #include "vendor/imgui/imgui_impl_opengl3.h"
+#endif
 
 // stl headers
 #include <iostream>
@@ -32,3 +34,9 @@
 // custom headers
 #include "exceptions/Exceptions.h"
 #include "exceptions/Throws.h"
+
+enum class YesNoEnum
+{
+	No,
+	Yes
+};
