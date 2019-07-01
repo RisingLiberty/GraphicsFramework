@@ -9,6 +9,10 @@
 #include "OpenGLIndexBuffer.h"
 #include "OpenGLVertexArray.h"
 
+#include "OpenGLShaderProgram.h"
+#include "OpenGLVertexShader.h"
+#include "OpenGLFragmentShader.h"
+
 #include <graphics/MeshFactory.h>
 
 namespace
@@ -123,17 +127,14 @@ void OpenGLRenderer::Present()
 
 	mesh->GetIndices()->Bind();
 
-	ShaderProgramSource source = ParseShader("Data/shaders/opengl/shader.shader");
+	std::unique_ptr<OpenGLVertexShader> vertex_shader = std::make_unique<OpenGLVertexShader>("data/shaders/opengl/vertexshader.glsl");
+	std::unique_ptr<OpenGLFragmentShader> fragment_shader = std::make_unique<OpenGLFragmentShader>("data/shaders/opengl/fragmentshader.glsl");
 
-	unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
+	std::unique_ptr<OpenGLShaderProgram> program = std::make_unique<OpenGLShaderProgram>();
+	program->Create({ vertex_shader->GetId(), fragment_shader->GetId() });
+	program->Bind();
 
-	GLCALL(glUseProgram(shader));
-
-	GLCALL(int uColorLocation = glGetUniformLocation(shader, "u_Color"));
-	assert(uColorLocation != -1);
-
-	GLCALL(glClear(GL_COLOR_BUFFER_BIT));
-	GLCALL(glUniform4f(uColorLocation, 1.0f, 0.3f, 0.8f, 1.0f));
+	program->SetVector4Uniform("u_Color", 1.0f, 0.3f, 0.8f, 1.0f);
 
 	GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 }
