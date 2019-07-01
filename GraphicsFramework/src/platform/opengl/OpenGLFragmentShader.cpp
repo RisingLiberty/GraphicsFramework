@@ -31,7 +31,7 @@ namespace
 OpenGLFragmentShader::OpenGLFragmentShader(const std::string& path):
 	FragmentShader(path)
 {
-
+	this->Compile();
 }
 
 OpenGLFragmentShader::~OpenGLFragmentShader()
@@ -72,4 +72,9 @@ int OpenGLFragmentShader::Compile()
 	}
 
 	return result;
+}
+
+unsigned int OpenGLFragmentShader::GetId() const
+{
+	return m_id;
 }

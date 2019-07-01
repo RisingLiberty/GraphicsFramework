@@ -32,7 +32,7 @@ namespace
 OpenGLVertexShader::OpenGLVertexShader(const std::string& path) :
 	VertexShader(path)
 {
-
+	this->Compile();
 }
 
 OpenGLVertexShader::~OpenGLVertexShader()
@@ -73,4 +73,9 @@ int OpenGLVertexShader::Compile()
 	}
 
 	return result;
+}
+
+unsigned int OpenGLVertexShader::GetId() const
+{
+	return m_id;
 }

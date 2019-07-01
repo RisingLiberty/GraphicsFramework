@@ -12,6 +12,8 @@ public:
 	void Unbind() const override;
 	int Compile() override;
 
+	unsigned int GetId() const;
+
 private:
 	unsigned int m_id;
 };
