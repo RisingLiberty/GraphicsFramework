@@ -3,6 +3,7 @@
 class Window;
 class Timer;
 class SceneController;
+class Scene;
 
 #include "Events/Event.h"
 
@@ -10,14 +11,15 @@ class Application
 {
 public:
 	Application();
-	~Application();
+	virtual ~Application();
 
 	virtual void OnEvent(const Event& event) = 0;
 	virtual void Run() = 0;
 
 protected:
 	void CalculateFrameStats() const;
-
+	void PushScene(std::unique_ptr<Scene> scene);
+	
 	virtual void Update(float dTime) = 0;
 	virtual void Draw() = 0;
 

@@ -6,7 +6,7 @@ class Scene
 {
 public: 
 	Scene(const std::string& name);
-	~Scene();
+	virtual ~Scene();
 
 	void Update(float dTime);
 	void Draw();
