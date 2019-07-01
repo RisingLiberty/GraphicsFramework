@@ -21,12 +21,10 @@ void SceneController::Push(std::unique_ptr<Scene> scene)
 
 void SceneController::Update(float dTime)
 {
-	spdlog::info("scene {} updating", m_active_scene->GetName());
 	m_active_scene->Update(dTime);
 }
 
 void SceneController::Draw()
 {
-	spdlog::info("scene {} drawing", m_active_scene->GetName());
 	m_active_scene->Draw();
 }
