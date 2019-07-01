@@ -4,7 +4,7 @@
 #include "scenegraph/MainScene.h"
 
 Sandbox::Sandbox():
-	Win64Application(AreFramesCapped::No)
+	Win64Application(AreFramesCapped::NO)
 {
 	this->PushScene(std::make_unique<MainScene>("Main Scene"));
 }
