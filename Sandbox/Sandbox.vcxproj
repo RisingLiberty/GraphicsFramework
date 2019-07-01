@@ -72,14 +72,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)GraphicsFramework/src/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)GraphicsFramework/src/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)\GraphicsFramework\lib\;$(SolutionDir)_Temp\GraphicsFramework\$(Platform)\$(Configuration)\bin\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\intermediate\</IntDir>
     <LibraryPath>$(SolutionDir)\GraphicsFramework\lib\;$(SolutionDir)_Temp\GraphicsFramework\$(Platform)\$(Configuration)\bin\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
-    <IncludePath>$(SolutionDir)GraphicsFramework/src/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(ProjectDir)src;$(SolutionDir)GraphicsFramework/src/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -144,13 +144,17 @@
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\core\main.cpp" />
+    <ClCompile Include="src\scenegraph\MainScene.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\core\Sandbox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\scenegraph\MainScene.h" />
     <ClInclude Include="src\pch.h" />
+    <ClInclude Include="src\core\Sandbox.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

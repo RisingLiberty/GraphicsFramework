@@ -72,14 +72,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\intermediate\</IntDir>
-    <IncludePath>$(SolutionDir)\GraphicsFramework\src\;$(SolutionDir)GraphicsFramework\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\GraphicsFramework\lib\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <IncludePath>$(ProjectDir)\src\;$(ProjectDir)\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\lib\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)\GraphicsFramework\src\;$(SolutionDir)GraphicsFramework\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\src\;$(ProjectDir)\include;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\bin\</OutDir>
     <IntDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\intermediate\</IntDir>
-    <LibraryPath>$(SolutionDir)\GraphicsFramework\lib\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
+    <LibraryPath>$(ProjectDir)\lib\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
