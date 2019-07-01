@@ -13,8 +13,13 @@
 #include <vector>
 #include <unordered_map>
 #include <map>
+#include <memory>
+#include <functional>
 
 // windows headers
 #include <Windows.h>
 #include <windowsx.h>
 
+// custom headers
+#include "exceptions/Exceptions.h"
+#include "exceptions/Throws.h"
