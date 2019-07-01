@@ -5,7 +5,7 @@ class LayerController;
 class Scene
 {
 public: 
-	Scene();
+	Scene(const std::string& name);
 	~Scene();
 
 	void Update(float dTime);
