@@ -9,12 +9,18 @@
 
 #include "controllers/SceneController.h"
 
+#include "scenegraph/Scene.h"
+
 
 namespace
 {
 	const int WINDOW_WIDTH = 720;
 	const int WINDOW_HEIGHT = 480;
 	const std::wstring& WINDOW_TITLE = L"Sandbox";
+
+	const float UPDATE_FREQUENCY = 60; //frames per seconds
+	const float SECONDS_PER_UPDATE = 1.0f / UPDATE_FREQUENCY;
+
 }
 
 Win64Application::Win64Application()
@@ -30,7 +36,14 @@ void Win64Application::Run()
 {
 	spdlog::info("Application is running");
 
+	// Create the main scene here
+	m_scene_controller->Push(std::make_unique<Scene>("main scene"));
+
 	bool is_running = true;
+	bool frame_cap = true;
+
+	unsigned int frame_count = 0;
+	float frame_time = 0;
 
 	while (is_running)
 	{
@@ -50,9 +63,25 @@ void Win64Application::Run()
 
 		m_timer->Tick();
 
-		this->CalculateFrameStats();
-		this->Update(m_timer->GetDeltaTimeInSeconds());
-		this->Draw();
+		if (frame_cap)
+		{
+			frame_time += m_timer->GetDeltaTimeInSeconds();
+
+			if (frame_time > SECONDS_PER_UPDATE)
+			{
+				this->Update(m_timer->GetDeltaTimeInSeconds());
+				this->Draw();
+				frame_time = 0;
+				++frame_count;
+			}
+		}
+		else
+		{
+			this->CalculateFrameStats();
+			this->Update(m_timer->GetDeltaTimeInSeconds());
+			this->Draw();
+			++frame_count;
+		}
 	}
 
 	std::cin.get();
@@ -60,12 +89,13 @@ void Win64Application::Run()
 
 void Win64Application::Update(float dTime)
 {
-
+	m_scene_controller->Update(dTime);
+	
 }
 
 void Win64Application::Draw()
 {
-
+	m_scene_controller->Draw();
 }
 
 void Win64Application::OnEvent(const Event& event)

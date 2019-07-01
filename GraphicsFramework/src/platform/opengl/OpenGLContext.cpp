@@ -26,6 +26,8 @@ OpenGLContext::OpenGLContext(void* windowHandle)
 	{
 		ThrowException(L"Failed to initialize glew");
 	}
+
+	this->InitializeImGui();
 }
 
 OpenGLContext::~OpenGLContext() = default;
@@ -38,4 +40,11 @@ void OpenGLContext::Present()
 OpenGLContext::API OpenGLContext::GetApiType() const
 {
 	return API::OpenGL;
+}
+
+void OpenGLContext::InitializeImGui() const
+{
+	ImGui::CreateContext();
+	ImGui_ImplOpenGL3_Init("#version 330");
+
 }

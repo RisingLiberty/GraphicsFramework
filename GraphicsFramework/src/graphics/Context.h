@@ -20,6 +20,9 @@ public:
 	virtual void Present() = 0;
 	virtual API GetApiType() const = 0;
 
+protected:
+	virtual void InitializeImGui() const = 0;
+
 private:
 	static std::unique_ptr<Context> s_current;
 };

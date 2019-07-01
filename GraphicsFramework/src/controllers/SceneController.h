@@ -1,8 +1,19 @@
 #pragma once
 
+class Scene;
+
 class SceneController
 {
-public: 
+public:
 	SceneController();
 	~SceneController();
+
+	void Push(std::unique_ptr<Scene> scene);
+
+	void Update(float dTime);
+	void Draw();
+
+private:
+	std::vector<std::unique_ptr<Scene>> m_scenes;
+	Scene* m_active_scene;
 };

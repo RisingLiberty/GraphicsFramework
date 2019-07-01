@@ -3,6 +3,14 @@
 class Layer
 {
 public:
-	Layer();
+	Layer(const std::string& name);
 	~Layer();
+
+	void Update(float dTime);
+	void Draw();
+
+	const std::string& GetName() const;
+
+private:
+	std::string m_name;
 };
