@@ -24,6 +24,8 @@
 #include <memory>
 #include <functional>
 #include <algorithm>
+#include <array>
+
 
 // windows headers
 #include <Windows.h>
@@ -32,5 +34,6 @@
 // custom headers
 #include "exceptions/Exceptions.h"
 #include "exceptions/Throws.h"
+#include "debug/Debug.h"
 
 #include "core/DefaultEnums.h"
