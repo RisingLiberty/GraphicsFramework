@@ -39,13 +39,13 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -91,14 +91,16 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <PreprocessorDefinitions>GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4211 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,32 +125,44 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <PreprocessorDefinitions>GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4211 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Application.cpp" />
+    <ClCompile Include="src\core\Timer.cpp" />
+    <ClCompile Include="src\Events\Event.cpp" />
     <ClCompile Include="src\exceptions\Exceptions.cpp" />
     <ClCompile Include="src\exceptions\Throws.cpp" />
+    <ClCompile Include="src\graphics\Context.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLContext.cpp" />
+    <ClCompile Include="src\platform\win64\Win64Application.cpp" />
     <ClCompile Include="src\platform\win64\Win64Window.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\windows\DefaultWndClass.cpp" />
+    <ClCompile Include="src\platform\win64\DefaultWndClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\core\Application.h" />
+    <ClInclude Include="src\core\Timer.h" />
+    <ClInclude Include="src\Events\Event.h" />
     <ClInclude Include="src\exceptions\Exceptions.h" />
     <ClInclude Include="src\exceptions\Throws.h" />
+    <ClInclude Include="src\graphics\Context.h" />
     <ClInclude Include="src\graphics\Window.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLContext.h" />
+    <ClInclude Include="src\platform\win64\Win64Application.h" />
     <ClInclude Include="src\platform\win64\Win64Window.h" />
     <ClInclude Include="src\stdafx.h" />
-    <ClInclude Include="src\windows\DefaultWndClass.h" />
+    <ClInclude Include="src\platform\win64\DefaultWndClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
