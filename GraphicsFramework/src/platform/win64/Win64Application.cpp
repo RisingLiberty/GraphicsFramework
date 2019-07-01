@@ -11,7 +11,6 @@
 
 #include "scenegraph/Scene.h"
 
-
 namespace
 {
 	const int WINDOW_WIDTH = 720;
@@ -23,7 +22,8 @@ namespace
 
 }
 
-Win64Application::Win64Application()
+Win64Application::Win64Application(AreFramesCapped areFramesCapped):
+	m_are_frames_capped(areFramesCapped)
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
@@ -36,11 +36,7 @@ void Win64Application::Run()
 {
 	spdlog::info("Application is running");
 
-	// Create the main scene here
-	m_scene_controller->Push(std::make_unique<Scene>("main scene"));
-
 	bool is_running = true;
-	bool frame_cap = true;
 
 	unsigned int frame_count = 0;
 	float frame_time = 0;
@@ -63,7 +59,7 @@ void Win64Application::Run()
 
 		m_timer->Tick();
 
-		if (frame_cap)
+		if (m_are_frames_capped == AreFramesCapped::Yes)
 		{
 			frame_time += m_timer->GetDeltaTimeInSeconds();
 
