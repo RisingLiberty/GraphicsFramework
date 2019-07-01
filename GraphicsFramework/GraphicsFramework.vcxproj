@@ -125,7 +125,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <PreprocessorDefinitions>GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_IMPL_OPENGL_LOADER_GLEW;GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -185,6 +185,7 @@
     <ClInclude Include="src\controllers\LayerController.h" />
     <ClInclude Include="src\controllers\SceneController.h" />
     <ClInclude Include="src\core\Application.h" />
+    <ClInclude Include="src\core\DefaultEnums.h" />
     <ClInclude Include="src\core\Timer.h" />
     <ClInclude Include="src\Events\Event.h" />
     <ClInclude Include="src\exceptions\Exceptions.h" />
