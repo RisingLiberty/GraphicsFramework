@@ -1,9 +1,13 @@
 #include "stdafx.h"
 
 #include "Application.h"
-#include "graphics/window.h"
 #include "Timer.h"
+
+#include "graphics/window.h"
+
 #include "controllers/SceneController.h"
+
+#include "scenegraph/Scene.h"
 
 Application::Application()
 {
@@ -36,4 +40,9 @@ void Application::CalculateFrameStats() const
 		frameCount = 0;
 		++timeElapsed;
 	}
+}
+
+void Application::PushScene(std::unique_ptr<Scene> scene)
+{
+	m_scene_controller->Push(std::move(scene));
 }
