@@ -2,6 +2,7 @@
 
 class Window;
 class Timer;
+class SceneController;
 
 #include "Events/Event.h"
 
@@ -23,4 +24,5 @@ protected:
 protected:
 	std::unique_ptr<Window> m_window;
 	std::unique_ptr<Timer> m_timer;
+	std::unique_ptr<SceneController> m_scene_controller;
 };

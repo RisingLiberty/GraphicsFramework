@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "graphics/window.h"
 #include "Timer.h"
+#include "controllers/SceneController.h"
 
 namespace
 {
@@ -12,6 +13,8 @@ namespace
 
 Application::Application()
 {
+	m_timer = std::make_unique<Timer>();
+	m_scene_controller = std::make_unique<SceneController>();
 };
 
 Application::~Application() = default;
