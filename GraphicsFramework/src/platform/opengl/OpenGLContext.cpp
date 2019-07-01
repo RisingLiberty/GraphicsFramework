@@ -6,6 +6,8 @@
 
 #include <GL/glew.h>
 
+#include "OpenGLRenderer.h"
+
 using HandleGLRenderingContext = HGLRC;
 
 OpenGLContext::OpenGLContext(void* windowHandle)
@@ -26,6 +28,8 @@ OpenGLContext::OpenGLContext(void* windowHandle)
 	{
 		ThrowException(L"Failed to initialize glew");
 	}
+
+	m_renderer = std::make_unique<OpenGLRenderer>();
 
 	this->InitializeImGui();
 }

@@ -1,8 +1,10 @@
 #include "stdafx.h"
 
 #include "Context.h"
+#include "Renderer.h"
 
 #include "platform/opengl/OpenGLContext.h"
+
 
 std::unique_ptr<Context> Context::s_current = nullptr;
 
@@ -31,4 +33,9 @@ void Context::Create(API api, void* windowHandle)
 Context* Context::GetCurrent()
 {
 	return s_current.get();
+}
+
+Renderer* Context::GetRenderer() const
+{
+	return m_renderer.get();
 }
