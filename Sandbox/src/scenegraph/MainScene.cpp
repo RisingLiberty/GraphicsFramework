@@ -41,6 +41,5 @@ void MainScene::Draw()
 {
 	Scene::Draw();
 	Context::GetCurrent()->GetRenderer()->SubmitMesh(m_test_quad.get());
-	Context::GetCurrent()->GetRenderer()->Present();
 
 }
