@@ -1,6 +1,6 @@
 #pragma once
 
-class Mesh;
+class SceneObject;
 
 class Renderer
 {
@@ -8,7 +8,7 @@ public:
 	Renderer();
 	virtual ~Renderer();
 
-	void SubmitMesh(Mesh* mesh);
+	void SubmitMesh(SceneObject* mesh);
 	
 	virtual void Present() = 0;
 	virtual void ClearAllBuffers() = 0;
@@ -19,7 +19,7 @@ public:
 
 
 protected:
-	std::vector<Mesh*> m_meshes_to_draw;
+	std::vector<SceneObject*> m_scene_objects;
 
 private:
 
