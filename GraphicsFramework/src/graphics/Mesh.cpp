@@ -91,7 +91,7 @@ Mesh::Mesh(const std::string& path)
 		}
 	}
 
-	m_vertices = VertexBuffer::Create(vertices.size() * sizeof(Vertex), VertexBuffer::BufferUsage::STATIC);
+	m_vertices = VertexBuffer::Create(vertices.size() * sizeof(Vertex), BufferUsage::STATIC);
 	m_indices = IndexBuffer::Create(indices.size());
 }
 
