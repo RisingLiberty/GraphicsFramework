@@ -23,11 +23,17 @@ void Dx11Context::InitD3D(Window* window)
 	HWND handle = (HWND)win64_window->GetHandle();
 	Window::Properties properties = win64_window->GetPropeties();
 
+	UINT creationFlags = 0; //D3D11_CREATE_DEVICE_BGRA_SUPPORT <-- not needed, but good to have on stand by
+#if defined(_DEBUG)
+	// Let's DirectX log to visual studio's output tab.
+	creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
 	DXCALL(D3D11CreateDevice(
 		NULL, 
 		D3D_DRIVER_TYPE_HARDWARE, 
 		NULL, 
-		m_debug_layer_enabled ? D3D11_CREATE_DEVICE_DEBUG : D3D11_CREATE_DEVICE_SINGLETHREADED, 
+		creationFlags,
 		NULL, 
 		NULL, 
 		D3D11_SDK_VERSION, 
@@ -64,20 +70,20 @@ void Dx11Context::InitD3D(Window* window)
 	DXCALL(dxgi_adapter->GetParent(IID_PPV_ARGS(dxgi_factory.GetAddressOf())));
 	DXCALL(dxgi_factory->CreateSwapChain(m_resources.device.Get(), &swapchain_desc, m_resources.swapchain.ReleaseAndGetAddressOf())));
 
-	if (m_debug_layer_enabled)
-	{
-		DXCALL(m_resources.device->QueryInterface(IID_PPV_ARGS(m_debug_layer.ReleaseAndGetAddressOf())));
-		DXCALL(m_debug_layer->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL));
+#if defined _DEBUG
+	DXCALL(m_resources.device->QueryInterface(IID_PPV_ARGS(m_debug_layer.ReleaseAndGetAddressOf())));
+	DXCALL(m_debug_layer->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL));
 
-		ID3D11InfoQueue* info_queue;
-		DXCALL(m_resources.device->QueryInterface(IID_PPV_ARGS(&info_queue)));
-		D3D11_MESSAGE_ID hide[] = { D3D11_MESSAGE_ID_DEVICE_DRAW_SAMPLER_NOT_SET };
-		D3D11_INFO_QUEUE_FILTER filter;
-		ZeroMemory(&filter, sizeof(filter));
-		filter.DenyList.NumIDs = 1;
-		filter.DenyList.pIDList = hide;
-		DXCALL(info_queue->AddStorageFilterEntries(&filter));
-	}
+	//TODO: Look up further information about this
+	ID3D11InfoQueue* info_queue;
+	DXCALL(m_resources.device->QueryInterface(IID_PPV_ARGS(&info_queue)));
+	D3D11_MESSAGE_ID hide[] = { D3D11_MESSAGE_ID_DEVICE_DRAW_SAMPLER_NOT_SET };
+	D3D11_INFO_QUEUE_FILTER filter;
+	ZeroMemory(&filter, sizeof(filter));
+	filter.DenyList.NumIDs = 1;
+	filter.DenyList.pIDList = hide;
+	DXCALL(info_queue->AddStorageFilterEntries(&filter));
+#endif
 
 	this->ResizeBuffers(properties.width, properties.height);
 }
