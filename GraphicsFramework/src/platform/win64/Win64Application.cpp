@@ -28,7 +28,7 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped):
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	Context::Create(Context::API::OpenGL, m_window->GetHandle());
+	Context::Create(Context::API::OpenGL, m_window.get());
 }
 
 Win64Application::~Win64Application() = default;
@@ -48,7 +48,6 @@ void Win64Application::Run()
 		if (m_window->EventLoop() == WM_QUIT)
 		{
 			is_running = false;
-			false;
 		}
 
 		// sleep thread so window can activate again when debugging
@@ -78,9 +77,14 @@ void Win64Application::Run()
 			++frame_count;
 		}
 
-		Context::GetCurrent()->GetRenderer()->ClearAllBuffers();
-		this->Draw();
-		Context::GetCurrent()->GetRenderer()->Present();
+		Renderer* renderer = Context::GetCurrent()->GetRenderer();
+		if (renderer)
+		{
+			renderer->ClearAllBuffers();
+			this->Draw();
+			renderer->Present();
+		}
+
 		m_window->Present();
 	}
 }
