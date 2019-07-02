@@ -21,8 +21,8 @@ MainScene::MainScene(const std::string& name) :
 {
 	std::unique_ptr<Mesh> mesh = MeshFactory::CreateQuad();
 
-	VertexShader* vs = VertexShader::Create("data/shaders/opengl/vertexshader.glsl");
-	FragmentShader* fs = FragmentShader::Create("data/shaders/opengl/fragmentshader.glsl");
+	VertexShader* vs = VertexShader::Create("vertexshader");
+	FragmentShader* fs = FragmentShader::Create("fragmentshader");
 
 	ShaderProgram* program = ShaderProgram::Create(vs, fs);
 	std::unique_ptr<Material> material = std::make_unique<Material>(program);
