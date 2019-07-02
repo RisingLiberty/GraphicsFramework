@@ -10,10 +10,11 @@ public:
 
 	void Bind() const override;
 	void Unbind() const override;
-	int Compile() override;
 
 	unsigned int GetId() const;
 
+protected:
+	int Compile() override;
 private:
 	unsigned int m_id;
 };
