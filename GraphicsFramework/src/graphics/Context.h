@@ -3,6 +3,7 @@
 class Renderer;
 class ShaderController;
 class VertexArrayController;
+class Window;
 
 class Context
 {
@@ -18,7 +19,7 @@ public:
 	Context();
 	virtual ~Context();
 
-	static void Create(API api, void* windowHandle);
+	static void Create(API api, Window* window);
 	static API GetApi();
 	static Context* GetCurrent();
 

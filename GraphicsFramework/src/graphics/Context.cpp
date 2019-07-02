@@ -4,6 +4,7 @@
 #include "Renderer.h"
 
 #include "platform/opengl/OpenGLContext.h"
+#include "platform/directx11/Dx11Context.h"
 
 #include "controllers/ShaderController.h"
 #include "controllers/VertexArrayController.h"
@@ -18,16 +19,17 @@ Context::Context()
 
 Context::~Context() = default;
 
-void Context::Create(API api, void* windowHandle)
+void Context::Create(API api, Window* window)
 {
 	switch (api)
 	{
 	case Context::API::DirectX11:
+		s_current = std::make_unique<Dx11Context>(window);
 		break;
 	case Context::API::DirectX12:
 		break;
 	case Context::API::OpenGL:
-		s_current = std::make_unique<OpenGLContext>(windowHandle);
+		s_current = std::make_unique<OpenGLContext>(window);
 		break;
 	case Context::API::Vulkan:
 		break;
