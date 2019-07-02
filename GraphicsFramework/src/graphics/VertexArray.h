@@ -6,11 +6,20 @@ class VertexLayout;
 class VertexArray
 {
 public:
-	VertexArray();
 	virtual ~VertexArray();
 
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;
-	virtual void BindLayoutToBuffer(const VertexBuffer* vb, const VertexLayout* pLayout) = 0;
 
+	const VertexBuffer* GetVertexBuffer() const;
+	const VertexLayout* GetVertexLayout() const;
+
+	static VertexArray* Create(const VertexBuffer* vb, const VertexLayout* layout);
+
+protected:
+	VertexArray(const VertexBuffer* vb, const VertexLayout* layout);
+
+private:
+	const VertexBuffer* m_vertex_buffer;
+	const VertexLayout* m_vertex_layout;
 };
