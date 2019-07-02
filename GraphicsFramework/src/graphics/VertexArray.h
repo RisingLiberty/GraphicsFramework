@@ -19,7 +19,7 @@ public:
 protected:
 	VertexArray(const VertexBuffer* vb, const VertexLayout* layout);
 
-private:
+protected:
 	const VertexBuffer* m_vertex_buffer;
 	const VertexLayout* m_vertex_layout;
 };

@@ -6,6 +6,7 @@
 #include "controllers/VertexArrayController.h"
 
 #include "platform/opengl/OpenGLVertexArray.h"
+#include "platform/directx11/Dx11VertexArray.h"
 
 VertexArray::VertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	m_vertex_buffer(vb),
@@ -28,10 +29,16 @@ VertexArray* VertexArray::Create(const VertexBuffer* vb, const VertexLayout* lay
 	{
 	case Context::API::OpenGL:
 	{
-		std::unique_ptr<VertexArray> unique_shader = std::make_unique<OpenGLVertexArray>(vb, layout);
-		vertex_array = unique_shader.get();
-		vertex_array_controller->PushVertexArray(unique_shader);
+		std::unique_ptr<VertexArray> unique_array = std::make_unique<OpenGLVertexArray>(vb, layout);
+		vertex_array = unique_array.get();
+		vertex_array_controller->PushVertexArray(unique_array);
+		break;
 	}
+	case Context::API::DirectX11:
+		std::unique_ptr<VertexArray> unique_array = std::make_unique<Dx11VertexArray>(vb, layout);
+		vertex_array = unique_array.get();
+		vertex_array_controller->PushVertexArray(unique_array);
+		break;
 	}
 
 	return vertex_array;
