@@ -1,13 +1,10 @@
 #pragma once
 
+#include "BufferUsage.h"
+
 class VertexBuffer
 {
 public:
-	enum class BufferUsage
-	{
-		DYNAMIC,
-		STATIC
-	};
 
 	VertexBuffer(size_t size, BufferUsage usage);
 	virtual ~VertexBuffer();
@@ -16,7 +13,7 @@ public:
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;
 
-	static std::unique_ptr<VertexBuffer> Create(size_t size, BufferUsage usage = BufferUsage::STATIC);
+	static std::unique_ptr<VertexBuffer> Create(size_t size, BufferUsage usage = BufferUsage::STATIC, void* data = nullptr);
 
 protected:
 	size_t m_size;
