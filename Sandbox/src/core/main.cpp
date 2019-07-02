@@ -4,7 +4,7 @@
 
 int main()
 {
-	 Sandbox app;
+	Sandbox app;
 
 	app.Run();
 }

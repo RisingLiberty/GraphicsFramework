@@ -7,7 +7,6 @@
 
 namespace
 {
-
 	std::string LoadCode(const std::string& path)
 	{
 		std::fstream file(path, std::ios::in | std::ios::ate);
