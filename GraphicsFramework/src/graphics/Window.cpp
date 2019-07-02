@@ -18,6 +18,11 @@ void Window::SetEventCallback(const WindowEventCallback& callback)
 	m_event_callback = callback;
 }
 
+Window::Properties Window::GetPropeties() const
+{
+	return m_properties;
+}
+
 bool Window::IsPaused() const
 {
 	return m_is_paused;

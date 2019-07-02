@@ -7,6 +7,14 @@ using WindowEventCallback = std::function<void(const Event& event)>;
 class Window
 {
 public:
+	struct Properties
+	{
+		unsigned int width;
+		unsigned int height;
+		bool is_fullscreen;
+		bool vsync;
+	};
+
 	Window(unsigned int width, unsigned int height, bool isFullScreen = false, bool isVsync = false);
 	virtual ~Window();
 
@@ -16,16 +24,10 @@ public:
 
 	void SetEventCallback(const WindowEventCallback& callback);
 
+	Properties GetPropeties() const;
 	bool IsPaused() const;
 
 protected:
-	struct Properties
-	{
-		unsigned int width;
-		unsigned int height;
-		bool is_fullscreen;
-		bool vsync;
-	};
 	Properties m_properties;
 
 	WindowEventCallback m_event_callback;
