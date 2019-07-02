@@ -11,7 +11,7 @@ namespace
 		switch (usage)
 		{
 		case BufferUsage::DYNAMIC: return D3D11_USAGE_DYNAMIC;
-		case BufferUsage::STATIC: return D3D11_USAGE_DYNAMIC;
+		case BufferUsage::STATIC: return D3D11_USAGE_IMMUTABLE;
 		}
 
 		spdlog::warn("buffer usage not speciifed!");
@@ -25,13 +25,21 @@ Dx11VertexBuffer::Dx11VertexBuffer(size_t size, BufferUsage usage, void* data):
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	desc.ByteWidth = size;
-	desc.CPUAccessFlags = D3D11_CPU_ACCESS_FLAG::D3D11_CPU_ACCESS_WRITE;
+	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	desc.Usage = CustomBufferUsagToDx11Usage(usage);
 	desc.MiscFlags = 0;
 
 	Dx11Context* context = GetDx11Context();
 
-	if (data)
+	if (usage == BufferUsage::STATIC)
+	{
+		ASSERT(data, "data given to buffer is null!");
+		desc.CPUAccessFlags = 0; //if not mutable, cpu can't write to buffer.
+		D3D11_SUBRESOURCE_DATA vertices;
+		vertices.pSysMem = data;
+		DXCALL(context->GetDevice()->CreateBuffer(&desc, &vertices, m_buffer.ReleaseAndGetAddressOf()));
+	}
+	else if (data)
 	{
 		D3D11_SUBRESOURCE_DATA vertices;
 		vertices.pSysMem = data;
