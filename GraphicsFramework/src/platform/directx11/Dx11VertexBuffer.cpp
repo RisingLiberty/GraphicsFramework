@@ -24,7 +24,7 @@ Dx11VertexBuffer::Dx11VertexBuffer(size_t size, BufferUsage usage, void* data):
 {
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	desc.ByteWidth = size;
+	desc.ByteWidth = (unsigned int)size;
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	desc.Usage = CustomBufferUsagToDx11Usage(usage);
 	desc.MiscFlags = 0;

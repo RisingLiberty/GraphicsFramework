@@ -35,7 +35,7 @@ void Dx11Renderer::Present()
 		mesh->GetIndices()->Bind();
 
 		ID3D11DeviceContext* device_context = dynamic_cast<Dx11Context*>(Context::GetCurrent())->GetDeviceContext();
-		device_context->DrawIndexed(mesh->GetIndices()->GetCount(), 0, 0);
+		device_context->DrawIndexed((unsigned int)mesh->GetIndices()->GetCount(), 0, 0);
 	}
 }
 
