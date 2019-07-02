@@ -37,7 +37,7 @@ Win64Window::Win64Window(unsigned int width, unsigned int height, const std::wst
 		0L,
 		window_class_name.c_str(),
 		title.c_str(),
-		WS_OVERLAPPED,
+		WS_OVERLAPPED | WS_SYSMENU,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		win_width,
