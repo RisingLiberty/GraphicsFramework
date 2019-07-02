@@ -44,7 +44,7 @@ void OpenGLContext::Present()
 
 OpenGLContext::API OpenGLContext::GetApiType() const
 {
-	return API::OpenGL;
+	return API::OPENGL;
 }
 
 void OpenGLContext::InitializeImGui() const
