@@ -8,7 +8,8 @@ public:
 	VertexShader(const std::string& path);
 	virtual ~VertexShader();
 
-	static VertexShader* Create(const std::string& path);
+	// give the shader name without extention
+	static VertexShader* Create(const std::string& shaderName);
 protected:
 	virtual int Compile() override = 0;
 };

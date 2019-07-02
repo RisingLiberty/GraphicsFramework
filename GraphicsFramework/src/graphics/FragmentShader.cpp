@@ -18,8 +18,17 @@ FragmentShader::~FragmentShader()
 
 }
 
-FragmentShader* FragmentShader::Create(const std::string& path)
+FragmentShader* FragmentShader::Create(const std::string& shaderName)
 {
+	ASSERT(shaderName.find(".") == std::string::npos, "shader name can't have an extention!");
+
+	std::string path = "data/shaders/";
+	if (Context::GetApi() == Context::API::OpenGL)
+		path += "opengl/" + shaderName + ".glsl";
+	else
+		path += "directx11/" + shaderName + ".hlsl";
+
+
 	ShaderController* shader_controller = Context::GetCurrent()->GetShaderController();
 	FragmentShader* shader = shader_controller->GetFragmentShader(path);
 
