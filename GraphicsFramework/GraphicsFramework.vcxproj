@@ -139,6 +139,8 @@
   <ItemGroup>
     <ClCompile Include="src\controllers\LayerController.cpp" />
     <ClCompile Include="src\controllers\SceneController.cpp" />
+    <ClCompile Include="src\controllers\ShaderController.cpp" />
+    <ClCompile Include="src\controllers\VertexArrayController.cpp" />
     <ClCompile Include="src\core\Application.cpp" />
     <ClCompile Include="src\core\Timer.cpp" />
     <ClCompile Include="src\Events\Event.cpp" />
@@ -147,6 +149,8 @@
     <ClCompile Include="src\graphics\Context.cpp" />
     <ClCompile Include="src\graphics\FragmentShader.cpp" />
     <ClCompile Include="src\graphics\IndexBuffer.cpp" />
+    <ClCompile Include="src\graphics\Material.cpp" />
+    <ClCompile Include="src\graphics\MaterialParameter.cpp" />
     <ClCompile Include="src\graphics\Mesh.cpp" />
     <ClCompile Include="src\graphics\MeshFactory.cpp" />
     <ClCompile Include="src\graphics\Renderer.cpp" />
@@ -173,6 +177,7 @@
     <ClCompile Include="src\platform\win64\Win64Window.cpp" />
     <ClCompile Include="src\scenegraph\Layer.cpp" />
     <ClCompile Include="src\scenegraph\Scene.cpp" />
+    <ClCompile Include="src\scenegraph\SceneObject.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -208,6 +213,8 @@
   <ItemGroup>
     <ClInclude Include="src\controllers\LayerController.h" />
     <ClInclude Include="src\controllers\SceneController.h" />
+    <ClInclude Include="src\controllers\ShaderController.h" />
+    <ClInclude Include="src\controllers\VertexArrayController.h" />
     <ClInclude Include="src\core\Application.h" />
     <ClInclude Include="src\core\DefaultEnums.h" />
     <ClInclude Include="src\core\Timer.h" />
@@ -218,6 +225,8 @@
     <ClInclude Include="src\graphics\Context.h" />
     <ClInclude Include="src\graphics\FragmentShader.h" />
     <ClInclude Include="src\graphics\IndexBuffer.h" />
+    <ClInclude Include="src\graphics\Material.h" />
+    <ClInclude Include="src\graphics\MaterialParameter.h" />
     <ClInclude Include="src\graphics\Mesh.h" />
     <ClInclude Include="src\graphics\MeshFactory.h" />
     <ClInclude Include="src\graphics\Renderer.h" />
@@ -244,6 +253,7 @@
     <ClInclude Include="src\platform\win64\Win64Window.h" />
     <ClInclude Include="src\scenegraph\Layer.h" />
     <ClInclude Include="src\scenegraph\Scene.h" />
+    <ClInclude Include="src\scenegraph\SceneObject.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\platform\win64\DefaultWndClass.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />
