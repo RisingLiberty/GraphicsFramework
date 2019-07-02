@@ -10,68 +10,36 @@
 class OpenGLShaderProgram : public ShaderProgram
 {
 public:
-	OpenGLShaderProgram();
+	OpenGLShaderProgram(VertexShader* vs, FragmentShader* fs);
 	virtual ~OpenGLShaderProgram();
 
-	void Create(const std::vector<unsigned int>& shaders);
-
-	void Bind() const;
-	void UnBind() const;
+	void Bind() const override;
+	void Unbind() const override;
 
 	unsigned int GetId() const { return m_id; }
 
-	template <typename T>
-	void SetUniform(const std::string& name, const T& uniform)
-	{
-		assert(false && "SetUniform method not overriden with correct method yet");
-	}
-
-	template <>
-	void SetUniform<float>(const std::string& name, const float& uniform)
-	{
-		GLCALL(glUniform1f(GetUniformLocation(name), uniform));
-	}
-
-	template <>
-	void SetUniform<int>(const std::string& name, const int& uniform)
-	{
-		GLCALL(glUniform1i(GetUniformLocation(name), uniform));
-	}
-
-	void SetVector4Uniform(const std::string& name, float x, float y, float z, float w)
-	{
-		GLCALL(glUniform4f(GetUniformLocation(name), x, y, z, w));
-	}
-
-	//template <>
-	//void SetUniform<Math::Vec2>(const std::string& name, const Math::Vec2& vec)
-	//{
-	//	GLCALL(glUniform2f(GetUniformLocation(name), vec.x, vec.y));
-	//}
-
-	//template <>
-	//void SetUniform<Math::Vec3>(const std::string& name, const Math::Vec3& vec)
-	//{
-	//	GLCALL(glUniform3f(GetUniformLocation(name), vec.x, vec.y, vec.z));
-	//}
-
-	//template <>
-	//void SetUniform<Math::Vec4>(const std::string& name, const Math::Vec4& vec)
-	//{
-	//	GLCALL(glUniform4f(GetUniformLocation(name), vec.x, vec.y, vec.z, vec.w));
-	//}
-
-	//template <>
-	//void SetUniform<Math::Mat44>(const std::string& name, const Math::Mat44& mat)
-	//{
-	//	GLCALL(glUniformMatrix4fv(GetUniformLocation(name), 1, GL_FALSE, &mat.m[0][0]));
-	//}
+	virtual void SetBoolUniform(const std::string& name, bool uniform);
+	virtual void SetUShortUniform(const std::string& name, unsigned short& uniform);
+	virtual void SetShortUniform(const std::string& name, short uniform);
+	virtual void SetIntUniform(const std::string& name, int uniform);
+	virtual void SetUIntUniform(const std::string& name, unsigned int& uniform);
+	virtual void SetFloatUniform(const std::string& name, float uniform);
+	virtual void SetDoubleUniform(const std::string& name, double uniform);
+	virtual void SetVec2Uniform(const std::string& name, float x, float y);
+	virtual void SetVec2Uniform(const std::string& name, float* values);
+	virtual void SetVec3Uniform(const std::string& name, float x, float y, float z);
+	virtual void SetVec3Uniform(const std::string& name, float* values);
+	virtual void SetVec4Uniform(const std::string& name, float x, float y, float z, float w);
+	virtual void SetVec4Uniform(const std::string& name, float* values);
+	virtual void SetMat3Uniform(const std::string& name, float* values);
+	virtual void SetMat4Uniform(const std::string& name, float* values);
 
 	int GetUniformLocation(const std::string& name);
 
-	std::vector<ShaderUniform> GetUniforms() const;
+	std::vector<ShaderUniform> GetUniforms() const override;
 
 private:
+	void Create(const std::vector<unsigned int>& shaders);
 
 private:
 	unsigned int m_id;
