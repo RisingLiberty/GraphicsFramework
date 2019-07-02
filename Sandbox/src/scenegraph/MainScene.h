@@ -2,7 +2,7 @@
 
 #include <scenegraph/Scene.h>
 
-class Mesh;
+class SceneObject;
 
 class MainScene : public Scene
 {
@@ -14,5 +14,5 @@ public:
 	void Draw() override;
 
 private:
-	std::unique_ptr<Mesh> m_material_ball;
+	std::unique_ptr<SceneObject> m_test_quad;
 };
