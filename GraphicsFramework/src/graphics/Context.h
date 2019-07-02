@@ -1,6 +1,8 @@
 #pragma once
 
 class Renderer;
+class ShaderController;
+class VertexArrayController;
 
 class Context
 {
@@ -17,9 +19,12 @@ public:
 	virtual ~Context();
 
 	static void Create(API api, void* windowHandle);
-
+	static API GetApi();
 	static Context* GetCurrent();
+
 	Renderer* GetRenderer() const;
+	ShaderController* GetShaderController() const;
+	VertexArrayController* GetVertexArrayController() const;
 
 	virtual void Present() = 0;
 	virtual API GetApiType() const = 0;
@@ -29,6 +34,8 @@ protected:
 
 protected:
 	std::unique_ptr<Renderer> m_renderer;
+	std::unique_ptr<ShaderController> m_shader_controller;
+	std::unique_ptr<VertexArrayController> m_vertex_array_controller;
 
 private:
 	static std::unique_ptr<Context> s_current;
