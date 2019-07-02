@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "OpenGLContext.h"
+#include "graphics/Window.h"
 
 #include <Windows.h>
 
@@ -10,9 +11,9 @@
 
 using HandleGLRenderingContext = HGLRC;
 
-OpenGLContext::OpenGLContext(void* windowHandle)
+OpenGLContext::OpenGLContext(Window* window)
 {
-	m_hdc = GetDC((HWND)windowHandle);
+	m_hdc = GetDC((HWND)window->GetHandle());
 
 	// Handle to GL Rendering Context
 	HandleGLRenderingContext hrc = wglCreateContext(m_hdc);

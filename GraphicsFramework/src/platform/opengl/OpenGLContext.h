@@ -2,10 +2,12 @@
 
 #include "graphics/Context.h"
 
+class Window;
+
 class OpenGLContext : public Context
 {
 public: 
-	OpenGLContext(void* windowHandle);
+	OpenGLContext(Window* window);
 	virtual ~OpenGLContext();
 
 	void Present() override;
