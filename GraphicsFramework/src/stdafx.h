@@ -25,7 +25,7 @@
 #include <functional>
 #include <algorithm>
 #include <array>
-
+#include <set>
 
 // windows headers
 #include <Windows.h>
