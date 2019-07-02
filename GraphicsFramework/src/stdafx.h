@@ -27,9 +27,22 @@
 #include <array>
 #include <set>
 
+// directx headers
+#include <d3d11.h>
+#include <dxgi1_6.h>
+#include <d3dcompiler.h>
+#include <dxgidebug.h>
+
+#include <DirectXMath.h>
+#include <DirectXColors.h>
+#include <DirectXPackedVector.h>
+#include <DirectXCollision.h>
+
 // windows headers
 #include <Windows.h>
 #include <windowsx.h>
+#include <wrl.h> // windows run time libraries
+using Microsoft::WRL::ComPtr;
 
 // custom headers
 #include "exceptions/Exceptions.h"
