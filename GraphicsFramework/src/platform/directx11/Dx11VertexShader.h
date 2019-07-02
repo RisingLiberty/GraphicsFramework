@@ -11,5 +11,7 @@ public:
 protected:
 	int Compile() override;
 
+private:
+	ID3DBlob* m_shader_compiled_code;
 };
 
