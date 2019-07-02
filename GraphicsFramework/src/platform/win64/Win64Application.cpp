@@ -78,13 +78,11 @@ void Win64Application::Run()
 			++frame_count;
 		}
 
-		//this->Draw();
 		Context::GetCurrent()->GetRenderer()->ClearAllBuffers();
+		this->Draw();
 		Context::GetCurrent()->GetRenderer()->Present();
 		m_window->Present();
 	}
-
-	std::cin.get();
 }
 
 void Win64Application::Update(float dTime)
