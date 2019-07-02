@@ -137,6 +137,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11IndexBuffer.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11ShaderProgram.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11VertexArray.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11VertexBuffer.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11VertexShader.cpp" />
     <ClCompile Include="src\controllers\LayerController.cpp" />
     <ClCompile Include="src\controllers\SceneController.cpp" />
     <ClCompile Include="src\controllers\ShaderController.cpp" />
@@ -164,7 +170,10 @@
     <ClCompile Include="src\graphics\VertexLayout.cpp" />
     <ClCompile Include="src\graphics\VertexShader.cpp" />
     <ClCompile Include="src\graphics\Window.cpp" />
-    <ClCompile Include="src\platform\opengl\HelperMethods.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11Context.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11Renderer.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11HelperMethods.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLHelperMethods.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLContext.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLFragmentShader.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLIndexBuffer.cpp" />
@@ -211,6 +220,13 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\graphics\BufferUsage.h" />
+    <ClInclude Include="src\platform\directx11\Dx11FragmentShader.h" />
+    <ClInclude Include="src\platform\directx11\Dx11IndexBuffer.h" />
+    <ClInclude Include="src\platform\directx11\Dx11ShaderProgram.h" />
+    <ClInclude Include="src\platform\directx11\Dx11VertexArray.h" />
+    <ClInclude Include="src\platform\directx11\Dx11VertexBuffer.h" />
+    <ClInclude Include="src\platform\directx11\Dx11VertexShader.h" />
     <ClInclude Include="src\controllers\LayerController.h" />
     <ClInclude Include="src\controllers\SceneController.h" />
     <ClInclude Include="src\controllers\ShaderController.h" />
@@ -240,7 +256,10 @@
     <ClInclude Include="src\graphics\VertexLayout.h" />
     <ClInclude Include="src\graphics\VertexShader.h" />
     <ClInclude Include="src\graphics\Window.h" />
-    <ClInclude Include="src\platform\opengl\HelperMethods.h" />
+    <ClInclude Include="src\platform\directx11\Dx11Context.h" />
+    <ClInclude Include="src\platform\directx11\Dx11Renderer.h" />
+    <ClInclude Include="src\platform\directx11\Dx11HelperMethods.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLHelperMethods.h" />
     <ClInclude Include="src\platform\opengl\OpenGLContext.h" />
     <ClInclude Include="src\platform\opengl\OpenGLFragmentShader.h" />
     <ClInclude Include="src\platform\opengl\OpenGLIndexBuffer.h" />
