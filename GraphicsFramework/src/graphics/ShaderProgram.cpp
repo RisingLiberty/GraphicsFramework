@@ -39,7 +39,7 @@ ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OpenGL:
+	case Context::API::OPENGL:
 	{
 		std::unique_ptr<ShaderProgram> unique_program = std::make_unique<OpenGLShaderProgram>(vs, fs);
 		program = unique_program.get();

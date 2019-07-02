@@ -10,10 +10,10 @@ class Context
 public: 
 	enum class API
 	{
-		DirectX11,
-		DirectX12,
-		OpenGL,
-		Vulkan
+		DIRECTX11,
+		DIRECTX12,
+		OPENGL,
+		VULKAN
 	};
 
 	Context();

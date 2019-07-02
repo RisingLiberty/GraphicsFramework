@@ -146,7 +146,7 @@ void Dx11Context::Present()
 
 Context::API Dx11Context::GetApiType() const
 {
-	return API::DirectX11;
+	return API::DIRECTX11;
 }
 
 Dx11Context::Dx11Resources Dx11Context::GetResources() const

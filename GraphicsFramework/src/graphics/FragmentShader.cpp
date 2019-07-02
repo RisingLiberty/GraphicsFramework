@@ -23,7 +23,7 @@ FragmentShader* FragmentShader::Create(const std::string& shaderName)
 	ASSERT(shaderName.find(".") == std::string::npos, "shader name can't have an extention!");
 
 	std::string path = "data/shaders/";
-	if (Context::GetApi() == Context::API::OpenGL)
+	if (Context::GetApi() == Context::API::OPENGL)
 		path += "opengl/" + shaderName + ".glsl";
 	else
 		path += "directx11/" + shaderName + ".hlsl";
@@ -37,7 +37,7 @@ FragmentShader* FragmentShader::Create(const std::string& shaderName)
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OpenGL:
+	case Context::API::OPENGL:
 	{
 		std::unique_ptr<FragmentShader> unique_shader = std::make_unique<OpenGLFragmentShader>(path);
 		shader = unique_shader.get();

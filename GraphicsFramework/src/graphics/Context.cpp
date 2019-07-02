@@ -23,15 +23,15 @@ void Context::Create(API api, Window* window)
 {
 	switch (api)
 	{
-	case Context::API::DirectX11:
+	case Context::API::DIRECTX11:
 		s_current = std::make_unique<Dx11Context>(window);
 		break;
-	case Context::API::DirectX12:
+	case Context::API::DIRECTX12:
 		break;
-	case Context::API::OpenGL:
+	case Context::API::OPENGL:
 		s_current = std::make_unique<OpenGLContext>(window);
 		break;
-	case Context::API::Vulkan:
+	case Context::API::VULKAN:
 		break;
 	default:
 		break;

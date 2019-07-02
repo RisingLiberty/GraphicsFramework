@@ -11,8 +11,8 @@ std::unique_ptr<IndexBuffer> IndexBuffer::Create(size_t count, BufferUsage usage
 {
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OpenGL: return std::make_unique<OpenGLIndexBuffer>(count, usage, data);
-	case Context::API::DirectX11: return std::make_unique<Dx11IndexBuffer>(count, usage, data);
+	case Context::API::OPENGL: return std::make_unique<OpenGLIndexBuffer>(count, usage, data);
+	case Context::API::DIRECTX11: return std::make_unique<Dx11IndexBuffer>(count, usage, data);
 	}
 
 	return nullptr;
