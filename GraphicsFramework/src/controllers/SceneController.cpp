@@ -21,10 +21,12 @@ void SceneController::Push(std::unique_ptr<Scene> scene)
 
 void SceneController::Update(float dTime)
 {
-	m_active_scene->Update(dTime);
+	if (m_active_scene)
+		m_active_scene->Update(dTime);
 }
 
 void SceneController::Draw()
 {
-	m_active_scene->Draw();
+	if (m_active_scene)
+		m_active_scene->Draw();
 }
