@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "OpenGLVertexArray.h"
-#include "HelperMethods.h"
+#include "OpenGLHelperMethods.h"
 #include "OpenGLVertexBuffer.h"
 
 #include <graphics/VertexLayout.h>

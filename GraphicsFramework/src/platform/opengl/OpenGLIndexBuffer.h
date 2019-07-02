@@ -5,7 +5,7 @@
 class OpenGLIndexBuffer : public IndexBuffer
 {
 public:
-	OpenGLIndexBuffer(size_t count);
+	OpenGLIndexBuffer(size_t count, BufferUsage usage, void* data);
 	~OpenGLIndexBuffer();
 
 	virtual void SetData(void* data) override;

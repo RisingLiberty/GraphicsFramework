@@ -1,6 +1,6 @@
 #pragma once
 
-#include "HelperMethods.h"
+#include "OpenGLHelperMethods.h"
 
 #include <graphics/ShaderUniform.h>
 #include <graphics/ShaderProgram.h>

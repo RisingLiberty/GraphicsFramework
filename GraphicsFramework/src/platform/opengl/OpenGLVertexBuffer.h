@@ -5,7 +5,7 @@
 class OpenGLVertexBuffer : public VertexBuffer
 {
 public:
-	OpenGLVertexBuffer(size_t size, BufferUsage usage, void* data = nullptr);
+	OpenGLVertexBuffer(size_t size, BufferUsage usage, void* data);
 	virtual ~OpenGLVertexBuffer();
 
 	

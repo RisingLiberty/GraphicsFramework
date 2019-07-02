@@ -6,7 +6,7 @@
 
 #include <scenegraph/SceneObject.h>
 
-#include "HelperMethods.h"
+#include "OpenGLHelperMethods.h"
 #include "OpenGLRenderer.h"
 #include "OpenGLVertexBuffer.h"
 #include "OpenGLIndexBuffer.h"
@@ -16,12 +16,10 @@
 #include "OpenGLVertexShader.h"
 #include "OpenGLFragmentShader.h"
 
-#include <graphics/MeshFactory.h>
 
 OpenGLRenderer::OpenGLRenderer()
 {
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-	ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 OpenGLRenderer::~OpenGLRenderer()
@@ -43,7 +41,7 @@ void OpenGLRenderer::Present()
 		VertexArray* va = VertexArray::Create(mesh->GetVertices(), mesh->GetVertexLayout());
 		mesh->GetIndices()->Bind();
 
-		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
+		GLCALL(glDrawElements(GL_TRIANGLES, (GLsizei)mesh->GetIndices()->GetCount(), GL_UNSIGNED_INT, 0));
 	}
 
 	ImGui_ImplOpenGL3_NewFrame();

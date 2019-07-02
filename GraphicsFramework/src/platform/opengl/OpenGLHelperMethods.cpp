@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "HelperMethods.h"
+#include "OpenGLHelperMethods.h"
 
 void GLClearError()
 {

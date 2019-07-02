@@ -1,19 +1,19 @@
 #include "stdafx.h"
 
 #include "OpenGLVertexBuffer.h"
-#include "HelperMethods.h"
+#include "OpenGLHelperMethods.h"
 
 #include <GL/glew.h>
 
 namespace
 {
-	int CustomBufferUsageToGLUsage(VertexBuffer::BufferUsage usage)
+	int CustomBufferUsageToGLUsage(BufferUsage usage)
 	{
 		switch (usage)
 		{
-		case VertexBuffer::BufferUsage::DYNAMIC:
+		case BufferUsage::DYNAMIC:
 			return GL_STATIC_DRAW;
-		case VertexBuffer::BufferUsage::STATIC:
+		case BufferUsage::STATIC:
 			return GL_DYNAMIC_DRAW;
 		}
 
