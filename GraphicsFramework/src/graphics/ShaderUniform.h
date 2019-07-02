@@ -9,8 +9,8 @@ enum class UniformDataType
 	VEC2,
 	VEC3,
 	VEC4,
-	MAT33,
-	MAT44,
+	MAT3,
+	MAT4,
 
 };
 
