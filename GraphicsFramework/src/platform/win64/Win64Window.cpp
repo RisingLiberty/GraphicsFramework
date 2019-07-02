@@ -21,6 +21,8 @@ namespace
 	}
 }
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 Win64Window::Win64Window(unsigned int width, unsigned int height, const std::wstring& title) :
 	Window(width, height),
 	m_hinstance(GetModuleHandle(0))
@@ -66,6 +68,9 @@ Win64Window::Win64Window(unsigned int width, unsigned int height, const std::wst
 		ThrowException(L"Failed to choose pixel format!");
 
 	ShowWindow(m_handle, SW_SHOWDEFAULT);
+
+	ImGui::CreateContext();
+	ImGui_ImplWin32_Init(m_handle);
 }
 
 Win64Window::~Win64Window() = default;
@@ -89,6 +94,9 @@ LRESULT Win64Window::WindowProcdureStatic(HWND hwnd, UINT message, WPARAM wParam
 
 LRESULT Win64Window::HandleEvent(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, message, wParam, lParam))
+		return true;
+
 	switch (message)
 	{
 		//Is sent when the window is being destroyed

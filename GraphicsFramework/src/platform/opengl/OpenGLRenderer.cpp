@@ -21,11 +21,12 @@
 OpenGLRenderer::OpenGLRenderer()
 {
 	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 OpenGLRenderer::~OpenGLRenderer()
 {
-
+	ImGui_ImplOpenGL3_Shutdown();
 }
 
 void OpenGLRenderer::Present()
@@ -44,6 +45,18 @@ void OpenGLRenderer::Present()
 
 		GLCALL(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0));
 	}
+
+	ImGui_ImplOpenGL3_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	bool is_open = true;
+	ImGui::Begin("Title", &is_open);
+	ImGui::Button("Button", ImVec2(100, 100));
+	ImGui::End();
+
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 	m_scene_objects.clear();
 }
