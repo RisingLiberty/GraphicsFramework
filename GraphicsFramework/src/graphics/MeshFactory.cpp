@@ -23,13 +23,10 @@ std::unique_ptr<Mesh> MeshFactory::CreateQuad()
 		2,3,0
 	};
 
-	std::unique_ptr<VertexBuffer> vb = VertexBuffer::Create(sizeof(positions));
-	std::unique_ptr<IndexBuffer> ib = IndexBuffer::Create(6);
+	std::unique_ptr<VertexBuffer> vb = VertexBuffer::Create(sizeof(positions) , BufferUsage::STATIC, positions.data());
+	std::unique_ptr<IndexBuffer> ib = IndexBuffer::Create(6, BufferUsage::STATIC, indices.data());
 	std::unique_ptr<VertexLayout> layout = std::make_unique<VertexLayout>();
 	layout->Push<float>(VertexAttributeType::POSITION, 2);
-
-	vb->SetData(positions.data());
-	ib->SetData(indices.data());
 
 	std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(vb, layout, ib);
 	return mesh;
