@@ -8,9 +8,6 @@ public:
 	OpenGLFragmentShader(const std::string& path);
 	~OpenGLFragmentShader();
 
-	void Bind() const override;
-	void Unbind() const override;
-
 	unsigned int GetId() const;
 
 protected:

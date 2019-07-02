@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "OpenGLFragmentShader.h"
-#include "HelperMethods.h"
+#include "OpenGLHelperMethods.h"
 
 #include <GL/glew.h>
 
@@ -35,16 +35,6 @@ OpenGLFragmentShader::OpenGLFragmentShader(const std::string& path):
 }
 
 OpenGLFragmentShader::~OpenGLFragmentShader()
-{
-
-}
-
-void OpenGLFragmentShader::Bind() const
-{
-
-}
-
-void OpenGLFragmentShader::Unbind() const
 {
 
 }

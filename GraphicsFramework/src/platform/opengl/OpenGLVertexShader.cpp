@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "OpenGLVertexShader.h"
-#include "HelperMethods.h"
+#include "OpenGLHelperMethods.h"
 
 #include <GL/glew.h>
 
@@ -35,16 +35,6 @@ OpenGLVertexShader::OpenGLVertexShader(const std::string& path) :
 }
 
 OpenGLVertexShader::~OpenGLVertexShader()
-{
-
-}
-
-void OpenGLVertexShader::Bind() const
-{
-
-}
-
-void OpenGLVertexShader::Unbind() const
 {
 
 }
