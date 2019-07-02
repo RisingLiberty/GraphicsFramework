@@ -10,8 +10,9 @@ public:
 
 	virtual void Bind() const override = 0;
 	virtual void Unbind() const override = 0;
+
+	static FragmentShader* Create(const std::string& path);
+
+protected:
 	virtual int Compile() override = 0;
-
-
-	static std::unique_ptr<FragmentShader> Create(const std::string& path);
 };
