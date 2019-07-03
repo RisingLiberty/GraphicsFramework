@@ -33,12 +33,37 @@ OpenGLShaderProgram::OpenGLShaderProgram(VertexShader* vs, FragmentShader* fs) :
 	assert(gl_fs);
 
 	this->Create({ gl_vs->GetId(), gl_fs->GetId() });
+	this->LoadUniforms();
 }
 
 
 OpenGLShaderProgram::~OpenGLShaderProgram()
 {
 	GLCALL(glDeleteProgram(m_id));
+}
+
+void OpenGLShaderProgram::LoadUniforms()
+{
+	int count;
+	GLCALL(glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &count));
+
+	std::vector<std::unique_ptr<ShaderUniform>> uniforms;
+
+	for (int i = 0; i < count; ++i)
+	{
+		GLint Count;
+		GLenum type;
+
+		const GLsizei bufSize = 16; //maximum name length
+		GLchar name[bufSize]; //uniform name
+		GLsizei nameLength; //uniform name length
+
+		GLCALL(glGetActiveUniform(m_id, i, bufSize, &nameLength, &Count, &type, name));
+
+		uniforms.push_back(std::make_unique<ShaderUniform>(Count, GLUniformDataTypeToCustomDataType(type), name));
+	}
+
+	m_uniforms = std::move(uniforms);
 }
 
 void OpenGLShaderProgram::Create(const std::vector<unsigned int>& shaderIDs)
@@ -156,8 +181,8 @@ void OpenGLShaderProgram::SetMat4Uniform(const std::string& name, float* values)
 
 int OpenGLShaderProgram::GetUniformLocation(const std::string& name)
 {
-	if (m_UniformLocationCache.find(name) != m_UniformLocationCache.end())
-		return m_UniformLocationCache[name];
+	if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end())
+		return m_uniform_location_cache[name];
 
 	GLCALL(int location = glGetUniformLocation(m_id, name.c_str()));
 	if (location == -1)
@@ -166,30 +191,11 @@ int OpenGLShaderProgram::GetUniformLocation(const std::string& name)
 		return -1;
 	}
 
-	m_UniformLocationCache[name] = location;
+	m_uniform_location_cache[name] = location;
 	return location;
 }
 
-std::vector<ShaderUniform> OpenGLShaderProgram::GetUniforms() const
+const std::vector<std::unique_ptr<ShaderUniform>>& OpenGLShaderProgram::GetUniforms() const
 {
-	int count;
-	GLCALL(glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &count));
-
-	std::vector<ShaderUniform> uniforms;
-
-	for (int i = 0; i < count; ++i)
-	{
-		GLint Count;
-		GLenum type;
-
-		const GLsizei bufSize = 16; //maximum name length
-		GLchar name[bufSize]; //uniform name
-		GLsizei nameLength; //uniform name length
-
-		GLCALL(glGetActiveUniform(m_id, i, bufSize, &nameLength, &Count, &type, name));
-
-		uniforms.push_back(ShaderUniform(Count, GLUniformDataTypeToCustomDataType(type), name));
-	}
-
-	return uniforms;
+	return m_uniforms;
 }

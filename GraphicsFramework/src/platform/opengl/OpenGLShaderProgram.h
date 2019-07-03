@@ -18,30 +18,33 @@ public:
 
 	unsigned int GetId() const { return m_id; }
 
-	virtual void SetBoolUniform(const std::string& name, bool uniform);
-	virtual void SetUShortUniform(const std::string& name, unsigned short& uniform);
-	virtual void SetShortUniform(const std::string& name, short uniform);
-	virtual void SetIntUniform(const std::string& name, int uniform);
-	virtual void SetUIntUniform(const std::string& name, unsigned int& uniform);
-	virtual void SetFloatUniform(const std::string& name, float uniform);
-	virtual void SetDoubleUniform(const std::string& name, double uniform);
-	virtual void SetVec2Uniform(const std::string& name, float x, float y);
-	virtual void SetVec2Uniform(const std::string& name, float* values);
-	virtual void SetVec3Uniform(const std::string& name, float x, float y, float z);
-	virtual void SetVec3Uniform(const std::string& name, float* values);
-	virtual void SetVec4Uniform(const std::string& name, float x, float y, float z, float w);
-	virtual void SetVec4Uniform(const std::string& name, float* values);
-	virtual void SetMat3Uniform(const std::string& name, float* values);
-	virtual void SetMat4Uniform(const std::string& name, float* values);
+	virtual void SetBoolUniform(const std::string& name, bool uniform) override;
+	virtual void SetUShortUniform(const std::string& name, unsigned short& uniform) override;
+	virtual void SetShortUniform(const std::string& name, short uniform) override;
+	virtual void SetIntUniform(const std::string& name, int uniform) override;
+	virtual void SetUIntUniform(const std::string& name, unsigned int& uniform) override;
+	virtual void SetFloatUniform(const std::string& name, float uniform) override;
+	virtual void SetDoubleUniform(const std::string& name, double uniform) override;
+	virtual void SetVec2Uniform(const std::string& name, float x, float y) override;
+	virtual void SetVec2Uniform(const std::string& name, float* values) override;
+	virtual void SetVec3Uniform(const std::string& name, float x, float y, float z) override;
+	virtual void SetVec3Uniform(const std::string& name, float* values) override;
+	virtual void SetVec4Uniform(const std::string& name, float x, float y, float z, float w) override;
+	virtual void SetVec4Uniform(const std::string& name, float* values) override;
+	virtual void SetMat3Uniform(const std::string& name, float* values) override;
+	virtual void SetMat4Uniform(const std::string& name, float* values) override;
 
 	int GetUniformLocation(const std::string& name);
 
-	std::vector<ShaderUniform> GetUniforms() const override;
+	const std::vector<std::unique_ptr<ShaderUniform>>& GetUniforms() const override;
 
 private:
 	void Create(const std::vector<unsigned int>& shaders);
 
+	void LoadUniforms();
+
 private:
 	unsigned int m_id;
-	std::map<std::string, int> m_UniformLocationCache;
+	std::map<std::string, int> m_uniform_location_cache;
+	std::vector<std::unique_ptr<ShaderUniform>> m_uniforms;
 };
