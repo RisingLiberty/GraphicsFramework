@@ -3,11 +3,13 @@
 #include "Dx11Context.h"
 #include "Dx11HelperMethods.h"
 #include "platform/win64/Win64Window.h"
+#include "platform/directx11/Dx11Renderer.h"
 
 Dx11Context::Dx11Context(Window* window)
 {
 	m_is_vsync = window->GetPropeties().vsync;
 	this->InitD3D(window);
+	m_renderer = std::make_unique<Dx11Renderer>();
 }
 
 Dx11Context::~Dx11Context()
