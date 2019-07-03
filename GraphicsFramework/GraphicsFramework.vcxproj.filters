@@ -201,7 +201,19 @@
     <ClCompile Include="src\platform\directx11\Dx11ShaderUniform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\platform\directx11\Dx11CBuffer.cpp">
+    <ClCompile Include="src\platform\directx11\Dx11ShaderStruct.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\directx11\Dx11ShaderTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\directx11\Dx11ShaderSamplerState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\directx11\Dx11GlobalShaderUniform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -407,7 +419,19 @@
     <ClInclude Include="src\platform\directx11\Dx11ShaderUniform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\platform\directx11\Dx11CBuffer.h">
+    <ClInclude Include="src\platform\directx11\Dx11ShaderStruct.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\directx11\Dx11ShaderTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\directx11\Dx11ShaderSamplerState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\directx11\Dx11GlobalShaderUniform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
