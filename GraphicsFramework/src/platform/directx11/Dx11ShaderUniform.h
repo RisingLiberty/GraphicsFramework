@@ -5,7 +5,9 @@
 struct Dx11ShaderUniform : public ShaderUniform
 {
 public:
-	Dx11ShaderUniform(int size, UniformDataType type, const std::string& name);
+	Dx11ShaderUniform(const std::string& name, UniformDataType type, unsigned int offset = 0, int size = 0);
 	virtual ~Dx11ShaderUniform();
 
+public:
+	unsigned int offset;
 };
