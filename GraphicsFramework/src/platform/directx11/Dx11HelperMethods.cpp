@@ -42,3 +42,13 @@ Dx11Context* GetDx11Context()
 {
 	return dynamic_cast<Dx11Context*>(Context::GetCurrent());
 }
+
+ID3D11Device* GetDx11Device()
+{
+	return GetDx11Context()->GetDevice();
+}
+
+ID3D11DeviceContext* GetDx11DeviceContext()
+{
+	return GetDx11Context()->GetDeviceContext();
+}

@@ -2,6 +2,9 @@
 
 bool CheckD3DError(HRESULT result);
 class Dx11Context* GetDx11Context();
+ID3D11Device* GetDx11Device();
+ID3D11DeviceContext* GetDx11DeviceContext();
+
 
 #define DXCALL(function)\
 {\
