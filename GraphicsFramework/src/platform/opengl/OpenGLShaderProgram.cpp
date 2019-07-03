@@ -51,16 +51,16 @@ void OpenGLShaderProgram::LoadUniforms()
 
 	for (int i = 0; i < count; ++i)
 	{
-		GLint Count;
+		GLint size;
 		GLenum type;
 
 		const GLsizei bufSize = 16; //maximum name length
 		GLchar name[bufSize]; //uniform name
 		GLsizei nameLength; //uniform name length
 
-		GLCALL(glGetActiveUniform(m_id, i, bufSize, &nameLength, &Count, &type, name));
+		GLCALL(glGetActiveUniform(m_id, i, bufSize, &nameLength, &size, &type, name));
 
-		uniforms.push_back(std::make_unique<ShaderUniform>(Count, GLUniformDataTypeToCustomDataType(type), name));
+		uniforms.push_back(std::make_unique<ShaderUniform>(name, GLUniformDataTypeToCustomDataType(type), size));
 	}
 
 	m_uniforms = std::move(uniforms);
