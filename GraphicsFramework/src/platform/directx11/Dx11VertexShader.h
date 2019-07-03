@@ -12,6 +12,9 @@ protected:
 	int Compile() override;
 
 private:
-	ID3DBlob* m_shader_compiled_code;
+	ComPtr<ID3DBlob> m_shader_compiled_code;
+	ComPtr<ID3D11VertexShader> m_shader;
+
+
 };
 
