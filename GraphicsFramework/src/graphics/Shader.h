@@ -3,11 +3,17 @@
 class Shader
 {
 public:
+	enum class Type
+	{
+		VERTEX,
+		FRAGMENT
+	};
+
 	Shader(const std::string& path);
 	virtual ~Shader();
 
 	const std::string& GetPath() const;
-
+	virtual Type GetType() const = 0;
 protected:
 	virtual int Compile() = 0;
 
