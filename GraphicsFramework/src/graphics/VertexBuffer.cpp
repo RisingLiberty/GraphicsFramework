@@ -11,8 +11,8 @@ std::unique_ptr<VertexBuffer> VertexBuffer::Create(size_t size, BufferUsage usag
 {
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OpenGL: return std::make_unique<OpenGLVertexBuffer>(size, usage, data);
-	case Context::API::DirectX11: return std::make_unique<Dx11VertexBuffer>(size, usage, data);
+	case Context::API::OPENGL: return std::make_unique<OpenGLVertexBuffer>(size, usage, data);
+	case Context::API::DIRECTX11: return std::make_unique<Dx11VertexBuffer>(size, usage, data);
 	}
 
 	return nullptr;
