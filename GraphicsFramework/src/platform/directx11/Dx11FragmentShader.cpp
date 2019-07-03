@@ -4,15 +4,50 @@
 #include "Dx11HelperMethods.h"
 #include "Dx11Context.h"
 
+namespace
+{
+	std::string LoadCode(const std::string& path)
+	{
+		std::fstream file(path, std::ios::in | std::ios::ate);
+
+		if (!file.is_open())
+		{
+			spdlog::warn("Failed to open shader at {}", path);
+			return "";
+		}
+
+		size_t size = file.tellg();
+
+		std::vector<char> content(size);
+		file.seekg(0);
+
+		file.read(content.data(), size);
+
+		return content.data();
+	}
+}
+
+
 Dx11FragmentShader::Dx11FragmentShader(const std::string& path):
 	FragmentShader(path)
 {
 	this->Compile();
+	m_code = LoadCode(path);
 }
 
 
 Dx11FragmentShader::~Dx11FragmentShader()
 {
+}
+
+std::string Dx11FragmentShader::GetCode() const
+{
+	return m_code;
+}
+
+ID3D11PixelShader* Dx11FragmentShader::GetShader() const
+{
+	return m_shader.Get();
 }
 
 int Dx11FragmentShader::Compile()

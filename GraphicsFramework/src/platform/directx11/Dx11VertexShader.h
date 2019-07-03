@@ -8,6 +8,9 @@ public:
 	Dx11VertexShader(const std::string& path);
 	virtual ~Dx11VertexShader();
 
+	std::string GetCode() const;
+	ID3D11VertexShader* GetShader() const;
+
 protected:
 	int Compile() override;
 
@@ -15,6 +18,6 @@ private:
 	ComPtr<ID3DBlob> m_shader_compiled_code;
 	ComPtr<ID3D11VertexShader> m_shader;
 
-
+	std::string m_code;
 };
 
