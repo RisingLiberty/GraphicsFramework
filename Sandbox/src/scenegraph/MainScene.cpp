@@ -26,6 +26,8 @@ MainScene::MainScene(const std::string& name) :
 
 	ShaderProgram* program = ShaderProgram::Create(vs, fs);
 	std::unique_ptr<Material> material = std::make_unique<Material>(program);
+	float color[] = { 1.0f, 0.3f, 0.8f, 1.0f };
+	material->SetParameter("u_Color", color);
 
 	m_test_quad = std::make_unique<SceneObject>(mesh, material);
 }
