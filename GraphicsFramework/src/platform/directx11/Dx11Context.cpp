@@ -9,7 +9,7 @@ Dx11Context::Dx11Context(Window* window)
 {
 	m_is_vsync = window->GetPropeties().vsync;
 	this->InitD3D(window);
-	m_renderer = std::make_unique<Dx11Renderer>();
+	m_renderer = std::make_unique<Dx11Renderer>(m_render_target_view.Get());
 }
 
 Dx11Context::~Dx11Context()

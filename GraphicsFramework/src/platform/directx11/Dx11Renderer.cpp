@@ -9,8 +9,10 @@
 
 #include "Dx11Context.h"
 #include "Dx11Renderer.h"
+#include "Dx11HelperMethods.h"
 
-Dx11Renderer::Dx11Renderer()
+Dx11Renderer::Dx11Renderer(ID3D11RenderTargetView* renderTargetView):
+	m_render_target_view(renderTargetView)
 {
 	m_clear_color = DirectX::Colors::Red;
 }
@@ -27,8 +29,6 @@ void Dx11Renderer::Present()
 		Mesh* mesh = object->GetMesh();
 		Material* material = object->GetMaterial();
 
-		float color[] = { 1.0f, 0.3f, 0.8f, 1.0f };
-		material->SetParameter("u_Color", color, sizeof(color));
 		material->Use();
 
 		VertexArray* va = VertexArray::Create(mesh->GetVertices(), mesh->GetVertexLayout());
@@ -37,14 +37,18 @@ void Dx11Renderer::Present()
 		ID3D11DeviceContext* device_context = dynamic_cast<Dx11Context*>(Context::GetCurrent())->GetDeviceContext();
 		device_context->DrawIndexed((unsigned int)mesh->GetIndices()->GetCount(), 0, 0);
 	}
+
+	m_scene_objects.clear();
 }
 
 void Dx11Renderer::ClearAllBuffers()
 {
+	this->ClearColorBuffer();
 }
 
 void Dx11Renderer::ClearColorBuffer()
 {
+	GetDx11DeviceContext()->ClearRenderTargetView(m_render_target_view.Get(), &m_clear_color[0]);
 }
 
 void Dx11Renderer::ClearDepthStencilBuffer()

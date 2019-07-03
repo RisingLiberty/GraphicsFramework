@@ -5,7 +5,7 @@
 class Dx11Renderer : public Renderer
 {
 public:
-	Dx11Renderer();
+	Dx11Renderer(ID3D11RenderTargetView* renderTargetView);
 	~Dx11Renderer();
 
 	void Present() override;
@@ -17,4 +17,5 @@ public:
 
 private:
 	DirectX::XMVECTORF32 m_clear_color = DirectX::Colors::Red;
+	ComPtr<ID3D11RenderTargetView> m_render_target_view;
 };
