@@ -3,6 +3,8 @@
 #include "Win64Window.h"
 #include "DefaultWndClass.h"
 
+#include "graphics/Context.h"
+
 namespace
 {
 	PIXELFORMATDESCRIPTOR GetPixelFormat()
@@ -147,5 +149,5 @@ void* Win64Window::GetHandle() const
 
 void Win64Window::Present()
 {
-	SwapBuffers(m_hdc);
+	Context::GetCurrent()->Present();
 }
