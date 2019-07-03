@@ -137,9 +137,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\platform\directx11\Dx11CBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11IndexBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderProgram.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11ShaderUniform.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexArray.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexShader.cpp" />
@@ -221,9 +223,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\BufferUsage.h" />
+    <ClInclude Include="src\platform\directx11\Dx11CBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11FragmentShader.h" />
     <ClInclude Include="src\platform\directx11\Dx11IndexBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderProgram.h" />
+    <ClInclude Include="src\platform\directx11\Dx11ShaderUniform.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexArray.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexShader.h" />
