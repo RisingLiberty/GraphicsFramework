@@ -34,8 +34,6 @@ void OpenGLRenderer::Present()
 		Mesh* mesh = object->GetMesh();
 		Material* material = object->GetMaterial();
 
-		float color[] = { 1.0f, 0.3f, 0.8f, 1.0f };
-		material->SetParameter("u_Color", color, sizeof(color));
 		material->Use();
 
 		VertexArray* va = VertexArray::Create(mesh->GetVertices(), mesh->GetVertexLayout());
