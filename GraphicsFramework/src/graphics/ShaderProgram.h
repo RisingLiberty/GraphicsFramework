@@ -33,7 +33,7 @@ public:
 	VertexShader* GetVertexShader() const;
 	FragmentShader* GetFragmentShader() const;
 
-	virtual std::vector<ShaderUniform> GetUniforms() const = 0;
+	virtual const std::vector<std::unique_ptr<ShaderUniform>>& GetUniforms() const = 0;
 
 	static ShaderProgram* Create(VertexShader* vs, FragmentShader* fs);
 

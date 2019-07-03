@@ -4,6 +4,7 @@
 #include "Context.h"
 
 #include "platform/opengl/OpenGLFragmentShader.h"
+#include "platform/directx11/Dx11FragmentShader.h"
 
 #include "controllers/ShaderController.h"
 
@@ -35,15 +36,29 @@ FragmentShader* FragmentShader::Create(const std::string& shaderName)
 	if (shader)
 		return shader;
 
+	std::unique_ptr<FragmentShader> unique_shader;
+
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case Context::API::OPENGL:
 	{
-		std::unique_ptr<FragmentShader> unique_shader = std::make_unique<OpenGLFragmentShader>(path);
+		unique_shader = std::make_unique<OpenGLFragmentShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushFragmentShader(unique_shader);
+		break;
 	}
+	case Context::API::DIRECTX11:
+		unique_shader = std::make_unique<Dx11FragmentShader>(path);
+		shader = unique_shader.get();
+		shader_controller->PushFragmentShader(unique_shader);
+		break;
+
 	}
 
 	return shader;
+}
+
+Shader::Type FragmentShader::GetType() const
+{
+	return Type::VERTEX;
 }

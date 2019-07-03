@@ -5,6 +5,7 @@
 #include "Context.h"
 
 #include "platform/opengl/OpenGLVertexShader.h"
+#include "platform/directx11/Dx11VertexShader.h"
 
 #include "controllers/ShaderController.h"
 
@@ -34,15 +35,28 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 	if (shader)
 		return shader;
 
+	std::unique_ptr<VertexShader> unique_shader;
+
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case Context::API::OPENGL:
 	{
-		std::unique_ptr<VertexShader> unique_shader = std::make_unique<OpenGLVertexShader>(path);
+		unique_shader = std::make_unique<OpenGLVertexShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);
+		break;
+	case Context::API::DIRECTX11:
+		unique_shader = std::make_unique<Dx11VertexShader>(path);
+		shader = unique_shader.get();
+		shader_controller->PushVertexShader(unique_shader);
+		break;
 	}
 	}
 
 	return shader;
+}
+
+Shader::Type VertexShader::GetType() const
+{
+	return Type::VERTEX;
 }
