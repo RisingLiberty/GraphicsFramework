@@ -82,8 +82,3 @@ void Dx11ShaderProgram::SetMat3Uniform(const std::string & name, float * values)
 void Dx11ShaderProgram::SetMat4Uniform(const std::string & name, float * values)
 {
 }
-
-const std::vector<std::unique_ptr<ShaderUniform>>& Dx11ShaderProgram::GetUniforms() const
-{
-	return {};
-}

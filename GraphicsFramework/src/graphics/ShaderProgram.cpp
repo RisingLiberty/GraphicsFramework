@@ -30,6 +30,11 @@ FragmentShader* ShaderProgram::GetFragmentShader() const
 	return m_fragment_shader;
 }
 
+const std::vector<std::unique_ptr<ShaderUniform>>& ShaderProgram::GetUniforms() const
+{
+	return m_uniforms;
+}
+
 ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
 {
 	ShaderController* shader_controller = Context::GetCurrent()->GetShaderController();

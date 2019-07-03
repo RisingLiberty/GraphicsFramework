@@ -36,8 +36,6 @@ public:
 
 	int GetUniformLocation(const std::string& name);
 
-	const std::vector<std::unique_ptr<ShaderUniform>>& GetUniforms() const override;
-
 private:
 	void Create(const std::vector<unsigned int>& shaders);
 
@@ -46,5 +44,4 @@ private:
 private:
 	unsigned int m_id;
 	std::map<std::string, int> m_uniform_location_cache;
-	std::vector<std::unique_ptr<ShaderUniform>> m_uniforms;
 };

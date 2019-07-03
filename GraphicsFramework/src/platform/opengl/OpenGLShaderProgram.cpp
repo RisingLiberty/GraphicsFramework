@@ -195,7 +195,3 @@ int OpenGLShaderProgram::GetUniformLocation(const std::string& name)
 	return location;
 }
 
-const std::vector<std::unique_ptr<ShaderUniform>>& OpenGLShaderProgram::GetUniforms() const
-{
-	return m_uniforms;
-}

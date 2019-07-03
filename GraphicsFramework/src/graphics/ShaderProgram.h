@@ -33,12 +33,13 @@ public:
 	VertexShader* GetVertexShader() const;
 	FragmentShader* GetFragmentShader() const;
 
-	virtual const std::vector<std::unique_ptr<ShaderUniform>>& GetUniforms() const = 0;
+	const std::vector<std::unique_ptr<ShaderUniform>>& GetUniforms() const;
 
 	static ShaderProgram* Create(VertexShader* vs, FragmentShader* fs);
 
-private:
+protected:
 	VertexShader* m_vertex_shader;
 	FragmentShader* m_fragment_shader;
+	std::vector<std::unique_ptr<ShaderUniform>> m_uniforms;
 };
 

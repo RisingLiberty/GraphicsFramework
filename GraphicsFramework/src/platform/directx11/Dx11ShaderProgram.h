@@ -27,7 +27,6 @@ public:
 	virtual void SetMat3Uniform(const std::string& name, float* values) override;
 	virtual void SetMat4Uniform(const std::string& name, float* values) override;
 
-	const std::vector<std::unique_ptr<ShaderUniform>>& GetUniforms() const override;
 private:
 
 	
