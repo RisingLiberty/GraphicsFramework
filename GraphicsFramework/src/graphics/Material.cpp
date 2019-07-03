@@ -27,16 +27,12 @@ namespace
 Material::Material(ShaderProgram* program) :
 	m_program(program)
 {
-	std::vector<ShaderUniform> uniforms = m_program->GetUniforms();
+	const std::vector<std::unique_ptr<ShaderUniform>>& uniforms = m_program->GetUniforms();
 	m_parameters.reserve(uniforms.size());
 
-	for (ShaderUniform uniform : uniforms)
+	for (const std::unique_ptr<ShaderUniform>& uniform : uniforms)
 	{
-		MaterialParameter parameter;
-		parameter.name = uniform.name;
-		parameter.data_type = UniformDataTypeToMaterialDataType(uniform.type);
-
-		m_parameters.push_back(parameter);
+		m_parameters.emplace_back(uniform->name, UniformDataTypeToMaterialDataType(uniform->type));
 	}
 }
 
@@ -45,13 +41,46 @@ Material::~Material()
 
 }
 
-void Material::SetParameter(const std::string& name, void* data, size_t size)
+void Material::AddParameter(const std::string& name, MaterialParameterDataType type, void* data)
 {
+	bool parameter_already_exists = false;
 	for (const MaterialParameter& parameter : m_parameters)
 	{
 		if (parameter.name == name)
 		{
-			memcpy(parameter.data, data, size);
+			parameter_already_exists = true;
+			break;
+		}
+	}
+
+	if (parameter_already_exists)
+		spdlog::warn("parameter with name '{}' already exists in material", name);
+	else
+		m_parameters.emplace_back(name, type, data);
+
+}
+
+void Material::SetParameter(const std::string& name, void* data)
+{
+	for (MaterialParameter& parameter : m_parameters)
+	{
+		if (parameter.name == name)
+		{
+			parameter.SetData(data);
+			return;
+		}
+	}
+
+	spdlog::warn("material parameter not found!");
+}
+
+void Material::SetParameter(const std::string& name, void* data, size_t size)
+{
+	for (MaterialParameter& parameter : m_parameters)
+	{
+		if (parameter.name == name)
+		{
+			parameter.SetData(data);
 			return;
 		}
 	}

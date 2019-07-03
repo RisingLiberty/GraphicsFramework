@@ -2,10 +2,16 @@
 
 #include "MaterialParameter.h"
 
-MaterialParameter::MaterialParameter()
+MaterialParameter::MaterialParameter(const std::string& name, MaterialParameterDataType dataType, void* data) :
+	name(name),
+	data_type(dataType)
 {
-	data = malloc(GetSize());
-	ZeroMemory(data, GetSize());
+	this->data = malloc(GetSize());
+
+	if (data)
+		memcpy(this->data, data, GetSize());
+	else
+		ZeroMemory(this->data, GetSize());
 }
 
 MaterialParameter::MaterialParameter(const MaterialParameter& other)
@@ -54,7 +60,7 @@ MaterialParameter::~MaterialParameter()
 	free(data);
 }
 
-unsigned int MaterialParameter::GetSize() const
+size_t MaterialParameter::GetSize() const
 {
 	switch (data_type)
 	{
@@ -73,4 +79,10 @@ unsigned int MaterialParameter::GetSize() const
 	}
 
 	return 0;
+}
+
+void MaterialParameter::SetData(void* data)
+{
+	ASSERT(GetSize(), "data size of material parameter is 0!");
+	memcpy(this->data, data, GetSize());
 }

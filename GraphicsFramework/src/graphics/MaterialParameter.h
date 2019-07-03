@@ -20,7 +20,7 @@ enum class MaterialParameterDataType
 
 struct MaterialParameter
 {
-	MaterialParameter();
+	MaterialParameter(const std::string& name, MaterialParameterDataType dataType, void* data = nullptr);
 	MaterialParameter(const MaterialParameter& other);
 	MaterialParameter(const MaterialParameter&& other);
 	MaterialParameter& operator=(const MaterialParameter& other);
@@ -32,6 +32,7 @@ struct MaterialParameter
 	MaterialParameterDataType data_type;
 	void* data;
 
-	unsigned int GetSize() const;
+	size_t GetSize() const;
+	void SetData(void* data);
 
 };
