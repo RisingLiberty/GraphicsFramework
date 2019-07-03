@@ -8,3 +8,5 @@ ShaderUniform::ShaderUniform(int size, UniformDataType type, const std::string& 
 	name(name)
 {
 }
+
+ShaderUniform::~ShaderUniform() = default;
