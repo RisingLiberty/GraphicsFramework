@@ -12,6 +12,7 @@ public:
 	virtual void SetData(void* data) = 0;
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;
+	virtual size_t GetSize() const;
 
 	static std::unique_ptr<VertexBuffer> Create(size_t size, BufferUsage usage = BufferUsage::STATIC, void* data = nullptr);
 

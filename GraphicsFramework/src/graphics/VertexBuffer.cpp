@@ -29,3 +29,8 @@ VertexBuffer::~VertexBuffer()
 {
 
 }
+
+size_t VertexBuffer::GetSize() const
+{
+	return m_size;
+}
