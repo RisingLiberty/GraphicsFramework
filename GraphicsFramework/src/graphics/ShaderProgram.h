@@ -11,24 +11,11 @@ public:
 	ShaderProgram(VertexShader* vertexShader, FragmentShader* fragmentShader);
 	virtual ~ShaderProgram();
 
-	virtual void SetBoolUniform(const std::string& name,  bool uniform) = 0;
-	virtual void SetUShortUniform(const std::string& name,  unsigned short& uniform) = 0;
-	virtual void SetShortUniform(const std::string& name,  short uniform) = 0;
-	virtual void SetIntUniform(const std::string& name,  int uniform) = 0;
-	virtual void SetUIntUniform(const std::string& name,  unsigned int& uniform) = 0;
-	virtual void SetFloatUniform(const std::string& name,  float uniform) = 0;
-	virtual void SetDoubleUniform(const std::string& name,  double uniform) = 0;
-	virtual void SetVec2Uniform(const std::string& name, float x, float y) = 0;
-	virtual void SetVec2Uniform(const std::string& name, float* values) = 0;
-	virtual void SetVec3Uniform(const std::string& name, float x, float y, float z) = 0;
-	virtual void SetVec3Uniform(const std::string& name, float* values) = 0;
-	virtual void SetVec4Uniform(const std::string& name, float x, float y, float z, float w) = 0;
-	virtual void SetVec4Uniform(const std::string& name, float* values) = 0;
-	virtual void SetMat3Uniform(const std::string& name, float* values) = 0;
-	virtual void SetMat4Uniform(const std::string& name, float* values) = 0;
+	void SetUniform(const std::string& name, void* data, unsigned int size);
 
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;
+	virtual void UploadVariables() = 0;
 
 	VertexShader* GetVertexShader() const;
 	FragmentShader* GetFragmentShader() const;

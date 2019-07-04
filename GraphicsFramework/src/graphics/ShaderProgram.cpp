@@ -20,6 +20,20 @@ ShaderProgram::~ShaderProgram()
 
 }
 
+void ShaderProgram::SetUniform(const std::string& name, void* data, unsigned int size)
+{
+	for (std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
+	{
+		if (uniform->name == name)
+		{
+			memcpy(uniform->data, data, size);
+			return;
+		}
+
+	}
+	ASSERT(false, "uniform not found in buffer");
+}
+
 VertexShader* ShaderProgram::GetVertexShader() const
 {
 	return m_vertex_shader;

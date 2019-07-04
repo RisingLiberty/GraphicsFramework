@@ -104,77 +104,80 @@ void OpenGLShaderProgram::Unbind() const
 	GLCALL(glUseProgram(0));
 }
 
-void OpenGLShaderProgram::SetBoolUniform(const std::string& name, bool uniform)
+void OpenGLShaderProgram::UploadVariables()
+{
+	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
+	{
+		switch (uniform->type)
+		{
+		case UniformDataType::UNSPECIFIED: ASSERT(false, "uniform data type unspecified!");			break;
+		case UniformDataType::INT:		UploadIntUniform(uniform->name, (int)*uniform->data);		break;
+		case UniformDataType::FLOAT:	UploadFloatUniform(uniform->name, (float)*uniform->data);	break;
+		case UniformDataType::VEC2:		UploadVec2Uniform(uniform->name, (float*)uniform->data);	break;
+		case UniformDataType::VEC3:		UploadVec3Uniform(uniform->name, (float*)uniform->data);	break;
+		case UniformDataType::VEC4:		UploadVec4Uniform(uniform->name, (float*)uniform->data);	break;
+		case UniformDataType::MAT3:		UploadMat3Uniform(uniform->name, (float*)uniform->data);	break;
+		case UniformDataType::MAT4:		UploadMat4Uniform(uniform->name, (float*)uniform->data);	break;
+		}
+	}
+}
+
+void OpenGLShaderProgram::UploadBoolUniform(const std::string& name, bool uniform)
 {
 	GLCALL(glUniform1i(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::SetUShortUniform(const std::string& name, unsigned short & uniform)
+void OpenGLShaderProgram::UploadUShortUniform(const std::string& name, unsigned short & uniform)
 {
 	GLCALL(glUniform1ui(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::SetShortUniform(const std::string& name, short uniform)
+void OpenGLShaderProgram::UploadShortUniform(const std::string& name, short uniform)
 {
 	GLCALL(glUniform1i(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::SetIntUniform(const std::string& name, int uniform)
+void OpenGLShaderProgram::UploadIntUniform(const std::string& name, int uniform)
 {
 	GLCALL(glUniform1i(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::SetUIntUniform(const std::string& name, unsigned int & uniform)
+void OpenGLShaderProgram::UploadUIntUniform(const std::string& name, unsigned int & uniform)
 {
 	GLCALL(glUniform1ui(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::SetFloatUniform(const std::string& name, float uniform)
+void OpenGLShaderProgram::UploadFloatUniform(const std::string& name, float uniform)
 {
 	GLCALL(glUniform1f(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::SetDoubleUniform(const std::string& name, double uniform)
+void OpenGLShaderProgram::UploadDoubleUniform(const std::string& name, double uniform)
 {
 	GLCALL(glUniform1d(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::SetVec2Uniform(const std::string& name, float x, float y)
-{
-	GLCALL(glUniform2f(GetUniformLocation(name), x, y));
-}
-
-void OpenGLShaderProgram::SetVec2Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadVec2Uniform(const std::string& name, float* values)
 {
 	GLCALL(glUniform2f(GetUniformLocation(name), values[0], values[1]));
 }
 
-void OpenGLShaderProgram::SetVec3Uniform(const std::string& name, float x, float y, float z)
-{
-	GLCALL(glUniform3f(GetUniformLocation(name), x, y, z));
-}
-
-void OpenGLShaderProgram::SetVec3Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadVec3Uniform(const std::string& name, float* values)
 {
 	GLCALL(glUniform3f(GetUniformLocation(name), values[0], values[1], values[2]));
 }
 
-void OpenGLShaderProgram::SetVec4Uniform(const std::string& name, float x, float y, float z, float w)
-{
-	GLCALL(glUniform4f(GetUniformLocation(name), x, y, z, w));
-}
-
-void OpenGLShaderProgram::SetVec4Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadVec4Uniform(const std::string& name, float* values)
 {
 	GLCALL(glUniform4f(GetUniformLocation(name), values[0], values[1], values[2], values[3]));
 }
 
-void OpenGLShaderProgram::SetMat3Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadMat3Uniform(const std::string& name, float* values)
 {
 	GLCALL(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, values));
 }
 
-void OpenGLShaderProgram::SetMat4Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadMat4Uniform(const std::string& name, float* values)
 {
 	GLCALL(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, values));
 }

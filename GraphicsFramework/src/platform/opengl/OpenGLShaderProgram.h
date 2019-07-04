@@ -15,29 +15,28 @@ public:
 
 	void Bind() const override;
 	void Unbind() const override;
+	void UploadVariables() override;
 
 	unsigned int GetId() const { return m_id; }
-
-	virtual void SetBoolUniform(const std::string& name, bool uniform) override;
-	virtual void SetUShortUniform(const std::string& name, unsigned short& uniform) override;
-	virtual void SetShortUniform(const std::string& name, short uniform) override;
-	virtual void SetIntUniform(const std::string& name, int uniform) override;
-	virtual void SetUIntUniform(const std::string& name, unsigned int& uniform) override;
-	virtual void SetFloatUniform(const std::string& name, float uniform) override;
-	virtual void SetDoubleUniform(const std::string& name, double uniform) override;
-	virtual void SetVec2Uniform(const std::string& name, float x, float y) override;
-	virtual void SetVec2Uniform(const std::string& name, float* values) override;
-	virtual void SetVec3Uniform(const std::string& name, float x, float y, float z) override;
-	virtual void SetVec3Uniform(const std::string& name, float* values) override;
-	virtual void SetVec4Uniform(const std::string& name, float x, float y, float z, float w) override;
-	virtual void SetVec4Uniform(const std::string& name, float* values) override;
-	virtual void SetMat3Uniform(const std::string& name, float* values) override;
-	virtual void SetMat4Uniform(const std::string& name, float* values) override;
 
 	int GetUniformLocation(const std::string& name);
 
 private:
 	void Create(const std::vector<unsigned int>& shaders);
+
+	void UploadBoolUniform(const std::string& name, bool uniform);
+	void UploadUShortUniform(const std::string& name, unsigned short& uniform);
+	void UploadShortUniform(const std::string& name, short uniform);
+	void UploadIntUniform(const std::string& name, int uniform);
+	void UploadUIntUniform(const std::string& name, unsigned int& uniform);
+	void UploadFloatUniform(const std::string& name, float uniform);
+	void UploadDoubleUniform(const std::string& name, double uniform);
+	void UploadVec2Uniform(const std::string& name, float* values);
+	void UploadVec3Uniform(const std::string& name, float* values);
+	void UploadVec4Uniform(const std::string& name, float* values);
+	void UploadMat3Uniform(const std::string& name, float* values);
+	void UploadMat4Uniform(const std::string& name, float* values);
+
 
 	void LoadUniforms();
 
