@@ -140,6 +140,7 @@
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11IndexBuffer.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11ShaderParser.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderProgram.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderSamplerState.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderStruct.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="src\platform\directx11\Dx11Context.h" />
     <ClInclude Include="src\platform\directx11\Dx11Renderer.h" />
     <ClInclude Include="src\platform\directx11\Dx11HelperMethods.h" />
+    <ClInclude Include="src\platform\directx11\Dx11ShaderParser.h" />
     <ClInclude Include="src\platform\opengl\OpenGLHelperMethods.h" />
     <ClInclude Include="src\platform\opengl\OpenGLContext.h" />
     <ClInclude Include="src\platform\opengl\OpenGLFragmentShader.h" />
