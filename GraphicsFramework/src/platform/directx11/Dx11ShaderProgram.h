@@ -2,6 +2,25 @@
 
 #include "graphics/ShaderProgram.h"
 
+#include "Dx11ShaderStruct.h"
+#include "Dx11ShaderCBuffer.h"
+#include "Dx11ShaderTexture.h"
+#include "Dx11ShaderSamplerState.h"
+
+
+struct Dx11ShaderCBuffer;
+
+struct ParsedShader
+{
+	ParsedShader();
+	~ParsedShader();
+
+	std::vector<Dx11ShaderStruct> structs;
+	std::vector<Dx11ShaderCBuffer> buffers;
+	std::vector<Dx11ShaderTexture> textures;
+	std::vector<Dx11ShaderSamplerState> sampler_states;
+};
+
 class Dx11ShaderProgram : public ShaderProgram
 {
 public:
@@ -28,7 +47,24 @@ public:
 	virtual void SetMat4Uniform(const std::string& name, float* values) override;
 
 private:
+	class Dx11VertexShader* GetDxVertexShader() const;
+	class Dx11FragmentShader* GetDxFragmentShader() const;
 
-	
+private:
+
+	std::unique_ptr<Dx11ShaderCBuffer> m_vs_constant_buffer;
+	std::unique_ptr<Dx11ShaderCBuffer> m_fs_constant_buffer;
+
+	//// Allow only 1 per shader vs and ps per pass buffer
+	//std::unique_ptr<Dx11ShaderCBuffer> m_vs_per_pass_buffer;
+	//std::unique_ptr<Dx11ShaderCBuffer> m_fs_per_pass_buffer;
+	//
+	//// Allow only 1 per shader vs and ps per object buffer
+	//std::unique_ptr<Dx11ShaderCBuffer> m_vs_per_object_buffer;
+	//std::unique_ptr<Dx11ShaderCBuffer> m_fs_per_object_buffer;
+
+	//ParsedShader m_vs_parsed;
+	//ParsedShader m_fs_parsed;
+
 };
 
