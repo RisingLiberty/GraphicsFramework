@@ -42,17 +42,6 @@ void OpenGLRenderer::Present()
 		GLCALL(glDrawElements(GL_TRIANGLES, (GLsizei)mesh->GetIndices()->GetCount(), GL_UNSIGNED_INT, 0));
 	}
 
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
-	ImGui::Begin("Title");
-	ImGui::Button("Button", ImVec2(100, 100));
-	ImGui::End();
-
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 	m_scene_objects.clear();
 }
 

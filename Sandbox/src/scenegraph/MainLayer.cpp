@@ -26,7 +26,7 @@ MainLayer::MainLayer():
 
 	std::unique_ptr<Mesh> mesh = MeshFactory::CreateQuad();
 	std::unique_ptr<LayerObject> quad = std::make_unique<SceneObject>("Quad", mesh, material);
-	m_test_quad = this->PushObject(quad);
+	m_test_quad = this->PushObject(std::move(quad));
 }
 
 MainLayer::~MainLayer()

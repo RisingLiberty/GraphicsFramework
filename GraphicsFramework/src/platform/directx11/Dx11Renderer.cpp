@@ -39,17 +39,6 @@ void Dx11Renderer::Present()
 		va->Bind();
 		mesh->GetIndices()->Bind();
 
-		ImGui_ImplDX11_NewFrame();
-		ImGui_ImplWin32_NewFrame();
-		ImGui::NewFrame();
-
-		ImGui::Begin("Title");
-		ImGui::Button("Button", ImVec2(100, 100));
-		ImGui::End();
-
-		ImGui::Render();
-		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
 		GetDx11DeviceContext()->DrawIndexed((unsigned int)mesh->GetIndices()->GetCount(), 0, 0);
 	}
 
