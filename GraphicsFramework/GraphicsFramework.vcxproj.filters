@@ -210,10 +210,10 @@
     <ClCompile Include="src\platform\directx11\Dx11ShaderSamplerState.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\platform\directx11\Dx11GlobalShaderUniform.cpp">
+    <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp">
+    <ClCompile Include="src\platform\directx11\Dx11VertexLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -428,10 +428,10 @@
     <ClInclude Include="src\platform\directx11\Dx11ShaderSamplerState.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\platform\directx11\Dx11GlobalShaderUniform.h">
+    <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h">
+    <ClInclude Include="src\platform\directx11\Dx11VertexLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

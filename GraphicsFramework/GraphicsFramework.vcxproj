@@ -139,7 +139,6 @@
   <ItemGroup>
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
-    <ClCompile Include="src\platform\directx11\Dx11GlobalShaderUniform.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11IndexBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderProgram.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderSamplerState.cpp" />
@@ -148,6 +147,7 @@
     <ClCompile Include="src\platform\directx11\Dx11ShaderUniform.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexArray.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexBuffer.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11VertexLayout.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexShader.cpp" />
     <ClCompile Include="src\controllers\LayerController.cpp" />
     <ClCompile Include="src\controllers\SceneController.cpp" />
@@ -229,7 +229,6 @@
     <ClInclude Include="src\graphics\BufferUsage.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11FragmentShader.h" />
-    <ClInclude Include="src\platform\directx11\Dx11GlobalShaderUniform.h" />
     <ClInclude Include="src\platform\directx11\Dx11IndexBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderProgram.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderSamplerState.h" />
@@ -238,6 +237,7 @@
     <ClInclude Include="src\platform\directx11\Dx11ShaderUniform.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexArray.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexBuffer.h" />
+    <ClInclude Include="src\platform\directx11\Dx11VertexLayout.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexShader.h" />
     <ClInclude Include="src\controllers\LayerController.h" />
     <ClInclude Include="src\controllers\SceneController.h" />
