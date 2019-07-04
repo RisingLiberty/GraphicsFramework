@@ -6,7 +6,7 @@ class VertexLayout
 {
 public:
 	VertexLayout();
-	~VertexLayout();
+	virtual ~VertexLayout();
 
 	template <typename T>
 	void Push(VertexAttributeType type, unsigned int count = 1)
@@ -75,7 +75,13 @@ public:
 
 	void Clear();
 
-private:
+	static std::unique_ptr<VertexLayout> Create();
+
+protected:
+
+
+protected:
 	std::vector<VertexAttribute> m_attributes;
 	unsigned int m_size;
+
 };
