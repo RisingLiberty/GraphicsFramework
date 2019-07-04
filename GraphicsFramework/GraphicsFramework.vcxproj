@@ -146,6 +146,7 @@
     <ClCompile Include="src\platform\directx11\Dx11ShaderStruct.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderTexture.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderUniform.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11UILayer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexArray.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexLayout.cpp" />
@@ -186,6 +187,7 @@
     <ClCompile Include="src\platform\opengl\OpenGLIndexBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLRenderer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLShaderProgram.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLUILayer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexShader.cpp" />
@@ -197,6 +199,9 @@
     <ClCompile Include="src\scenegraph\LayerObject.cpp" />
     <ClCompile Include="src\scenegraph\Scene.cpp" />
     <ClCompile Include="src\scenegraph\SceneObject.cpp" />
+    <ClCompile Include="src\scenegraph\UIButton.cpp" />
+    <ClCompile Include="src\scenegraph\UILayer.cpp" />
+    <ClCompile Include="src\scenegraph\UIObject.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
@@ -239,6 +244,7 @@
     <ClInclude Include="src\platform\directx11\Dx11ShaderStruct.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderTexture.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderUniform.h" />
+    <ClInclude Include="src\platform\directx11\Dx11UILayer.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexArray.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexLayout.h" />
@@ -282,6 +288,7 @@
     <ClInclude Include="src\platform\opengl\OpenGLIndexBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLRenderer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLShaderProgram.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLUILayer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexArray.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexShader.h" />
@@ -293,6 +300,9 @@
     <ClInclude Include="src\scenegraph\Scene.h" />
     <ClInclude Include="src\scenegraph\SceneObject.h" />
     <ClInclude Include="src\scenegraph\Layer2D.h" />
+    <ClInclude Include="src\scenegraph\UIButton.h" />
+    <ClInclude Include="src\scenegraph\UILayer.h" />
+    <ClInclude Include="src\scenegraph\UIObject.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\platform\win64\DefaultWndClass.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />
