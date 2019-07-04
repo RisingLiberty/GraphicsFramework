@@ -8,7 +8,7 @@ public:
 	Renderer();
 	virtual ~Renderer();
 
-	void SubmitMesh(SceneObject* mesh);
+	void SubmitObject(SceneObject* mesh);
 	
 	virtual void Present() = 0;
 	virtual void ClearAllBuffers() = 0;

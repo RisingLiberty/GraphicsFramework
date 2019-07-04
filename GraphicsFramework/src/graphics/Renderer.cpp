@@ -5,7 +5,7 @@
 Renderer::Renderer() = default;
 Renderer::~Renderer() = default;
 
-void Renderer::SubmitMesh(SceneObject* mesh)
+void Renderer::SubmitObject(SceneObject* mesh)
 {
 	m_scene_objects.push_back(mesh);
 }
