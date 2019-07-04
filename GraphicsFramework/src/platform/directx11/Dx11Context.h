@@ -38,7 +38,6 @@ public:
 	Dx11FragmentShader* GetBoundFragmentShader();
 
 protected:
-	virtual void InitializeImGui() const override;
 
 private:
 	void InitD3D(Window* window);

@@ -14,7 +14,6 @@ public:
 	API GetApiType() const;
 
 protected:
-	virtual void InitializeImGui() const final override;
 
 private:
 	// Handle to device context

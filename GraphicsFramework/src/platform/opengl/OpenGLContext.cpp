@@ -33,8 +33,6 @@ OpenGLContext::OpenGLContext(Window* window)
 	}
 
 	m_renderer = std::make_unique<OpenGLRenderer>();
-
-	this->InitializeImGui();
 }
 
 OpenGLContext::~OpenGLContext() = default;
@@ -47,11 +45,4 @@ void OpenGLContext::Present()
 OpenGLContext::API OpenGLContext::GetApiType() const
 {
 	return API::OPENGL;
-}
-
-void OpenGLContext::InitializeImGui() const
-{
-	ImGui::CreateContext();
-	ImGui_ImplOpenGL3_Init("#version 330");
-
 }

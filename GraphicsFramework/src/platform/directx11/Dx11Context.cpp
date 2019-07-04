@@ -15,7 +15,6 @@ Dx11Context::Dx11Context(Window* window)
 	this->InitD3D(window);
 	m_renderer = std::make_unique<Dx11Renderer>(m_render_target_view.Get(), m_depth_stencil_view.Get());
 
-	this->InitializeImGui();
 }
 
 Dx11Context::~Dx11Context()
@@ -192,12 +191,6 @@ Dx11VertexShader* Dx11Context::GetBoundVertexShader()
 Dx11FragmentShader* Dx11Context::GetBoundFragmentShader()
 {
 	return m_bound_fragment_shader;
-}
-
-void Dx11Context::InitializeImGui() const
-{
-	ImGui::CreateContext();
-	ImGui_ImplDX11_Init(m_resources.device.Get(), m_resources.device_context.Get());
 }
 
 void Dx11Context::SetRenderTargets(ID3D11RenderTargetView* target, ID3D11DepthStencilView* view)
