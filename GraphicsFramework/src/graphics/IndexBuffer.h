@@ -8,7 +8,7 @@ public:
 	IndexBuffer(size_t count, BufferUsage usage);
 	virtual ~IndexBuffer();
 
-	virtual void SetData(void* data) = 0;
+	virtual void SetData(const void* data) = 0;
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;
 

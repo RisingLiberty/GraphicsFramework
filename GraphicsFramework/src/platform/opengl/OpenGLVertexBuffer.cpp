@@ -35,7 +35,7 @@ OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	GLCALL(glDeleteBuffers(1, &m_id));
 }
 
-void OpenGLVertexBuffer::SetData(void* data)
+void OpenGLVertexBuffer::SetData(const void* data)
 {
 	this->Bind();
 	GLCALL(glBufferData(GL_ARRAY_BUFFER, m_size, data, CustomBufferUsageToGLUsage(m_usage)));

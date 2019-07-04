@@ -35,7 +35,7 @@ OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	GLCALL(glDeleteBuffers(1, &m_id));
 }
 
-void OpenGLIndexBuffer::SetData(void* data)
+void OpenGLIndexBuffer::SetData(const void* data)
 {
 	this->Bind();
 	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_count * sizeof(unsigned int), data, CustomBufferUsageToGLUsage(m_usage)));

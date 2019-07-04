@@ -8,7 +8,7 @@ public:
 	Dx11VertexBuffer(size_t size, BufferUsage usage, void* data);
 	virtual ~Dx11VertexBuffer();
 
-	virtual void SetData(void* data) override;
+	virtual void SetData(const void* data) override;
 	virtual void Bind() const override;
 	virtual void Unbind() const override;
 

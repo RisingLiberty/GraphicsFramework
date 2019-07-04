@@ -54,7 +54,7 @@ Dx11VertexBuffer::~Dx11VertexBuffer()
 {
 }
 
-void Dx11VertexBuffer::SetData(void* data)
+void Dx11VertexBuffer::SetData(const void* data)
 {
 	Dx11Context* context = GetDx11Context();
 	D3D11_MAPPED_SUBRESOURCE mapped_subresource;

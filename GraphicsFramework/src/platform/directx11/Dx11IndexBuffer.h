@@ -8,7 +8,7 @@ public:
 	Dx11IndexBuffer(size_t count, BufferUsage usage, void* data);
 	virtual ~Dx11IndexBuffer();
 
-	virtual void SetData(void* data) override;
+	virtual void SetData(const void* data) override;
 	virtual void Bind() const override;
 	virtual void Unbind() const override;
 

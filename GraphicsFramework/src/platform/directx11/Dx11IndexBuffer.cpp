@@ -52,7 +52,7 @@ Dx11IndexBuffer::~Dx11IndexBuffer()
 {
 }
 
-void Dx11IndexBuffer::SetData(void* data)
+void Dx11IndexBuffer::SetData(const void* data)
 {
 	D3D11_MAPPED_SUBRESOURCE mapped_resource;
 	DXCALL(GetDx11Context()->GetDeviceContext()->Map(m_buffer.Get(), 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mapped_resource));
