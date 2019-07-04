@@ -18,7 +18,7 @@ Dx11Renderer::Dx11Renderer(ID3D11RenderTargetView* renderTargetView, ID3D11Depth
 	m_render_target_view(renderTargetView),
 	m_depth_stencil_view(depthStencilView)
 {
-	m_clear_color = DirectX::Colors::Red;
+	memcpy(m_clear_color.data(), &DirectX::Colors::Red, sizeof(float) * 4);
 }
 
 Dx11Renderer::~Dx11Renderer()

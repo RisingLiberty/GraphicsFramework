@@ -19,7 +19,7 @@
 
 OpenGLRenderer::OpenGLRenderer()
 {
-	glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(m_clear_color[0], m_clear_color[1], m_clear_color[2], m_clear_color[3]);
 }
 
 OpenGLRenderer::~OpenGLRenderer()

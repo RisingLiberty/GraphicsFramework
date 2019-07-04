@@ -20,6 +20,7 @@ public:
 
 protected:
 	std::vector<SceneObject*> m_scene_objects;
+	std::array<float, 4> m_clear_color;
 
 private:
 

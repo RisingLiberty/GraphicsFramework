@@ -2,7 +2,11 @@
 
 #include "Renderer.h"
 
-Renderer::Renderer() = default;
+Renderer::Renderer()
+{
+	m_clear_color = { 1.0f, 0.0f, 0.0f, 1.0f };
+}
+
 Renderer::~Renderer() = default;
 
 void Renderer::SubmitObject(SceneObject* mesh)

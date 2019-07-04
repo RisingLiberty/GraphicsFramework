@@ -4,7 +4,7 @@
 
 Dx12Renderer::Dx12Renderer()
 {
-
+	
 }
 
 Dx12Renderer::~Dx12Renderer()
