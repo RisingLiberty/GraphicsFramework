@@ -216,6 +216,15 @@
     <ClCompile Include="src\platform\directx11\Dx11VertexLayout.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\scenegraph\Layer2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenegraph\Layer3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scenegraph\LayerObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -432,6 +441,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\directx11\Dx11VertexLayout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenegraph\Layer2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenegraph\Layer3D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scenegraph\LayerObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

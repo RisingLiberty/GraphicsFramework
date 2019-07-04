@@ -191,6 +191,9 @@
     <ClCompile Include="src\platform\win64\Win64Application.cpp" />
     <ClCompile Include="src\platform\win64\Win64Window.cpp" />
     <ClCompile Include="src\scenegraph\Layer.cpp" />
+    <ClCompile Include="src\scenegraph\Layer2D.cpp" />
+    <ClCompile Include="src\scenegraph\Layer3D.cpp" />
+    <ClCompile Include="src\scenegraph\LayerObject.cpp" />
     <ClCompile Include="src\scenegraph\Scene.cpp" />
     <ClCompile Include="src\scenegraph\SceneObject.cpp" />
     <ClCompile Include="src\stdafx.cpp">
@@ -283,8 +286,11 @@
     <ClInclude Include="src\platform\win64\Win64Application.h" />
     <ClInclude Include="src\platform\win64\Win64Window.h" />
     <ClInclude Include="src\scenegraph\Layer.h" />
+    <ClInclude Include="src\scenegraph\Layer3D.h" />
+    <ClInclude Include="src\scenegraph\LayerObject.h" />
     <ClInclude Include="src\scenegraph\Scene.h" />
     <ClInclude Include="src\scenegraph\SceneObject.h" />
+    <ClInclude Include="src\scenegraph\Layer2D.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\platform\win64\DefaultWndClass.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />

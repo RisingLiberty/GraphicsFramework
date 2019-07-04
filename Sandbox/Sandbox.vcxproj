@@ -145,6 +145,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\core\main.cpp" />
+    <ClCompile Include="src\scenegraph\MainLayer.cpp" />
     <ClCompile Include="src\scenegraph\MainScene.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -152,6 +153,7 @@
     <ClCompile Include="src\core\Sandbox.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\scenegraph\MainLayer.h" />
     <ClInclude Include="src\scenegraph\MainScene.h" />
     <ClInclude Include="src\pch.h" />
     <ClInclude Include="src\core\Sandbox.h" />
