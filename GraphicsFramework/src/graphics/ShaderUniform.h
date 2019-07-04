@@ -17,11 +17,12 @@ enum class UniformDataType
 struct ShaderUniform
 {
 public:
-	ShaderUniform(const std::string& name, UniformDataType type, int size = 0);
+	ShaderUniform(const std::string& name, UniformDataType type, int size = 0, char* data = nullptr);
 	virtual ~ShaderUniform();
 
 public:
 	std::string name;
 	UniformDataType type;
 	unsigned int size;
+	char* data;
 };

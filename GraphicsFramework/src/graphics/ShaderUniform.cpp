@@ -19,13 +19,20 @@ unsigned int GetUniformDataTypeSize(UniformDataType dataType)
 	return 0;
 }
 
-ShaderUniform::ShaderUniform(const std::string& name, UniformDataType type, int size) :
+ShaderUniform::ShaderUniform(const std::string& name, UniformDataType type, int size, char* data) :
 	name(name),
 	type(type),
 	size(size)
 {
 	if (size == 0)
 		this->size = GetUniformDataTypeSize(type);
+	else
+	{
+		this->data = (char*)malloc(size);
+		if (data)
+			memcpy(this->data, data, size);
+	}
+
 }
 
 ShaderUniform::~ShaderUniform() = default;
