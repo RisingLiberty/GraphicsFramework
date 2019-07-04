@@ -13,6 +13,8 @@ using HandleGLRenderingContext = HGLRC;
 
 OpenGLContext::OpenGLContext(Window* window)
 {
+	spdlog::info("Using DirectX 11");
+
 	m_hdc = GetDC((HWND)window->GetHandle());
 
 	// Handle to GL Rendering Context
