@@ -65,8 +65,8 @@ Dx11ShaderCBuffer::Dx11ShaderCBuffer(Dx11ShaderCBuffer& buffer)
 	reg = buffer.reg;
 	shader_type = buffer.shader_type;
 	uniforms = std::move(buffer.uniforms);
-	size = CalculateBufferSize(uniforms);
-	real_size = CalculateConstantBufferByteSize(size);
+	size = buffer.size;
+	real_size = buffer.real_size;
 
 	this->buffer = buffer.buffer;
 
@@ -78,8 +78,8 @@ Dx11ShaderCBuffer::Dx11ShaderCBuffer(Dx11ShaderCBuffer&& buffer)
 	reg = buffer.reg;
 	shader_type = buffer.shader_type;
 	uniforms = std::move(buffer.uniforms);
-	size = CalculateBufferSize(uniforms);
-	real_size = CalculateConstantBufferByteSize(size);
+	size = buffer.size;
+	real_size = buffer.real_size;
 
 	this->buffer = buffer.buffer;
 }
@@ -90,8 +90,8 @@ Dx11ShaderCBuffer& Dx11ShaderCBuffer::operator=(Dx11ShaderCBuffer& buffer)
 	reg = buffer.reg;
 	shader_type = buffer.shader_type;
 	uniforms = std::move(buffer.uniforms);
-	size = CalculateBufferSize(uniforms);
-	real_size = CalculateConstantBufferByteSize(size);
+	size = buffer.size;
+	real_size = buffer.real_size;
 
 	this->buffer = buffer.buffer;
 
@@ -104,8 +104,8 @@ Dx11ShaderCBuffer& Dx11ShaderCBuffer::operator=(Dx11ShaderCBuffer&& buffer)
 	reg = buffer.reg;
 	shader_type = buffer.shader_type;
 	uniforms = std::move(buffer.uniforms);
-	size = CalculateBufferSize(uniforms);
-	real_size = CalculateConstantBufferByteSize(size);
+	size = buffer.size;
+	real_size = buffer.real_size;
 
 	this->buffer = buffer.buffer;
 
