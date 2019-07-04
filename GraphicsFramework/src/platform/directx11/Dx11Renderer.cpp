@@ -39,24 +39,16 @@ void Dx11Renderer::Present()
 		va->Bind();
 		mesh->GetIndices()->Bind();
 
-		Dx11VertexBuffer* dx_vb = dynamic_cast<Dx11VertexBuffer*>(mesh->GetVertices());
-		D3D11_BUFFER_DESC vb_desc;
-		dx_vb->GetBuffer()->GetDesc(&vb_desc);
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
 
-		D3D11_BUFFER_DESC desc;
-		desc.ByteWidth = vb_desc.ByteWidth;
-		desc.Usage = D3D11_USAGE_DEFAULT;
-		desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ | D3D11_CPU_ACCESS_WRITE;
-		desc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | D3D11_BIND_SHADER_RESOURCE;
-		desc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
-		desc.StructureByteStride = sizeof(float);
+		ImGui::Begin("Title");
+		ImGui::Button("Button", ImVec2(100, 100));
+		ImGui::End();
 
-		ComPtr<ID3D11Buffer> stagging_buffer;
-		GetDx11Device()->CreateBuffer(&desc, NULL, stagging_buffer.GetAddressOf());
-		GetDx11DeviceContext()->CopyResource(stagging_buffer.Get(), dx_vb->GetBuffer());
-		D3D11_MAPPED_SUBRESOURCE msr;
-		GetDx11DeviceContext()->Map(stagging_buffer.Get(), 0, D3D11_MAP_READ, 0, &msr);
-		GetDx11DeviceContext()->Unmap(stagging_buffer.Get(), 0);
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
 		GetDx11DeviceContext()->DrawIndexed((unsigned int)mesh->GetIndices()->GetCount(), 0, 0);
 	}
