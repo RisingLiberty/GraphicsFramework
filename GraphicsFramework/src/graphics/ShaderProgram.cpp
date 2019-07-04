@@ -7,6 +7,7 @@
 
 #include "platform/opengl/OpenGLShaderProgram.h"
 #include "platform/directx11/Dx11ShaderProgram.h"
+#include "platform/directx12/Dx12ShaderProgram.h"
 
 ShaderProgram::ShaderProgram(VertexShader* vertexShader, FragmentShader* fragmentShader):
 	m_vertex_shader(vertexShader),
@@ -70,6 +71,13 @@ ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
 	case Context::API::DIRECTX11:
 	{
 		unique_program = std::make_unique<Dx11ShaderProgram>(vs, fs);
+		program = unique_program.get();
+		shader_controller->PushShaderProgram(unique_program);
+		break;
+	}
+	case Context::API::DIRECTX12:
+	{
+		unique_program = std::make_unique<Dx12ShaderProgram>(vs, fs);
 		program = unique_program.get();
 		shader_controller->PushShaderProgram(unique_program);
 		break;

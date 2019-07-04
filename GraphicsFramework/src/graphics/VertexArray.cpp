@@ -7,6 +7,7 @@
 
 #include "platform/opengl/OpenGLVertexArray.h"
 #include "platform/directx11/Dx11VertexArray.h"
+#include "platform/directx12/Dx12VertexArray.h"
 
 VertexArray::VertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	m_vertex_buffer(vb),
@@ -25,17 +26,22 @@ VertexArray* VertexArray::Create(const VertexBuffer* vb, const VertexLayout* lay
 	if (vertex_array)
 		return vertex_array;
 
+	std::unique_ptr<VertexArray> unique_array;
+
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case Context::API::OPENGL:
-	{
-		std::unique_ptr<VertexArray> unique_array = std::make_unique<OpenGLVertexArray>(vb, layout);
+		unique_array = std::make_unique<OpenGLVertexArray>(vb, layout);
 		vertex_array = unique_array.get();
 		vertex_array_controller->PushVertexArray(unique_array);
 		break;
-	}
 	case Context::API::DIRECTX11:
-		std::unique_ptr<VertexArray> unique_array = std::make_unique<Dx11VertexArray>(vb, layout);
+		unique_array = std::make_unique<Dx11VertexArray>(vb, layout);
+		vertex_array = unique_array.get();
+		vertex_array_controller->PushVertexArray(unique_array);
+		break;
+	case Context::API::DIRECTX12:
+		unique_array = std::make_unique<Dx12VertexArray>(vb, layout);
 		vertex_array = unique_array.get();
 		vertex_array_controller->PushVertexArray(unique_array);
 		break;

@@ -4,6 +4,7 @@
 
 #include "platform/opengl/OpenGLVertexBuffer.h"
 #include "platform/directx11/Dx11VertexBuffer.h"
+#include "platform/directx12/Dx12VertexBuffer.h"
 
 #include "Context.h"
 
@@ -13,6 +14,7 @@ std::unique_ptr<VertexBuffer> VertexBuffer::Create(size_t size, BufferUsage usag
 	{
 	case Context::API::OPENGL: return std::make_unique<OpenGLVertexBuffer>(size, usage, data);
 	case Context::API::DIRECTX11: return std::make_unique<Dx11VertexBuffer>(size, usage, data);
+	case Context::API::DIRECTX12: return std::make_unique<Dx12VertexBuffer>(size, usage, data);
 	}
 
 	return nullptr;

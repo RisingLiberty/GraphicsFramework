@@ -5,6 +5,7 @@
 
 #include "platform/opengl/OpenGLFragmentShader.h"
 #include "platform/directx11/Dx11FragmentShader.h"
+#include "platform/directx12/Dx12FragmentShader.h"
 
 #include "controllers/ShaderController.h"
 
@@ -52,7 +53,11 @@ FragmentShader* FragmentShader::Create(const std::string& shaderName)
 		shader = unique_shader.get();
 		shader_controller->PushFragmentShader(unique_shader);
 		break;
-
+	case Context::API::DIRECTX12:
+		unique_shader = std::make_unique<Dx12FragmentShader>(path);
+		shader = unique_shader.get();
+		shader_controller->PushFragmentShader(unique_shader);
+		break;
 	}
 
 	return shader;
