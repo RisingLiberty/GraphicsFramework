@@ -3,7 +3,7 @@ struct VSOutput
     float4 position : SV_POSITION;
 };
 
-cbuffer PSUniforms : register(b1)
+cbuffer PSUniforms : register(b0)
 {
     float4 u_Color;
 };
