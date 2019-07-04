@@ -43,21 +43,17 @@ Material::~Material()
 
 void Material::AddParameter(const std::string& name, MaterialParameterDataType type, void* data)
 {
-	bool parameter_already_exists = false;
-	for (const MaterialParameter& parameter : m_parameters)
-	{
-		if (parameter.name == name)
-		{
-			parameter_already_exists = true;
-			break;
-		}
-	}
+	this->AddParameterInternal(MaterialParameter(name, type, data));
+}
 
-	if (parameter_already_exists)
-		spdlog::warn("parameter with name '{}' already exists in material", name);
+void Material::AddParameterInternal(const MaterialParameter& param)
+{
+	auto it = std::find(m_parameters.begin(), m_parameters.end(), param);
+
+	if (it == m_parameters.cend())
+		m_parameters.push_back(param);
 	else
-		m_parameters.emplace_back(name, type, data);
-
+		spdlog::warn("parameter with name '{}' already exists in material", param.name);
 }
 
 void Material::SetParameter(const std::string& name, void* data)
@@ -94,20 +90,8 @@ void Material::Use()
 
 	for (const MaterialParameter& parameter : m_parameters)
 	{
-		switch (parameter.data_type)
-		{
-		case MaterialParameterDataType::BOOL:			m_program->SetBoolUniform(parameter.name, *(bool*)parameter.data); 				break;
-		case MaterialParameterDataType::SHORT:			m_program->SetShortUniform(parameter.name, *(short*)parameter.data);				break;
-		case MaterialParameterDataType::UNSIGNED_SHORT:	m_program->SetUShortUniform(parameter.name, *(unsigned short*)parameter.data);	break;
-		case MaterialParameterDataType::INT:			m_program->SetIntUniform(parameter.name, *(int*)parameter.data);					break;
-		case MaterialParameterDataType::UNSIGNED_INT:	m_program->SetUIntUniform(parameter.name, *(unsigned int*)parameter.data);		break;
-		case MaterialParameterDataType::FLOAT:			m_program->SetFloatUniform(parameter.name, *(float*)parameter.data);				break;
-		case MaterialParameterDataType::DOUBLE:			m_program->SetDoubleUniform(parameter.name, *(double*)parameter.data);			break;
-		case MaterialParameterDataType::VEC2:			m_program->SetVec2Uniform(parameter.name, (float*)parameter.data);				break;
-		case MaterialParameterDataType::VEC3:			m_program->SetVec3Uniform(parameter.name, (float*)parameter.data);				break;
-		case MaterialParameterDataType::VEC4:			m_program->SetVec4Uniform(parameter.name, (float*)parameter.data);				break;
-		case MaterialParameterDataType::MAT3:			m_program->SetMat3Uniform(parameter.name, (float*)parameter.data);				break;
-		case MaterialParameterDataType::MAT4:			m_program->SetMat4Uniform(parameter.name, (float*)parameter.data);				break;
-		}
+		m_program->SetUniform(parameter.name, parameter.data, parameter.GetSize());
 	}
+
+	m_program->UploadVariables();
 }

@@ -6,7 +6,7 @@ MaterialParameter::MaterialParameter(const std::string& name, MaterialParameterD
 	name(name),
 	data_type(dataType)
 {
-	this->data = malloc(GetSize());
+	this->data = (char*)malloc(GetSize());
 
 	if (data)
 		memcpy(this->data, data, GetSize());
@@ -18,15 +18,16 @@ MaterialParameter::MaterialParameter(const MaterialParameter& other)
 {
 	name = other.name;
 	data_type = other.data_type;
-	data = malloc(GetSize());
-	ZeroMemory(data, GetSize());
+	data = (char*)malloc(GetSize());
+	memcpy(data, other.data, GetSize());
 }
 
 MaterialParameter::MaterialParameter(const MaterialParameter&& other)
 {
 	name = other.name;
 	data_type = other.data_type;
-	data = malloc(GetSize());
+	data = (char*)malloc(GetSize());
+	memcpy(data, other.data, GetSize());
 	ZeroMemory(data, GetSize());
 }
 
@@ -36,8 +37,8 @@ MaterialParameter& MaterialParameter::operator=(const MaterialParameter& other)
 
 	name = other.name;
 	data_type = other.data_type;
-	data = malloc(GetSize());
-	ZeroMemory(data, GetSize());
+	data = (char*)malloc(GetSize());
+	memcpy(data, other.data, GetSize());
 
 	return *this;
 }
@@ -48,8 +49,8 @@ MaterialParameter& MaterialParameter::operator=(const MaterialParameter&& other)
 
 	name = other.name;
 	data_type = other.data_type;
-	data = malloc(GetSize());
-	ZeroMemory(data, GetSize());
+	data = (char*)malloc(GetSize());
+	memcpy(data, other.data, GetSize());
 
 	return *this;
 }
@@ -60,7 +61,16 @@ MaterialParameter::~MaterialParameter()
 	free(data);
 }
 
-size_t MaterialParameter::GetSize() const
+bool MaterialParameter::operator==(const MaterialParameter& other) const
+{
+	if (name.size() != other.name.size())
+		return false;
+
+	// data doesn't need to be equal in order for 2 parameters to be the same.
+	return (name == other.name) && (data_type == other.data_type);
+}
+
+unsigned int MaterialParameter::GetSize() const
 {
 	switch (data_type)
 	{

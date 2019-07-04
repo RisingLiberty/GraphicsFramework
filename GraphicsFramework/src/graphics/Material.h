@@ -17,6 +17,9 @@ public:
 	void SetParameter(const std::string& name, void* data, size_t size);
 
 private:
+	void AddParameterInternal(const MaterialParameter& param);
+
+private:
 	ShaderProgram* m_program;
 	std::vector<MaterialParameter> m_parameters;
 	
