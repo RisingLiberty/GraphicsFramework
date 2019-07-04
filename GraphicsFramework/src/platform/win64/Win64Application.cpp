@@ -83,6 +83,7 @@ void Win64Application::Run()
 			renderer->ClearAllBuffers();
 			this->Draw();
 			renderer->Present();
+			this->ImguiRender();
 		}
 
 		m_window->Present();
@@ -103,4 +104,15 @@ void Win64Application::Draw()
 void Win64Application::OnEvent(const Event& event)
 {
 
+}
+
+void Win64Application::ImguiRender()
+{
+	ImGui::Render();
+
+	switch (Context::GetApi())
+	{
+	case Context::API::OPENGL: ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); break;
+	case Context::API::DIRECTX11: ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData()); break;
+	}
 }

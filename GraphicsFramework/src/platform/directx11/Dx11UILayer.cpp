@@ -27,13 +27,11 @@ void Dx11UILayer::Draw()
 	ImGui::NewFrame();
 
 	ImGui::Begin(m_name.c_str());
-
 	for (std::unique_ptr<LayerObject>& object : m_objects)
 	{
 		object->Draw();
 	}
 
 	ImGui::End();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
 }
