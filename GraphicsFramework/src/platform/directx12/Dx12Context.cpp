@@ -30,6 +30,9 @@ Dx12Context::Dx12Context(Window* window):
 	m_is_vsync = window->GetPropeties().vsync;
 	this->InitD3D(window);
 	
+	// Open command list
+	m_resources.command_list->Reset(m_resources.command_allocator.Get(), nullptr);
+	m_renderer = std::make_unique<Dx12Renderer>();
 }
 
 Dx12Context::~Dx12Context()
@@ -90,6 +93,26 @@ ID3D12Device* Dx12Context::GetDevice() const
 ID3D12GraphicsCommandList* Dx12Context::GetCommandList() const
 {
 	return m_resources.command_list.Get();
+}
+
+unsigned int Dx12Context::GetNrOfFrameResources() const
+{
+	return NUM_FRAME_RESOURCES;
+}
+
+DXGI_FORMAT Dx12Context::GetBackBufferFormat() const
+{
+	return m_backbuffer_format;
+}
+
+ID3D12DescriptorHeap* Dx12Context::GetRtvDescriptorHeap() const
+{
+	return m_resources.render_target_view_heap.Get();
+}
+
+ID3D12DescriptorHeap* Dx12Context::GetSrvDescriptorHeap() const
+{
+	return m_resources.srv_descriptor_heap.Get();
 }
 
 void Dx12Context::InitD3D(Window* window)
@@ -244,6 +267,13 @@ void Dx12Context::InitD3D(Window* window)
 	depth_stencil_view_heap_desc.NodeMask = 0;
 	DXCALL(m_resources.device->CreateDescriptorHeap(&depth_stencil_view_heap_desc, IID_PPV_ARGS(m_resources.depth_stencil_view_heap.ReleaseAndGetAddressOf())));
 
+	D3D12_DESCRIPTOR_HEAP_DESC shader_resource_view_desc;
+	shader_resource_view_desc.NumDescriptors = 1;
+	shader_resource_view_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	shader_resource_view_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	shader_resource_view_desc.NodeMask = 0;
+	DXCALL(m_resources.device->CreateDescriptorHeap(&shader_resource_view_desc, IID_PPV_ARGS(m_resources.srv_descriptor_heap.ReleaseAndGetAddressOf())));
+
 	this->ResizeBuffers(properties.width, properties.height);
 }
 
@@ -312,7 +342,7 @@ void Dx12Context::BuildPipelineState()
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC ps_desc;
 
 	ZeroMemory(&ps_desc, sizeof(ps_desc));
-	ps_desc.InputLayout = { m_bound_vertex_layout->GetLayout().data(), (UINT)m_bound_vertex_layout->GetLayout().data() };
+	ps_desc.InputLayout = { m_bound_vertex_layout->GetLayout().data(), (UINT)m_bound_vertex_layout->GetLayout().size() };
 	ps_desc.pRootSignature = m_bound_root_signature;
 	ps_desc.VS = { m_bound_vertex_shader->GetCompiledCode()->GetBufferPointer(), m_bound_vertex_shader->GetCompiledCode()->GetBufferSize() };
 	ps_desc.PS = { m_bound_fragment_shader->GetCompiledCode()->GetBufferPointer(), m_bound_fragment_shader->GetCompiledCode()->GetBufferSize() };

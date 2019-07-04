@@ -24,6 +24,7 @@ public:
 		ComPtr<ID3D12Resource> depth_stencil_buffer;
 		ComPtr<ID3D12DescriptorHeap> render_target_view_heap;
 		ComPtr<ID3D12DescriptorHeap> depth_stencil_view_heap;
+		ComPtr<ID3D12DescriptorHeap> srv_descriptor_heap;
 		ComPtr<IDXGIFactory1> dxgi_factory;
 		ComPtr<ID3D12PipelineState> m_pipeline_state;
 		std::vector<ComPtr<IDXGIAdapter1>> adapters;
@@ -46,6 +47,10 @@ public:
 	ID3D12Device* GetDevice() const;
 	ID3D12GraphicsCommandList* GetCommandList() const;
 
+	unsigned int GetNrOfFrameResources() const;
+	DXGI_FORMAT GetBackBufferFormat() const;
+	ID3D12DescriptorHeap* GetRtvDescriptorHeap() const;
+	ID3D12DescriptorHeap* GetSrvDescriptorHeap() const;
 
 private:
 	void InitD3D(Window* window);
@@ -57,6 +62,7 @@ private:
 
 private:
 	static const unsigned int SWAPCHAIN_BUFFER_COUNT = 2;
+	static const unsigned int NUM_FRAME_RESOURCES = 3;
 
 	Dx12Resources m_resources;
 	D3D_FEATURE_LEVEL m_feature_level;
