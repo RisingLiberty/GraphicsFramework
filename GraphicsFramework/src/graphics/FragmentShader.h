@@ -15,4 +15,5 @@ public:
 
 protected:
 	virtual int Compile() override = 0;
+
 };

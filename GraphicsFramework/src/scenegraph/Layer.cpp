@@ -2,7 +2,7 @@
 
 #include "Layer.h"
 
-Layer::Layer(const std::string & name, bool isVisible) :
+Layer::Layer(const std::string& name, bool isVisible) :
 	m_name(name),
 	m_is_visible(isVisible)
 {
