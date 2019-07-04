@@ -6,12 +6,10 @@
 OpenGLUILayer::OpenGLUILayer(const std::string& title):
 	UILayer(title)
 {
-	ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 OpenGLUILayer::~OpenGLUILayer()
 {
-	ImGui_ImplOpenGL3_Shutdown();
 }
 
 void OpenGLUILayer::Update(float dTime)

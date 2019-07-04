@@ -20,6 +20,7 @@
 OpenGLRenderer::OpenGLRenderer()
 {
 	glClearColor(m_clear_color[0], m_clear_color[1], m_clear_color[2], m_clear_color[3]);
+	ImGui_ImplOpenGL3_Init("#version 330");
 }
 
 OpenGLRenderer::~OpenGLRenderer()

@@ -19,6 +19,7 @@ Dx11Renderer::Dx11Renderer(ID3D11RenderTargetView* renderTargetView, ID3D11Depth
 	m_depth_stencil_view(depthStencilView)
 {
 	memcpy(m_clear_color.data(), &DirectX::Colors::Red, sizeof(float) * 4);
+	ImGui_ImplDX11_Init(GetDx11Device(), GetDx11DeviceContext());
 }
 
 Dx11Renderer::~Dx11Renderer()
