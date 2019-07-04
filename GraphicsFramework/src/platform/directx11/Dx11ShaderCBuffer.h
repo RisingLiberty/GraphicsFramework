@@ -7,7 +7,7 @@ struct Dx11ShaderCBuffer
 {
 public:
 	// reg = register
-	Dx11ShaderCBuffer(const std::string& name, unsigned int reg, Shader::Type shaderType, std::vector<std::unique_ptr<Dx11ShaderUniform>>& uniforms);
+	Dx11ShaderCBuffer(const std::string& name, unsigned int reg, std::vector<std::unique_ptr<Dx11ShaderUniform>>& uniforms);
 	Dx11ShaderCBuffer(Dx11ShaderCBuffer& buffer);
 	Dx11ShaderCBuffer(Dx11ShaderCBuffer&& buffer);
 	Dx11ShaderCBuffer& operator=(Dx11ShaderCBuffer& buffer);

@@ -30,10 +30,9 @@ namespace
 	}
 }
 
-Dx11ShaderCBuffer::Dx11ShaderCBuffer(const std::string& name, unsigned int reg, Shader::Type shaderType, std::vector<std::unique_ptr<Dx11ShaderUniform>>& uniforms) :
+Dx11ShaderCBuffer::Dx11ShaderCBuffer(const std::string& name, unsigned int reg, std::vector<std::unique_ptr<Dx11ShaderUniform>>& uniforms) :
 	name(name),
 	reg(reg),
-	shader_type(shaderType),
 	uniforms(std::move(uniforms))
 {
 	if (this->uniforms.empty())
