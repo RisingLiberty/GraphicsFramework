@@ -4,12 +4,16 @@
 #include "Dx11HelperMethods.h"
 #include "platform/win64/Win64Window.h"
 #include "platform/directx11/Dx11Renderer.h"
+#include "platform/directx11/dx11VertexShader.h"
+#include "platform/directx11/dx11FragmentShader.h"
 
 Dx11Context::Dx11Context(Window* window)
 {
+	spdlog::info("Using DirectX 11");
+
 	m_is_vsync = window->GetPropeties().vsync;
 	this->InitD3D(window);
-	m_renderer = std::make_unique<Dx11Renderer>(m_render_target_view.Get());
+	m_renderer = std::make_unique<Dx11Renderer>(m_render_target_view.Get(), m_depth_stencil_view.Get());
 }
 
 Dx11Context::~Dx11Context()
@@ -57,7 +61,7 @@ void Dx11Context::InitD3D(Window* window)
 	swapchain_desc.SampleDesc.Quality = 0;  // no msaa
 
 	swapchain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	swapchain_desc.BufferCount = 3;
+	swapchain_desc.BufferCount = 2;
 	swapchain_desc.OutputWindow = handle;
 	swapchain_desc.Windowed = !properties.is_fullscreen;
 	swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
@@ -97,7 +101,7 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 	ComPtr<ID3D11Texture2D> back_buffer;
 	DXCALL(m_resources.swapchain->GetBuffer(0, IID_PPV_ARGS(back_buffer.GetAddressOf())));
 	DXCALL(m_resources.device->CreateRenderTargetView(back_buffer.Get(), NULL, m_render_target_view.ReleaseAndGetAddressOf()));
-
+	
 	D3D11_TEXTURE2D_DESC depth_stencil_desc;
 	depth_stencil_desc.Width = width;
 	depth_stencil_desc.Height = height;
@@ -164,6 +168,28 @@ ID3D11Device* Dx11Context::GetDevice() const
 ID3D11DeviceContext* Dx11Context::GetDeviceContext() const
 {
 	return m_resources.device_context.Get();
+}
+
+void Dx11Context::BindVertexShader(Dx11VertexShader* vertexShader)
+{
+	m_resources.device_context->VSSetShader(vertexShader->GetShader(), NULL, 0);
+	m_bound_vertex_shader = vertexShader;
+}
+
+void Dx11Context::BindFragmentShader(Dx11FragmentShader* fragmentShader)
+{
+	m_resources.device_context->PSSetShader(fragmentShader->GetShader(), NULL, 0);
+	m_bound_fragment_shader = fragmentShader;
+}
+
+Dx11VertexShader* Dx11Context::GetBoundVertexShader()
+{
+	return m_bound_vertex_shader;
+}
+
+Dx11FragmentShader* Dx11Context::GetBoundFragmentShader()
+{
+	return m_bound_fragment_shader;
 }
 
 void Dx11Context::InitializeImGui() const
