@@ -2,7 +2,7 @@
 
 #include "ShaderUniform.h"
 
-size_t GetUniformDataTypeSize(UniformDataType dataType)
+unsigned int GetUniformDataTypeSize(UniformDataType dataType)
 {
 	switch (dataType)
 	{
@@ -15,6 +15,8 @@ size_t GetUniformDataTypeSize(UniformDataType dataType)
 	case UniformDataType::MAT3:			return sizeof(float) * 9;
 	case UniformDataType::MAT4:			return sizeof(float) * 16;
 	}
+
+	return 0;
 }
 
 ShaderUniform::ShaderUniform(const std::string& name, UniformDataType type, int size) :
