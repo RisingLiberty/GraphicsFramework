@@ -3,6 +3,12 @@
 #include "graphics/Context.h"
 
 class Window;
+class Dx12VertexLayout;
+class Dx12VertexBuffer;
+class Dx12VertexLayout;
+class Dx12VertexArray;
+class Dx12VertexShader;
+class Dx12FragmentShader;
 
 class Dx12Context : public Context
 {
@@ -19,6 +25,7 @@ public:
 		ComPtr<ID3D12DescriptorHeap> render_target_view_heap;
 		ComPtr<ID3D12DescriptorHeap> depth_stencil_view_heap;
 		ComPtr<IDXGIFactory1> dxgi_factory;
+		ComPtr<ID3D12PipelineState> m_pipeline_state;
 		std::vector<ComPtr<IDXGIAdapter1>> adapters;
 		std::vector<ComPtr<IDXGIOutput>> outputs;
 	};
@@ -31,6 +38,11 @@ public:
 	virtual void Present() override;
 	virtual API GetApiType() const override;
 
+	void BindInputLayout(Dx12VertexLayout* layout);
+	void BindRootSignature(ID3D12RootSignature* rootSignature);
+	void BindVertexShader(Dx12VertexShader* vs);
+	void BindFragmentShader(Dx12FragmentShader* fs);
+
 	ID3D12Device* GetDevice() const;
 	ID3D12GraphicsCommandList* GetCommandList() const;
 
@@ -38,6 +50,7 @@ public:
 private:
 	void InitD3D(Window* window);
 	void ResizeBuffers(unsigned int width, unsigned int height);
+	void BuildPipelineState();
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackbufferView() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const;
@@ -62,4 +75,13 @@ private:
 	unsigned int m_multi_sample_quality;
 	unsigned int m_current_fence;
 	unsigned int m_current_backbuffer;
+
+	Dx12VertexLayout* m_bound_vertex_layout;
+	ID3D12RootSignature* m_bound_root_signature;
+	Dx12VertexShader* m_bound_vertex_shader;
+	Dx12FragmentShader* m_bound_fragment_shader;
+
+
+
+
 };

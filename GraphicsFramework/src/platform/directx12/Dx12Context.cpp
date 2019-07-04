@@ -6,6 +6,10 @@
 
 #include "graphics/Window.h"
 
+#include "Dx12VertexLayout.h"
+#include "Dx12VertexShader.h"
+#include "Dx12FragmentShader.h"
+
 namespace
 {
 }
@@ -56,6 +60,26 @@ void Dx12Context::Present()
 Context::API Dx12Context::GetApiType() const
 {
 	return Context::API::DIRECTX12;
+}
+
+void Dx12Context::BindInputLayout(Dx12VertexLayout* layout)
+{
+	m_bound_vertex_layout = layout;
+}
+
+void Dx12Context::BindRootSignature(ID3D12RootSignature* rootSignature)
+{
+	m_bound_root_signature = rootSignature;
+}
+
+void Dx12Context::BindVertexShader(Dx12VertexShader* vs)
+{
+	m_bound_vertex_shader = vs;
+}
+
+void Dx12Context::BindFragmentShader(Dx12FragmentShader* fs)
+{
+	m_bound_fragment_shader = fs;
 }
 
 ID3D12Device* Dx12Context::GetDevice() const
@@ -281,6 +305,33 @@ void Dx12Context::ResizeBuffers(unsigned int width, unsigned int height)
 	m_viewport.MaxDepth = 1.0f;
 
 	m_scissor_rect = { 0,0, (LONG)width, (LONG)height };
+}
+
+void Dx12Context::BuildPipelineState()
+{
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC ps_desc;
+
+	ZeroMemory(&ps_desc, sizeof(ps_desc));
+	ps_desc.InputLayout = { m_bound_vertex_layout->GetLayout().data(), (UINT)m_bound_vertex_layout->GetLayout().data() };
+	ps_desc.pRootSignature = m_bound_root_signature;
+	ps_desc.VS = { m_bound_vertex_shader->GetCompiledCode()->GetBufferPointer(), m_bound_vertex_shader->GetCompiledCode()->GetBufferSize() };
+	ps_desc.PS = { m_bound_fragment_shader->GetCompiledCode()->GetBufferPointer(), m_bound_fragment_shader->GetCompiledCode()->GetBufferSize() };
+
+	ps_desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	ps_desc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+	ps_desc.RasterizerState.FrontCounterClockwise = true;
+
+	ps_desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	ps_desc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+	ps_desc.SampleMask = UINT_MAX;
+	ps_desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	ps_desc.NumRenderTargets = 1;
+	ps_desc.RTVFormats[0] = m_backbuffer_format;
+	ps_desc.SampleDesc.Count = 1;	// no msaa
+	ps_desc.SampleDesc.Quality = 0;	// no msaa
+	ps_desc.DSVFormat = m_depth_stencil_format;
+
+	DXCALL(m_resources.device->CreateGraphicsPipelineState(&ps_desc, IID_PPV_ARGS(m_resources.m_pipeline_state.ReleaseAndGetAddressOf())));
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Dx12Context::GetCurrentBackbufferView() const
