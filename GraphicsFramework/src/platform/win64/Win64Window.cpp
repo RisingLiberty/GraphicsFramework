@@ -75,7 +75,10 @@ Win64Window::Win64Window(unsigned int width, unsigned int height, const std::wst
 	ImGui_ImplWin32_Init(m_handle);
 }
 
-Win64Window::~Win64Window() = default;
+Win64Window::~Win64Window()
+{
+	ImGui_ImplWin32_Shutdown();
+}
 
 LRESULT Win64Window::WindowProcdureStatic(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {

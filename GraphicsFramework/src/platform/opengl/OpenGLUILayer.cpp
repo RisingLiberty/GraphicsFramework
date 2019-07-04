@@ -12,7 +12,6 @@ OpenGLUILayer::OpenGLUILayer(const std::string& title):
 OpenGLUILayer::~OpenGLUILayer()
 {
 	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplWin32_Shutdown();
 }
 
 void OpenGLUILayer::Update(float dTime)
