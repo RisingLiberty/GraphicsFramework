@@ -14,5 +14,4 @@ public:
 	void Draw() override;
 
 private:
-	std::unique_ptr<SceneObject> m_test_quad;
 };
