@@ -47,7 +47,7 @@ std::string Dx11FragmentShader::GetCode() const
 
 ID3DBlob* Dx11FragmentShader::GetCompiledCode() const
 {
-	return m_shader_compiled_code.Get();
+	return m_compiled_code.Get();
 }
 
 ID3D11PixelShader* Dx11FragmentShader::GetShader() const
@@ -65,10 +65,10 @@ int Dx11FragmentShader::Compile()
 	std::wstring w_path(m_path.begin(), m_path.end());
 
 	ComPtr<ID3DBlob> error_blob;
-	DXCALL(D3DCompileFromFile(w_path.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PSMain", "ps_4_0", compile_flags, 0, m_shader_compiled_code.ReleaseAndGetAddressOf(), error_blob.GetAddressOf()));
+	DXCALL(D3DCompileFromFile(w_path.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "PSMain", "ps_4_0", compile_flags, 0, m_compiled_code.ReleaseAndGetAddressOf(), error_blob.GetAddressOf()));
 	ASSERT(!error_blob, (char*)error_blob->GetBufferPointer());
 
-	DXCALL(GetDx11Context()->GetDevice()->CreatePixelShader(m_shader_compiled_code->GetBufferPointer(), m_shader_compiled_code->GetBufferSize(), NULL, m_shader.ReleaseAndGetAddressOf()));
+	DXCALL(GetDx11Context()->GetDevice()->CreatePixelShader(m_compiled_code->GetBufferPointer(), m_compiled_code->GetBufferSize(), NULL, m_shader.ReleaseAndGetAddressOf()));
 
 	return S_OK;
 }

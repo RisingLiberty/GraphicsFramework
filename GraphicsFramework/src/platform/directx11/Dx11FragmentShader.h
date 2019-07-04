@@ -16,7 +16,7 @@ protected:
 	int Compile() override;
 
 private:
-	ComPtr<ID3DBlob> m_shader_compiled_code;
+	ComPtr<ID3DBlob> m_compiled_code;
 	ComPtr<ID3D11PixelShader> m_shader;
 	
 	std::string m_code;
