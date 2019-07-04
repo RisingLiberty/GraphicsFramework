@@ -23,12 +23,14 @@ void Application::CalculateFrameStats() const
 	static int frameCount = 0;
 	static float timeElapsed = 0.0f;
 
+	const int SECONDS_PER_UPDATE = 10;
+
 	frameCount++;
 
 	// Update every second
-	if ((m_timer->GetEllapsedSeconds() - timeElapsed) >= 1.0f)
+	if ((m_timer->GetEllapsedSeconds() - timeElapsed) >= SECONDS_PER_UPDATE)
 	{
-		float fps = (float)frameCount; //after 1 second, frameCount holds the number of frames that passed.
+		float fps = (float)frameCount / SECONDS_PER_UPDATE; //after 1 second, frameCount holds the number of frames that passed.
 		float mspf = 1000.0f / fps;
 
 		// make the logging fixed
@@ -38,7 +40,7 @@ void Application::CalculateFrameStats() const
 		spdlog::info("milisecondss per frame: {}", mspf);
 
 		frameCount = 0;
-		++timeElapsed;
+		timeElapsed += SECONDS_PER_UPDATE;
 	}
 }
 
