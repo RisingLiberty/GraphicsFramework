@@ -19,7 +19,6 @@
 MainScene::MainScene(const std::string& name) :
 	Scene(name)
 {
-	std::unique_ptr<Mesh> mesh = MeshFactory::CreateQuad();
 
 	VertexShader* vs = VertexShader::Create("vertexshader");
 	FragmentShader* fs = FragmentShader::Create("fragmentshader");
@@ -28,6 +27,8 @@ MainScene::MainScene(const std::string& name) :
 	std::unique_ptr<Material> material = std::make_unique<Material>(program);
 	float color[] = { 1.0f, 0.3f, 0.8f, 1.0f };
 	material->SetParameter("u_Color", color);
+	
+	std::unique_ptr<Mesh> mesh = MeshFactory::CreateQuad();
 
 	m_test_quad = std::make_unique<SceneObject>(mesh, material);
 }
