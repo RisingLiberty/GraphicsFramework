@@ -12,7 +12,7 @@ Layer::Layer(const std::string& name, bool isVisible, bool shouldUpdateWhenInvis
 }
 Layer::~Layer() = default;
 
-LayerObject* Layer::PushObject(std::unique_ptr<LayerObject>& object)
+LayerObject* Layer::PushObject(std::unique_ptr<LayerObject> object)
 {
 	m_objects.emplace_back(std::move(object));
 	return m_objects.back().get();

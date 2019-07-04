@@ -9,7 +9,7 @@ class SceneObject : public LayerObject
 {
 public:
 	SceneObject(const std::string& name, std::unique_ptr<Mesh>& mesh, std::unique_ptr<Material>& material);
-	~SceneObject();
+	virtual ~SceneObject();
 
 	void Update(float dTime);
 	void Draw();

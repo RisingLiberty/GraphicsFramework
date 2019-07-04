@@ -8,7 +8,7 @@ public:
 	Layer(const std::string& name, bool isVisible, bool shouldUpdateWhenInvisible);
 	virtual ~Layer();
 
-	LayerObject* PushObject(std::unique_ptr<LayerObject>& object);
+	LayerObject* PushObject(std::unique_ptr<LayerObject> object);
 
 	virtual void Update(float dTime) = 0;
 	virtual void Draw() = 0;

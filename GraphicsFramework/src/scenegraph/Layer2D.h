@@ -9,6 +9,6 @@ public:
 	virtual ~Layer2D();
 
 	void Update(float dTime) override;
-	void Draw() override final;
+	void Draw() override;
 
 };

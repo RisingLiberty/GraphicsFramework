@@ -31,7 +31,6 @@ public:
 	virtual API GetApiType() const = 0;
 
 protected:
-	virtual void InitializeImGui() const = 0;
 
 protected:
 	std::unique_ptr<Renderer> m_renderer;
