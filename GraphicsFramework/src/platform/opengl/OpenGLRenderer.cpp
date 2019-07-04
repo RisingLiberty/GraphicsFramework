@@ -46,8 +46,7 @@ void OpenGLRenderer::Present()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	bool is_open = true;
-	ImGui::Begin("Title", &is_open);
+	ImGui::Begin("Title");
 	ImGui::Button("Button", ImVec2(100, 100));
 	ImGui::End();
 
