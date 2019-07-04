@@ -1,13 +1,18 @@
 #pragma once
 
+#include "LayerObject.h"
+
 class Mesh;
 class Material;
 
-class SceneObject
+class SceneObject : public LayerObject
 {
 public:
-	SceneObject(std::unique_ptr<Mesh>& mesh, std::unique_ptr<Material>& material);
+	SceneObject(const std::string& name, std::unique_ptr<Mesh>& mesh, std::unique_ptr<Material>& material);
 	~SceneObject();
+
+	void Update(float dTime);
+	void Draw();
 
 	Mesh* GetMesh() const;
 	Material* GetMaterial() const;

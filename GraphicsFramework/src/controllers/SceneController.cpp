@@ -13,6 +13,8 @@ SceneController::~SceneController() = default;
 
 void SceneController::Push(std::unique_ptr<Scene> scene)
 {
+	spdlog::info("{} added", scene->GetName());
+
 	if (m_scenes.empty())
 		m_active_scene = scene.get();
 

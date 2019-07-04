@@ -7,8 +7,9 @@
 LayerController::LayerController() = default;
 LayerController::~LayerController() = default;
 
-void LayerController::Push(std::unique_ptr<Layer> layer)
+void LayerController::Push(std::unique_ptr<Layer>& layer)
 {
+	spdlog::info("{} added", layer->GetName());
 	m_layers.push_back(std::move(layer));
 }
 

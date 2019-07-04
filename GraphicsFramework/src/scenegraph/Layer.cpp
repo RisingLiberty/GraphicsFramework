@@ -1,29 +1,21 @@
 #include "stdafx.h"
 
 #include "Layer.h"
+#include "LayerObject.h"
 
-Layer::Layer(const std::string& name, bool isVisible) :
+Layer::Layer(const std::string& name, bool isVisible, bool shouldUpdateWhenInvisible) :
 	m_name(name),
-	m_is_visible(isVisible)
+	m_is_visible(isVisible),
+	m_should_update_when_invisible(shouldUpdateWhenInvisible)
 {
 
 }
 Layer::~Layer() = default;
 
-void Layer::Update(float dTime)
+LayerObject* Layer::PushObject(std::unique_ptr<LayerObject>& object)
 {
-
-}
-
-void Layer::Draw()
-{
-	if (!m_is_visible)
-	{
-		spdlog::warn("Trying to draw layer that's not visible! <{}>", m_name);
-		return;
-	}
-
-
+	m_objects.emplace_back(std::move(object));
+	return m_objects.back().get();
 }
 
 void Layer::IsVisible(bool newIsVisible)
