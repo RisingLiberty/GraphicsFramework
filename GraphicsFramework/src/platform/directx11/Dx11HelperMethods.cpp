@@ -4,7 +4,7 @@
 
 #include "Dx11Context.h"
 
-bool CheckD3DError(HRESULT result)
+bool CheckD3D11Error(HRESULT result)
 {
 	if (result == S_OK)
 		return true;
