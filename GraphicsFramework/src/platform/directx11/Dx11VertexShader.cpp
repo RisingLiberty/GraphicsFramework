@@ -45,6 +45,11 @@ std::string Dx11VertexShader::GetCode() const
 	return m_code;
 }
 
+ID3DBlob* Dx11VertexShader::GetCompiledCode() const
+{
+	return m_shader_compiled_code.Get();
+}
+
 ID3D11VertexShader* Dx11VertexShader::GetShader() const
 {
 	return m_shader.Get();

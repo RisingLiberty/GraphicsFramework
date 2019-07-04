@@ -9,6 +9,7 @@ public:
 	virtual ~Dx11VertexShader();
 
 	std::string GetCode() const;
+	ID3DBlob* GetCompiledCode() const;
 	ID3D11VertexShader* GetShader() const;
 
 protected:

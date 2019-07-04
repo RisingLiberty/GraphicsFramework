@@ -9,6 +9,7 @@ public:
 	virtual ~Dx11FragmentShader();
 
 	std::string GetCode() const;
+	ID3DBlob* GetCompiledCode() const;
 	ID3D11PixelShader* GetShader() const;
 
 protected:
