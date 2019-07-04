@@ -24,8 +24,8 @@ std::unique_ptr<Mesh> MeshFactory::CreateQuad()
 	};
 
 	std::unique_ptr<VertexBuffer> vb = VertexBuffer::Create(sizeof(positions) , BufferUsage::STATIC, positions.data());
-	std::unique_ptr<IndexBuffer> ib = IndexBuffer::Create(6, BufferUsage::STATIC, indices.data());
-	std::unique_ptr<VertexLayout> layout = std::make_unique<VertexLayout>();
+	std::unique_ptr<IndexBuffer> ib = IndexBuffer::Create(indices.size(), BufferUsage::STATIC, indices.data());
+	std::unique_ptr<VertexLayout> layout = VertexLayout::Create();
 	layout->Push<float>(VertexAttributeType::POSITION, 3);
 
 	std::unique_ptr<Mesh> mesh = std::make_unique<Mesh>(vb, layout, ib);
