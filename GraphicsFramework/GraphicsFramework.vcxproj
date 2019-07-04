@@ -193,6 +193,7 @@
     <ClCompile Include="src\platform\directx12\Dx12ShaderStruct.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderTexture.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderUniform.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12UILayer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12UploadBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexArray.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexBuffer.cpp" />
@@ -305,6 +306,7 @@
     <ClInclude Include="src\platform\directx12\Dx12ShaderStruct.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderTexture.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderUniform.h" />
+    <ClInclude Include="src\platform\directx12\Dx12UILayer.h" />
     <ClInclude Include="src\platform\directx12\Dx12UploadBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexArray.h" />
     <ClInclude Include="src\platform\directx12\Dx12Context.h" />
