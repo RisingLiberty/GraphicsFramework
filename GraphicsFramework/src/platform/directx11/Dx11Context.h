@@ -4,6 +4,9 @@
 
 class Window;
 
+class Dx11VertexShader;
+class Dx11FragmentShader;
+
 class Dx11Context : public Context
 {
 public:
@@ -28,6 +31,11 @@ public:
 	ID3D11Device* GetDevice() const;
 	ID3D11DeviceContext* GetDeviceContext() const;
 	
+	void BindVertexShader(Dx11VertexShader* vertexShader);
+	void BindFragmentShader(Dx11FragmentShader* fragmentShader);
+
+	Dx11VertexShader* GetBoundVertexShader();
+	Dx11FragmentShader* GetBoundFragmentShader();
 
 protected:
 	virtual void InitializeImGui() const override;
@@ -49,4 +57,7 @@ private:
 	ComPtr<ID3D11Debug> m_debug_layer;
 
 	D3D11_VIEWPORT m_viewport;
+
+	Dx11VertexShader* m_bound_vertex_shader;
+	Dx11FragmentShader* m_bound_fragment_shader;
 };
