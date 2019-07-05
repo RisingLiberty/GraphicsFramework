@@ -12,6 +12,8 @@
 
 #include "scenegraph/Scene.h"
 
+#include "platform/directx12/Dx12HelperMethods.h"
+
 namespace
 {
 	const int WINDOW_WIDTH = 720;
@@ -77,16 +79,12 @@ void Win64Application::Run()
 			++frame_count;
 		}
 
-		Renderer* renderer = Context::GetCurrent()->GetRenderer();
-		if (renderer)
-		{
-			renderer->ClearAllBuffers();
-			this->Draw();
-			renderer->Present();
-			this->ImguiRender();
-		}
+		//if (Context::GetCurrent()->GetRenderer())
+		//	this->Draw();
 
+		//fix so draw updates are synced with display refresh rate
 		m_window->Present();
+
 	}
 }
 
@@ -98,7 +96,12 @@ void Win64Application::Update(float dTime)
 
 void Win64Application::Draw()
 {
+	Context::GetCurrent()->GetRenderer()->Begin();
+	Context::GetCurrent()->GetRenderer()->ClearAllBuffers();
 	m_scene_controller->Draw();
+	Context::GetCurrent()->GetRenderer()->Present();
+	Context::GetCurrent()->GetRenderer()->End();
+	//this->ImguiRender();
 }
 
 void Win64Application::OnEvent(const Event& event)
@@ -114,5 +117,6 @@ void Win64Application::ImguiRender()
 	{
 	case Context::API::OPENGL: ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); break;
 	case Context::API::DIRECTX11: ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData()); break;
+	case Context::API::DIRECTX12: ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx12CommandList()); break;
 	}
 }
