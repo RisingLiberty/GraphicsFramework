@@ -36,6 +36,7 @@ public:
 
 	void FlushCommandQueue();
 
+	virtual void Initialize() override;
 	virtual void Present() override;
 	virtual API GetApiType() const override;
 

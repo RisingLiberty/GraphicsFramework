@@ -10,7 +10,8 @@ public:
 	OpenGLContext(Window* window);
 	virtual ~OpenGLContext();
 
-	void Present() override;
+	virtual void Initialize() override;
+	virtual void Present() override;
 	API GetApiType() const;
 
 protected:

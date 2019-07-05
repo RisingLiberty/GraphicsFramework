@@ -22,6 +22,8 @@ Context::~Context() = default;
 
 void Context::Create(API api, Window* window)
 {
+	assert(s_current);
+
 	switch (api)
 	{
 	case Context::API::DIRECTX11: s_current = std::make_unique<Dx11Context>(window); break;
@@ -32,6 +34,8 @@ void Context::Create(API api, Window* window)
 	default:
 		break;
 	}
+
+	s_current->Initialize();
 }
 
 Context* Context::GetCurrent()

@@ -19,10 +19,11 @@ public:
 	};
 
 	Dx11Context(Window* window);
-	~Dx11Context();
+	virtual ~Dx11Context();
 
 	void ResizeBuffers(unsigned int width, unsigned int height);
 
+	virtual void Initialize() override;
 	virtual void Present() override;
 	virtual API GetApiType() const override;
 

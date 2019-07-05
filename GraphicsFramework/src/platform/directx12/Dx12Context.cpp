@@ -32,12 +32,16 @@ Dx12Context::Dx12Context(Window* window):
 	
 	// Open command list
 	m_resources.command_list->Reset(m_resources.command_allocator.Get(), nullptr);
-	m_renderer = std::make_unique<Dx12Renderer>();
 }
 
 Dx12Context::~Dx12Context()
 {
 
+}
+
+void Dx12Context::Initialize()
+{
+	m_renderer = std::make_unique<Dx12Renderer>();
 }
 
 void Dx12Context::FlushCommandQueue()

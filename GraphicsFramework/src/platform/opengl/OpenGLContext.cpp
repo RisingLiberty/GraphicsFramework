@@ -31,11 +31,14 @@ OpenGLContext::OpenGLContext(Window* window)
 	{
 		ThrowException(L"Failed to initialize glew");
 	}
-
-	m_renderer = std::make_unique<OpenGLRenderer>();
 }
 
 OpenGLContext::~OpenGLContext() = default;
+
+void OpenGLContext::Initialize()
+{
+	m_renderer = std::make_unique<OpenGLRenderer>();
+}
 
 void OpenGLContext::Present()
 {

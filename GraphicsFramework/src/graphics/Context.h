@@ -19,6 +19,8 @@ public:
 	Context();
 	virtual ~Context();
 
+	virtual void Initialize() = 0;
+
 	static void Create(API api, Window* window);
 	static API GetApi();
 	static Context* GetCurrent();

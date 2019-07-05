@@ -13,13 +13,16 @@ Dx11Context::Dx11Context(Window* window)
 
 	m_is_vsync = window->GetPropeties().vsync;
 	this->InitD3D(window);
-	m_renderer = std::make_unique<Dx11Renderer>(m_render_target_view.Get(), m_depth_stencil_view.Get());
-
 }
 
 Dx11Context::~Dx11Context()
 {
 
+}
+
+void Dx11Context::Initialize()
+{
+	m_renderer = std::make_unique<Dx11Renderer>(m_render_target_view.Get(), m_depth_stencil_view.Get());
 }
 
 void Dx11Context::InitD3D(Window* window)
