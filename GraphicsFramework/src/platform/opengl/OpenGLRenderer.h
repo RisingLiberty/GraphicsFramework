@@ -6,13 +6,13 @@ class OpenGLRenderer : public Renderer
 {
 public:
 	OpenGLRenderer();
-	~OpenGLRenderer();
+	virtual ~OpenGLRenderer();
 
-	void Present() override;
-	void ClearAllBuffers() override;
-	void ClearColorBuffer() override;
-	void ClearDepthStencilBuffer() override;
-	void ClearDepthBuffer() override;
-	void ClearStencilBuffer() override;
+	virtual void Present() override;
+	virtual void ClearAllBuffers() override;
+	virtual void ClearColorBuffer() override;
+	virtual void ClearDepthStencilBuffer() override;
+	virtual void ClearDepthBuffer() override;
+	virtual void ClearStencilBuffer() override;
 
 };
