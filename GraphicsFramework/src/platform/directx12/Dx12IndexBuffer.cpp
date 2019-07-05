@@ -11,7 +11,7 @@ Dx12IndexBuffer::Dx12IndexBuffer(size_t count, BufferUsage usage, const void* da
 	{
 		DXCALL(D3DCreateBlob(sizeof(unsigned int) * count, m_buffer_cpu.ReleaseAndGetAddressOf()));
 		memcpy(m_buffer_cpu->GetBufferPointer(), data, sizeof(unsigned int) * count);
-		m_buffer_gpu = CreateDefaultBuffer(data, sizeof(unsigned int)*count, m_upload_buffer);
+		m_buffer_gpu = CreateDefaultBuffer(data, sizeof(unsigned int)*(unsigned int)count, m_upload_buffer);
 	}
 }
 

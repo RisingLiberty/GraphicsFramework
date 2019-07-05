@@ -17,13 +17,13 @@ OpenGLVertexArray::OpenGLVertexArray(const VertexBuffer* vb, const VertexLayout*
 	vb->Bind();
 
 	const std::vector<VertexAttribute>& attributes = layout->GetAttributes();
-	unsigned int offset = 0;
+	size_t offset = 0;
 
 	for (unsigned int i = 0; i < attributes.size(); ++i)
 	{
 		const VertexAttribute& attribute = attributes[i];
 		GLCALL(glEnableVertexAttribArray(i));
-		GLCALL(glVertexAttribPointer(i, attribute.Count, attribute.GetOpenGLDataType(), attribute.IsNormalized, layout->GetSize(), (const void*)offset));
+		GLCALL(glVertexAttribPointer(i, attribute.Count, attribute.GetOpenGLDataType(), attribute.IsNormalized, layout->GetSize(), reinterpret_cast<const void*>(offset)));
 		offset += attribute.Count * VertexAttribute::GetSizeOfDataType(attribute.DataType);
 	}
 }
