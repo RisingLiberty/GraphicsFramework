@@ -13,3 +13,13 @@ void Renderer::SubmitObject(SceneObject* mesh)
 {
 	m_scene_objects.push_back(mesh);
 }
+
+void Renderer::Begin()
+{
+
+}
+
+void Renderer::End()
+{
+
+}

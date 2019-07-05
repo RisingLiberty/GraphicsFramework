@@ -17,6 +17,8 @@ public:
 	virtual void ClearDepthBuffer() = 0;
 	virtual void ClearStencilBuffer() = 0;
 
+	virtual void Begin();
+	virtual void End();
 
 protected:
 	std::vector<SceneObject*> m_scene_objects;

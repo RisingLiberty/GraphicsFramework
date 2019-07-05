@@ -30,20 +30,36 @@ void Dx12Renderer::Present()
 
 void Dx12Renderer::ClearAllBuffers()
 {
+	this->ClearColorBuffer();
+	this->ClearDepthStencilBuffer();
 }
 
 void Dx12Renderer::ClearColorBuffer()
 {
+	GetDx12CommandList()->ClearRenderTargetView(GetDx12Context()->GetCurrentBackBufferView(), m_clear_color.data(), 0, nullptr);
 }
 
 void Dx12Renderer::ClearDepthStencilBuffer()
 {
+	GetDx12CommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 }
 
 void Dx12Renderer::ClearDepthBuffer()
 {
+	GetDx12CommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void Dx12Renderer::ClearStencilBuffer()
 {
+	GetDx12CommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+}
+
+void Dx12Renderer::Begin()
+{
+	GetDx12Context()->Begin();
+}
+
+void Dx12Renderer::End()
+{
+	GetDx12Context()->End();
 }
