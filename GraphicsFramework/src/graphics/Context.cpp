@@ -22,7 +22,7 @@ Context::~Context() = default;
 
 void Context::Create(API api, Window* window)
 {
-	assert(s_current);
+	assert(!s_current);
 
 	switch (api)
 	{
