@@ -49,7 +49,6 @@ private:
 	Dx11Resources m_resources;
 
 	D3D_FEATURE_LEVEL m_feature_level;
-	bool m_is_vsync;
 
 	ComPtr<ID3D11RenderTargetView> m_render_target_view;
 	ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;

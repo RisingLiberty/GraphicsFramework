@@ -44,6 +44,8 @@ protected:
 	std::unique_ptr<ShaderController> m_shader_controller;
 	std::unique_ptr<VertexArrayController> m_vertex_array_controller;
 
+	bool m_is_vsync;
+
 private:
 	static std::unique_ptr<Context> s_current;
 
