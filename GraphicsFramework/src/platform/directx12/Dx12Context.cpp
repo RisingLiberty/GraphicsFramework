@@ -151,6 +151,7 @@ Dx12Context::Dx12Context(Window* window) :
 {
 	this->InitD3D(window);
 	this->OnResize(window->GetPropeties().width, window->GetPropeties().height);
+	m_is_vsync = window->GetPropeties().vsync;
 }
 
 Dx12Context::~Dx12Context() = default;
@@ -435,7 +436,7 @@ void Dx12Context::FlushCommandQueue()
 	}
 }
 
-ID3D12Resource * Dx12Context::CurrentBackBuffer() const
+ID3D12Resource* Dx12Context::CurrentBackBuffer() const
 {
 	return m_swapchain_buffers[m_current_back_buffer_index].Get();
 }
@@ -538,6 +539,14 @@ void Dx12Context::BuildDescriptorHeaps()
 	cbvHeapDesc.NodeMask = 0;
 	ThrowIfFailed(m_device->CreateDescriptorHeap(&cbvHeapDesc,
 		IID_PPV_ARGS(&m_cbv_heap)));
+
+	cbvHeapDesc.NumDescriptors = 1;
+	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	cbvHeapDesc.NodeMask = 0;
+	ThrowIfFailed(m_device->CreateDescriptorHeap(&cbvHeapDesc,
+		IID_PPV_ARGS(&m_cbv_imgui_heap)));
+
 }
 
 void Dx12Context::BuildPSO()
@@ -611,16 +620,22 @@ ID3D12GraphicsCommandList* Dx12Context::GetCommandList() const
 void Dx12Context::BindVertexArray(VertexArray* va)
 {
 	m_bound_vertex_array = va;
+	if (m_bound_shader_program && m_bound_ib)
+		this->BuildPSO();
 }
 
 void Dx12Context::BindShaderProgram(ShaderProgram* shaderProgram)
 {
 	m_bound_shader_program = shaderProgram;
+	if (m_bound_vertex_array && m_bound_ib)
+		this->BuildPSO();
 }
 
 void Dx12Context::BindIndexBuffer(IndexBuffer* ib)
 {
 	m_bound_ib = ib;
+	if (m_bound_vertex_array && m_bound_shader_program)
+		this->BuildPSO();
 }
 
 void Dx12Context::BindResourcesToPipeline()
@@ -634,12 +649,10 @@ void Dx12Context::BindResourcesToPipeline()
 
 	m_command_list->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_command_list->SetGraphicsRootDescriptorTable(0, m_cbv_heap->GetGPUDescriptorHandleForHeapStart());
-
 }
 
 void Dx12Context::Begin()
 {
-	this->BuildPSO();
 	// Reuse the memory associated with command recording.
 	// We can only reset when the associated command lists have finished execution on the GPU.
 	ThrowIfFailed(m_direct_cmdlist_alloc->Reset());
@@ -665,7 +678,7 @@ void Dx12Context::Begin()
 void Dx12Context::Present()
 {
 	// swap the back and front buffers
-	ThrowIfFailed(m_swapchain->Present(1, 0));
+	ThrowIfFailed(m_swapchain->Present(m_is_vsync, 0));
 }
 
 void Dx12Context::End()
@@ -722,7 +735,7 @@ ID3D12DescriptorHeap * Dx12Context::GetRtvDescriptorHeap() const
 
 ID3D12DescriptorHeap * Dx12Context::GetSrvDescriptorHeap() const
 {
-	return m_cbv_heap.Get();
+	return m_cbv_imgui_heap.Get();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Dx12Context::GetCurrentBackBufferView() const
@@ -761,8 +774,13 @@ ID3D12DescriptorHeap* Dx12Context::GetDsvHeap() const
 	return m_dsv_heap.Get();
 }
 
-
 void Dx12Context::IncreaseSwapBufferIndex()
 {
 	m_current_back_buffer_index = (m_current_back_buffer_index + 1) % SWAPCHAIN_BUFFER_COUNT;
+}
+
+void Dx12Context::BindImgui()
+{
+	ID3D12DescriptorHeap* descriptorHeaps[] = { m_cbv_imgui_heap.Get() };
+	m_command_list->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
 }

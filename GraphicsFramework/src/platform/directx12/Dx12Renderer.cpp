@@ -84,6 +84,7 @@ void Dx12Renderer::End()
 
 void Dx12Renderer::RenderImgui()
 {
+	GetDx12Context()->BindImgui();
 	ImGui::Render();
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx12CommandList());
 }

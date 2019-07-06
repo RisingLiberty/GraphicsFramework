@@ -153,6 +153,7 @@ public:
 	ID3D12DescriptorHeap* GetDsvHeap() const;
 	IDXGISwapChain* GetSwapchain() const { return m_swapchain.Get(); }
 	void IncreaseSwapBufferIndex();
+	void BindImgui();
 
 private:
 	void InitD3D(Window* window);
@@ -211,6 +212,7 @@ private:
 	Window* m_window;
 
 	ComPtr<ID3D12DescriptorHeap> m_cbv_heap = nullptr;
+	ComPtr<ID3D12DescriptorHeap> m_cbv_imgui_heap = nullptr;
 
 	ComPtr<ID3D12PipelineState> m_pipeline_state = nullptr;
 
