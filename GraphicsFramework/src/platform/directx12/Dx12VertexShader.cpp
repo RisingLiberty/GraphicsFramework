@@ -32,7 +32,6 @@ Dx12VertexShader::Dx12VertexShader(const std::string& path) :
 {
 	this->Compile();
 	m_code = LoadCode(m_path);
-	GetDx12Context()->BindVertexShader(this);
 }
 
 Dx12VertexShader::~Dx12VertexShader()

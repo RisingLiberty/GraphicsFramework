@@ -9,9 +9,9 @@ MainScene::MainScene(const std::string& name) :
 	Scene(name)
 {
 	this->PushLayer(std::make_unique<MainLayer>());
+
 	std::unique_ptr<Layer> ui = UILayer::Create("--UI--");
 	ui->PushObject(std::make_unique<UIButton>("Button", 100, 100));
-
 	this->PushLayer(std::move(ui));
 }
 
