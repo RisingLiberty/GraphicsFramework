@@ -18,9 +18,6 @@ protected:
 	void Draw() override;
 
 private:
-	void ImguiRender();
-
-private:
 	AreFramesCapped m_are_frames_capped;
 
 };

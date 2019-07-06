@@ -31,12 +31,16 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped):
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
 	Context::Create(Context::API::DIRECTX12, m_window.get());
+	Context::GetCurrent()->PreInitialize();
+	Context::GetCurrent()->Initialize();
 }
 
 Win64Application::~Win64Application() = default;
 
 void Win64Application::Run()
 {
+	Context::GetCurrent()->PostInitialize();
+
 	spdlog::info("Application is running");
 
 	bool is_running = true;
@@ -79,11 +83,12 @@ void Win64Application::Run()
 			++frame_count;
 		}
 
-		//if (Context::GetCurrent()->GetRenderer())
-		//	this->Draw();
+		if (Context::GetCurrent()->GetRenderer())
+			this->Draw();
+
+		m_window->Present();
 
 		//fix so draw updates are synced with display refresh rate
-		m_window->Present();
 
 	}
 }
@@ -100,23 +105,11 @@ void Win64Application::Draw()
 	Context::GetCurrent()->GetRenderer()->ClearAllBuffers();
 	m_scene_controller->Draw();
 	Context::GetCurrent()->GetRenderer()->Present();
+	//Context::GetCurrent()->GetRenderer()->RenderImgui();
 	Context::GetCurrent()->GetRenderer()->End();
-	//this->ImguiRender();
 }
 
 void Win64Application::OnEvent(const Event& event)
 {
 
-}
-
-void Win64Application::ImguiRender()
-{
-	ImGui::Render();
-
-	switch (Context::GetApi())
-	{
-	case Context::API::OPENGL: ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); break;
-	case Context::API::DIRECTX11: ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData()); break;
-	case Context::API::DIRECTX12: ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx12CommandList()); break;
-	}
 }
