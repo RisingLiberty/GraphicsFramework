@@ -3,19 +3,25 @@
 #include "Dx12Renderer.h"
 #include "Dx12HelperMethods.h"
 #include "Dx12Context.h"
+#include "Dx12IndexBuffer.h"
+#include "Dx12VertexArray.h"
+
+#include "graphics/Mesh.h"
+#include "graphics/Material.h"
+#include "scenegraph/SceneObject.h"
+
 
 Dx12Renderer::Dx12Renderer()
 {
 	unsigned int num_frame_resources = GetDx12Context()->GetNrOfFrameResources();
 	DXGI_FORMAT back_buffer_format = GetDx12Context()->GetBackBufferFormat();
-	ID3D12DescriptorHeap* rtv_descriptor_heap = GetDx12Context()->GetRtvDescriptorHeap();
 	ID3D12DescriptorHeap* srv_descriptor_heap = GetDx12Context()->GetSrvDescriptorHeap();
 
 	ImGui_ImplDX12_Init(
 		GetDx12Device(),
-		num_frame_resources,
+		1,
 		back_buffer_format,
-		rtv_descriptor_heap->GetCPUDescriptorHandleForHeapStart(),
+		srv_descriptor_heap->GetCPUDescriptorHandleForHeapStart(),
 		srv_descriptor_heap->GetGPUDescriptorHandleForHeapStart());
 }
 
@@ -26,6 +32,18 @@ Dx12Renderer::~Dx12Renderer()
 
 void Dx12Renderer::Present()
 {
+	for (SceneObject* object : m_scene_objects)
+	{
+		Mesh* mesh = object->GetMesh();
+		Material* material = object->GetMaterial();
+
+		material->Use();
+
+		GetDx12Context()->BindResourcesToPipeline();
+		GetDx12CommandList()->DrawIndexedInstanced((unsigned int)mesh->GetIndices()->GetCount(), 1, 0, 0, 0);
+	}
+
+	m_scene_objects.clear();
 }
 
 void Dx12Renderer::ClearAllBuffers()
@@ -62,4 +80,10 @@ void Dx12Renderer::Begin()
 void Dx12Renderer::End()
 {
 	GetDx12Context()->End();
+}
+
+void Dx12Renderer::RenderImgui()
+{
+	ImGui::Render();
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx12CommandList());
 }

@@ -17,4 +17,5 @@ public:
 
 	virtual void Begin() override;
 	virtual void End() override;
+	virtual void RenderImgui() override;
 };
