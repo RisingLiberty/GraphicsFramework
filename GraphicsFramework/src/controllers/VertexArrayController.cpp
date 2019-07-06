@@ -10,8 +10,8 @@ namespace
 {
 	size_t VertexArrayHash(const VertexBuffer* vb, const VertexLayout* layout)
 	{
-		__int64 a = (__int64)vb;
-		__int64 b = (__int64)layout;
+		size_t a = (size_t)vb;
+		size_t b = (size_t)layout;
 
 		//Cantor pairing function
 		return (a + b) * (a + b + 1) / 2 + a;

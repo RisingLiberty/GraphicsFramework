@@ -10,8 +10,8 @@ namespace
 {
 	size_t ShaderProgramHash(VertexShader* vs, FragmentShader* fs)
 	{
-		__int64 a = (__int64)vs;
-		__int64 b = (__int64)fs;
+		size_t a = (size_t)vs;
+		size_t b = (size_t)fs;
 
 		//Cantor pairing function
 		return (a + b) * (a + b + 1) / 2 + a;

@@ -55,7 +55,7 @@ namespace d3dUtil
 		std::ifstream fin(filename, std::ios::binary);
 
 		fin.seekg(0, std::ios_base::end);
-		std::ifstream::pos_type size = (int)fin.tellg();
+		size_t size = (size_t)fin.tellg();
 		fin.seekg(0, std::ios_base::beg);
 
 		ComPtr<ID3DBlob> blob;
@@ -71,7 +71,7 @@ namespace d3dUtil
 		ID3D12Device* device,
 		ID3D12GraphicsCommandList* cmdList,
 		const void* initData,
-		UINT64 byteSize,
+		size_t byteSize,
 		Microsoft::WRL::ComPtr<ID3D12Resource>& uploadBuffer)
 	{
 		ComPtr<ID3D12Resource> defaultBuffer;
