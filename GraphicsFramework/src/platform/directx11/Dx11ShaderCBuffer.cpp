@@ -58,55 +58,55 @@ Dx11ShaderCBuffer::Dx11ShaderCBuffer(const std::string& name, unsigned int reg, 
 
 }
 
-Dx11ShaderCBuffer::Dx11ShaderCBuffer(Dx11ShaderCBuffer& buffer)
+Dx11ShaderCBuffer::Dx11ShaderCBuffer(Dx11ShaderCBuffer& other)
 {
-	name = buffer.name;
-	reg = buffer.reg;
-	shader_type = buffer.shader_type;
-	uniforms = std::move(buffer.uniforms);
-	size = buffer.size;
-	real_size = buffer.real_size;
+	name = other.name;
+	reg = other.reg;
+	shader_type = other.shader_type;
+	uniforms = std::move(other.uniforms);
+	size = other.size;
+	real_size = other.real_size;
 
-	this->buffer = buffer.buffer;
+	this->buffer = other.buffer;
 
 }
 
-Dx11ShaderCBuffer::Dx11ShaderCBuffer(Dx11ShaderCBuffer&& buffer)
+Dx11ShaderCBuffer::Dx11ShaderCBuffer(Dx11ShaderCBuffer&& other)
 {
-	name = buffer.name;
-	reg = buffer.reg;
-	shader_type = buffer.shader_type;
-	uniforms = std::move(buffer.uniforms);
-	size = buffer.size;
-	real_size = buffer.real_size;
+	name = other.name;
+	reg = other.reg;
+	shader_type = other.shader_type;
+	uniforms = std::move(other.uniforms);
+	size = other.size;
+	real_size = other.real_size;
 
-	this->buffer = buffer.buffer;
+	this->buffer = other.buffer;
 }
 
-Dx11ShaderCBuffer& Dx11ShaderCBuffer::operator=(Dx11ShaderCBuffer& buffer)
+Dx11ShaderCBuffer& Dx11ShaderCBuffer::operator=(Dx11ShaderCBuffer& other)
 {
-	name = buffer.name;
-	reg = buffer.reg;
-	shader_type = buffer.shader_type;
-	uniforms = std::move(buffer.uniforms);
-	size = buffer.size;
-	real_size = buffer.real_size;
+	name = other.name;
+	reg = other.reg;
+	shader_type = other.shader_type;
+	uniforms = std::move(other.uniforms);
+	size = other.size;
+	real_size = other.real_size;
 
-	this->buffer = buffer.buffer;
+	this->buffer = other.buffer;
 
 	return *this;
 }
 
-Dx11ShaderCBuffer& Dx11ShaderCBuffer::operator=(Dx11ShaderCBuffer&& buffer)
+Dx11ShaderCBuffer& Dx11ShaderCBuffer::operator=(Dx11ShaderCBuffer&& other)
 {
-	name = buffer.name;
-	reg = buffer.reg;
-	shader_type = buffer.shader_type;
-	uniforms = std::move(buffer.uniforms);
-	size = buffer.size;
-	real_size = buffer.real_size;
+	name = other.name;
+	reg = other.reg;
+	shader_type = other.shader_type;
+	uniforms = std::move(other.uniforms);
+	size = other.size;
+	real_size = other.real_size;
 
-	this->buffer = buffer.buffer;
+	this->buffer = other.buffer;
 
 	return *this;
 }
