@@ -9,27 +9,23 @@
 
 #include "controllers/ShaderController.h"
 
-FragmentShader::FragmentShader(const std::string& path):
-	Shader(path)
-{
-
-}
-
-FragmentShader::~FragmentShader()
-{
-
-}
-
 FragmentShader* FragmentShader::Create(const std::string& shaderName)
 {
 	ASSERT(shaderName.find(".") == std::string::npos, "shader name can't have an extention!");
 
 	std::string path = "data/shaders/";
-	if (Context::GetApi() == Context::API::OPENGL)
+	switch (Context::GetApi())
+	{
+	case Context::API::OPENGL:
 		path += "opengl/" + shaderName + ".glsl";
-	else
+		break;
+	case Context::API::DIRECTX11:
 		path += "directx11/" + shaderName + ".hlsl";
-
+		break;
+	case Context::API::DIRECTX12:
+		path += "directx12/" + shaderName + ".hlsl";
+		break;
+	}
 
 	ShaderController* shader_controller = Context::GetCurrent()->GetShaderController();
 	FragmentShader* shader = shader_controller->GetFragmentShader(path);
@@ -42,12 +38,10 @@ FragmentShader* FragmentShader::Create(const std::string& shaderName)
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case Context::API::OPENGL:
-	{
 		unique_shader = std::make_unique<OpenGLFragmentShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushFragmentShader(unique_shader);
 		break;
-	}
 	case Context::API::DIRECTX11:
 		unique_shader = std::make_unique<Dx11FragmentShader>(path);
 		shader = unique_shader.get();
@@ -61,6 +55,17 @@ FragmentShader* FragmentShader::Create(const std::string& shaderName)
 	}
 
 	return shader;
+}
+
+FragmentShader::FragmentShader(const std::string& path):
+	Shader(path)
+{
+
+}
+
+FragmentShader::~FragmentShader()
+{
+
 }
 
 Shader::Type FragmentShader::GetType() const
