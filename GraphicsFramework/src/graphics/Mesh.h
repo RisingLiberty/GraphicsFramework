@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Vertex.h"
-
 class VertexBuffer;
 class VertexLayout;
 class IndexBuffer;
@@ -10,7 +8,7 @@ class Mesh
 {
 public:
 	Mesh(std::unique_ptr<VertexBuffer>& vb, std::unique_ptr<VertexLayout>& layout, std::unique_ptr<IndexBuffer>& ib);
-	Mesh(const std::string& path);
+	//Mesh(const std::string& path);
 	~Mesh();
 
 	VertexBuffer* GetVertices() const;
