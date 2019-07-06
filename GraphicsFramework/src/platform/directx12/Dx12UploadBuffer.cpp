@@ -25,9 +25,9 @@ Dx12UploadBuffer::~Dx12UploadBuffer()
 		m_upload_buffer->Unmap(0, nullptr);
 }
 
-void Dx12UploadBuffer::CopyData(const void* data)
+void Dx12UploadBuffer::CopyData(const void* data, unsigned int size, unsigned int offset)
 {
-	memcpy(m_mapped_data, data, m_size);
+	memcpy(&m_mapped_data[offset], data, size);
 }
 
 ID3D12Resource* Dx12UploadBuffer::GetResource() const

@@ -8,7 +8,7 @@ public:
 	Dx12UploadBuffer(const Dx12ShaderCBuffer& constantBuffer);
 	~Dx12UploadBuffer();
 
-	void CopyData(const void* data);
+	void CopyData(const void* data, unsigned int size, unsigned int offset);
 	
 	ID3D12Resource* GetResource() const;
 	unsigned int GetSize() const;
