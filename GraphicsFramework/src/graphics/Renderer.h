@@ -19,6 +19,7 @@ public:
 
 	virtual void Begin();
 	virtual void End();
+	virtual void RenderImgui() = 0;
 
 protected:
 	std::vector<SceneObject*> m_scene_objects;
