@@ -22,8 +22,6 @@ void Dx12UILayer::Update(float dTime)
 
 void Dx12UILayer::Draw()
 {
-	return;
-
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();

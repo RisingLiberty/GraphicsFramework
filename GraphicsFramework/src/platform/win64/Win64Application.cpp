@@ -105,7 +105,7 @@ void Win64Application::Draw()
 	Context::GetCurrent()->GetRenderer()->ClearAllBuffers();
 	m_scene_controller->Draw();
 	Context::GetCurrent()->GetRenderer()->Present();
-	//Context::GetCurrent()->GetRenderer()->RenderImgui();
+	Context::GetCurrent()->GetRenderer()->RenderImgui();
 	Context::GetCurrent()->GetRenderer()->End();
 }
 

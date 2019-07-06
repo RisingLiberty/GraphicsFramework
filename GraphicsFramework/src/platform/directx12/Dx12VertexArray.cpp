@@ -3,7 +3,7 @@
 #include "Dx12VertexArray.h"
 #include "Dx12HelperMethods.h"
 #include "Dx12VertexBuffer.h"
-
+#include "Dx12Context.h"
 #include "graphics/VertexLayout.h"
 
 
@@ -23,7 +23,6 @@ namespace
 Dx12VertexArray::Dx12VertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	VertexArray(vb, layout)
 {
-
 }
 
 Dx12VertexArray::~Dx12VertexArray()
@@ -34,7 +33,8 @@ Dx12VertexArray::~Dx12VertexArray()
 void Dx12VertexArray::Bind() const
 {
 	const Dx12VertexBuffer* dx_vb = dynamic_cast<const Dx12VertexBuffer*>(m_vertex_buffer);
-	GetDx12CommandList()->IASetVertexBuffers(0, 1, &GetVertexBufferView(dx_vb, m_vertex_layout));
+	D3D12_VERTEX_BUFFER_VIEW vbv = GetVertexBufferView(dx_vb, m_vertex_layout);
+	GetDx12CommandList()->IASetVertexBuffers(0, 1, &vbv);
 }
 
 void Dx12VertexArray::Unbind() const
