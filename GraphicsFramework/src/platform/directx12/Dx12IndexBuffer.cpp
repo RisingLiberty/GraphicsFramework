@@ -2,11 +2,14 @@
 
 #include "Dx12IndexBuffer.h"
 #include "Dx12HelperMethods.h"
+#include "Dx12Context.h"
 
 
 Dx12IndexBuffer::Dx12IndexBuffer(size_t count, BufferUsage usage, const void* data) :
 	IndexBuffer(count, usage)
 {
+	GetDx12Context()->BindIndexBuffer(this);
+
 	if (data)
 	{
 		DXCALL(D3DCreateBlob(sizeof(unsigned int) * count, m_buffer_cpu.ReleaseAndGetAddressOf()));
