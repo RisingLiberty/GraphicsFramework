@@ -81,13 +81,29 @@
     <IntDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\intermediate\</IntDir>
     <LibraryPath>$(ProjectDir)\lib\;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)src\;$(ProjectDir)\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(ProjectDir)lib\;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <OutDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\intermediate\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir)src;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <LibraryPath>$(ProjectDir)lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <OutDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\bin\</OutDir>
+    <IntDir>$(SolutionDir)_Temp/$(ProjectName)/$(Platform)\$(Configuration)\intermediate\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;D3D12.lib;DXGI.LIB;glew32s.lib;opengl32.lib;GraphicsFramework.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -112,10 +128,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;D3D12.lib;DXGI.LIB;glew32s.lib;opengl32.lib;GraphicsFramework.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -171,7 +189,6 @@
     <ClCompile Include="src\graphics\Shader.cpp" />
     <ClCompile Include="src\graphics\ShaderProgram.cpp" />
     <ClCompile Include="src\graphics\ShaderUniform.cpp" />
-    <ClCompile Include="src\graphics\Vertex.cpp" />
     <ClCompile Include="src\graphics\VertexArray.cpp" />
     <ClCompile Include="src\graphics\VertexAttribute.cpp" />
     <ClCompile Include="src\graphics\VertexBuffer.cpp" />
@@ -181,7 +198,6 @@
     <ClCompile Include="src\platform\directx11\Dx11Context.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11Renderer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11HelperMethods.cpp" />
-    <ClCompile Include="src\platform\directx12\Dx12Context.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12HelperMethods.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12IndexBuffer.cpp" />
@@ -193,6 +209,7 @@
     <ClCompile Include="src\platform\directx12\Dx12ShaderStruct.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderTexture.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderUniform.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12Context.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12UILayer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12UploadBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexArray.cpp" />
@@ -289,7 +306,6 @@
     <ClInclude Include="src\graphics\Shader.h" />
     <ClInclude Include="src\graphics\ShaderProgram.h" />
     <ClInclude Include="src\graphics\ShaderUniform.h" />
-    <ClInclude Include="src\graphics\Vertex.h" />
     <ClInclude Include="src\graphics\VertexArray.h" />
     <ClInclude Include="src\graphics\VertexAttribute.h" />
     <ClInclude Include="src\graphics\VertexBuffer.h" />
@@ -306,10 +322,10 @@
     <ClInclude Include="src\platform\directx12\Dx12ShaderStruct.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderTexture.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderUniform.h" />
+    <ClInclude Include="src\platform\directx12\Dx12Context.h" />
     <ClInclude Include="src\platform\directx12\Dx12UILayer.h" />
     <ClInclude Include="src\platform\directx12\Dx12UploadBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexArray.h" />
-    <ClInclude Include="src\platform\directx12\Dx12Context.h" />
     <ClInclude Include="src\platform\directx12\Dx12FragmentShader.h" />
     <ClInclude Include="src\platform\directx12\Dx12HelperMethods.h" />
     <ClInclude Include="src\platform\directx12\Dx12IndexBuffer.h" />
