@@ -41,6 +41,9 @@
 #include <DirectXPackedVector.h>
 #include <DirectXCollision.h>
 
+// vulkan header
+#include <vulkan/vulkan.h>
+
 // windows headers
 #include <Windows.h>
 #include <windowsx.h>
