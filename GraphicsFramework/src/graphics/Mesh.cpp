@@ -11,13 +11,14 @@
 #include "VertexBuffer.h"
 #include "VertexLayout.h"
 #include "IndexBuffer.h"
+#include "VertexArray.h"
 
 Mesh::Mesh(std::unique_ptr<VertexBuffer>& vb, std::unique_ptr<VertexLayout>& layout, std::unique_ptr<IndexBuffer>& ib):
 	m_vertices(std::move(vb)),
 	m_vertex_layout(std::move(layout)),
 	m_indices(std::move(ib))
 {
-
+	VertexArray::Create(m_vertices.get(), m_vertex_layout.get());
 }
 
 Mesh::Mesh(const std::string& path)
