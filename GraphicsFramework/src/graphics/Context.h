@@ -19,7 +19,12 @@ public:
 	Context();
 	virtual ~Context();
 
+	virtual void PreInitialize();
 	virtual void Initialize() = 0;
+	virtual void PostInitialize();
+
+	virtual void Start() {};
+	virtual void Finish() {};
 
 	static void Create(API api, Window* window);
 	static API GetApi();
