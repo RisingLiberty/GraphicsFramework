@@ -15,7 +15,7 @@ public:
 		bool vsync;
 	};
 
-	Window(unsigned int width, unsigned int height, bool isFullScreen = false, bool isVsync = false);
+	Window(unsigned int width, unsigned int height, bool isFullScreen = false, bool isVsync = true);
 	virtual ~Window();
 
 	virtual int EventLoop() = 0;
