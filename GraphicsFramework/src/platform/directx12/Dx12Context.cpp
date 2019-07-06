@@ -2,7 +2,6 @@
 #include "Dx12Context.h"
 #include "Dx12HelperMethods.h"
 
-#include "Dx12VertexBuffer.h"
 #include "Dx12IndexBuffer.h"
 #include "Dx12VertexShader.h"
 #include "Dx12VertexLayout.h"
@@ -16,9 +15,6 @@
 #endif
 
 #include "graphics/Window.h"
-#include <WindowsX.h>
-
-#include <comdef.h>
 #include "Dx12Renderer.h"
 
 Dx12Context::Dx12Context(Window* window)
