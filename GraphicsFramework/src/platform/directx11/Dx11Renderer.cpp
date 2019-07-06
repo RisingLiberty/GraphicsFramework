@@ -71,3 +71,9 @@ void Dx11Renderer::ClearStencilBuffer()
 {
 	GetDx11DeviceContext()->ClearDepthStencilView(m_depth_stencil_view.Get(), D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
+
+void Dx11Renderer::RenderImgui()
+{
+	ImGui::Render();
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+}

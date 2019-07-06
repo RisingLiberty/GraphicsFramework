@@ -71,3 +71,8 @@ void OpenGLRenderer::ClearStencilBuffer()
 	glClear(GL_STENCIL_BUFFER_BIT);
 }
 
+void OpenGLRenderer::RenderImgui()
+{
+	ImGui::Render();
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}

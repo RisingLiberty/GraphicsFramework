@@ -15,6 +15,8 @@ public:
 	virtual void ClearDepthBuffer() override;
 	virtual void ClearStencilBuffer() override;
 
+	virtual void RenderImgui() override;
+
 private:
 	ComPtr<ID3D11RenderTargetView> m_render_target_view;
 	ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
