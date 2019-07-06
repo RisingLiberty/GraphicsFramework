@@ -22,14 +22,14 @@ OpenGLContext::OpenGLContext(Window* window)
 	if (hrc)
 	{
 		if (!wglMakeCurrent(m_hdc, hrc))
-			ThrowContextException(L"Failed to set OpenGL context!");
+			ThrowContextException("Failed to set OpenGL context!");
 	}
 	else
-		ThrowContextException(L"Failed to create OpenGL context!");
+		ThrowContextException("Failed to create OpenGL context!");
 
 	if (glewInit())
 	{
-		ThrowException(L"Failed to initialize glew");
+		ThrowException("Failed to initialize glew");
 	}
 }
 

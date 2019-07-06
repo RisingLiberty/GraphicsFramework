@@ -64,10 +64,10 @@ Win64Window::Win64Window(unsigned int width, unsigned int height, const std::wst
 	if (pixel_format)
 	{
 		if (!SetPixelFormat(m_hdc, pixel_format, &pfd))
-			ThrowException(L"Failed to set pixel format!");
+			ThrowException("Failed to set pixel format!");
 	}
 	else
-		ThrowException(L"Failed to choose pixel format!");
+		ThrowException("Failed to choose pixel format!");
 
 	ShowWindow(m_handle, SW_SHOWDEFAULT);
 

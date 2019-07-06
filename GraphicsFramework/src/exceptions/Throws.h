@@ -1,27 +1,20 @@
 #pragma once
 
-inline std::wstring AnsiToWString(const std::string& str)
-{
-	WCHAR buffer[512];
-	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, buffer, 512);
-	return std::wstring(buffer);
-}
 
 #ifndef ThrowIfFailed
 #define ThrowIfFailed(x, exception)\
 {\
     HRESULT _hr_ = (x);\
-    if(FAILED(_hr_)) { throw exception(_hr_, L#x, AnsiToWString(__FILE__), __LINE__); } \
+    if(FAILED(_hr_)) { throw exception(_hr_, #x, __FILE__, __LINE__); } \
 }
-
 #define ThrowException(x)\
 {\
-	throw Exception(x, AnsiToWString(__FUNCTION__), AnsiToWString(__FILE__), __LINE__);\
+	throw Exception(x, __FUNCTION__, __FILE__, __LINE__);\
 }
 
 #define ThrowContextException(x)\
 {\
-	throw ContextException(x, AnsiToWString(__FUNCTION__), AnsiToWString(__FILE__), __LINE__);\
+	throw ContextException(x, __FUNCTION__, __FILE__, __LINE__);\
 }
 
 #define ThrowIfFailedDefault(x)\
@@ -63,6 +56,4 @@ inline std::wstring AnsiToWString(const std::string& str)
 {\
 	ThrowIfFailed(x, CommandAllocatorException);\
 }
-
-
 #endif
