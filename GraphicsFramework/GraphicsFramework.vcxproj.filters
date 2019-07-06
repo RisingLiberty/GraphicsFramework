@@ -294,6 +294,9 @@
     <ClCompile Include="src\platform\directx12\Dx12Context.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\platform\vulkan\VkContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -588,6 +591,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\directx12\Dx12Context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\vulkan\VkContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
