@@ -25,10 +25,19 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 	ASSERT(shaderName.find(".") == std::string::npos, "shader name can't have an extention!");
 
 	std::string path = "data/shaders/";
-	if (Context::GetApi() == Context::API::OPENGL)
+
+	switch (Context::GetApi())
+	{
+	case Context::API::OPENGL:
 		path += "opengl/" + shaderName + ".glsl";
-	else
+		break;
+	case Context::API::DIRECTX11:
 		path += "directx11/" + shaderName + ".hlsl";
+		break;
+	case Context::API::DIRECTX12:
+		path += "directx12/" + shaderName + ".hlsl";
+		break;
+	}
 
 	ShaderController* shader_controller = Context::GetCurrent()->GetShaderController();
 	VertexShader* shader = shader_controller->GetVertexShader(path);
@@ -41,7 +50,6 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case Context::API::OPENGL:
-	{
 		unique_shader = std::make_unique<OpenGLVertexShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);
@@ -56,7 +64,6 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);
 		break;
-	}
 	}
 
 	return shader;

@@ -9,6 +9,43 @@
 #include "platform/directx11/Dx11ShaderProgram.h"
 #include "platform/directx12/Dx12ShaderProgram.h"
 
+ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
+{
+	ShaderController* shader_controller = Context::GetCurrent()->GetShaderController();
+	ShaderProgram* program = shader_controller->GetShaderProgram(vs, fs);
+
+	if (program)
+		return program;
+
+	std::unique_ptr<ShaderProgram> unique_program;
+	switch (Context::GetCurrent()->GetApiType())
+	{
+	case Context::API::OPENGL:
+	{
+		unique_program = std::make_unique<OpenGLShaderProgram>(vs, fs);
+		program = unique_program.get();
+		shader_controller->PushShaderProgram(unique_program);
+		break;
+	}
+	case Context::API::DIRECTX11:
+	{
+		unique_program = std::make_unique<Dx11ShaderProgram>(vs, fs);
+		program = unique_program.get();
+		shader_controller->PushShaderProgram(unique_program);
+		break;
+	}
+	case Context::API::DIRECTX12:
+	{
+		unique_program = std::make_unique<Dx12ShaderProgram>(vs, fs);
+		program = unique_program.get();
+		shader_controller->PushShaderProgram(unique_program);
+		break;
+	}
+	}
+
+	return program;
+}
+
 ShaderProgram::ShaderProgram(VertexShader* vertexShader, FragmentShader* fragmentShader):
 	m_vertex_shader(vertexShader),
 	m_fragment_shader(fragmentShader)
@@ -50,39 +87,4 @@ const std::vector<std::unique_ptr<ShaderUniform>>& ShaderProgram::GetUniforms() 
 	return m_uniforms;
 }
 
-ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
-{
-	ShaderController* shader_controller = Context::GetCurrent()->GetShaderController();
-	ShaderProgram* program = shader_controller->GetShaderProgram(vs, fs);
 
-	if (program)
-		return program;
-
-	std::unique_ptr<ShaderProgram> unique_program;
-	switch (Context::GetCurrent()->GetApiType())
-	{
-	case Context::API::OPENGL:
-	{
-		unique_program = std::make_unique<OpenGLShaderProgram>(vs, fs);
-		program = unique_program.get();
-		shader_controller->PushShaderProgram(unique_program);
-		break;
-	}
-	case Context::API::DIRECTX11:
-	{
-		unique_program = std::make_unique<Dx11ShaderProgram>(vs, fs);
-		program = unique_program.get();
-		shader_controller->PushShaderProgram(unique_program);
-		break;
-	}
-	case Context::API::DIRECTX12:
-	{
-		unique_program = std::make_unique<Dx12ShaderProgram>(vs, fs);
-		program = unique_program.get();
-		shader_controller->PushShaderProgram(unique_program);
-		break;
-	}
-	}
-
-	return program;
-}

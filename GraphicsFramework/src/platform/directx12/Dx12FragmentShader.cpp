@@ -32,7 +32,6 @@ Dx12FragmentShader::Dx12FragmentShader(const std::string& path) :
 {
 	this->Compile();
 	m_code = LoadCode(m_path);
-	GetDx12Context()->BindFragmentShader(this);
 }
 
 Dx12FragmentShader::~Dx12FragmentShader()
