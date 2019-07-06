@@ -25,10 +25,12 @@ namespace
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-Win64Window::Win64Window(unsigned int width, unsigned int height, const std::wstring& title) :
-	Window(width, height),
+Win64Window::Win64Window(unsigned int width, unsigned int height, const std::string& title) :
+	Window(title, width, height),
 	m_hinstance(GetModuleHandle(0))
 {
+	std::wstring wide_title(title.begin(), title.end());
+
 	const std::wstring window_class_name = L"DirectXWindowClass";
 	DefaultWndClass wnd_class((WNDPROC)WindowProcdureStatic, m_hinstance, window_class_name.c_str());
 
@@ -40,7 +42,7 @@ Win64Window::Win64Window(unsigned int width, unsigned int height, const std::wst
 	m_handle = CreateWindowExW(
 		0L,
 		window_class_name.c_str(),
-		title.c_str(),
+		wide_title.c_str(),
 		WS_OVERLAPPED | WS_SYSMENU,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,

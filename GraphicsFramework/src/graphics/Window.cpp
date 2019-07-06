@@ -2,7 +2,8 @@
 
 #include "Window.h"
 
-Window::Window(unsigned int width, unsigned int height, bool isFullScreen, bool isVSync):
+Window::Window(const std::string& title,  unsigned int width, unsigned int height, bool isFullScreen, bool isVSync):
+	m_title(title),
 	m_is_paused(false)
 {
 	m_properties.width = width;
@@ -26,4 +27,9 @@ Window::Properties Window::GetPropeties() const
 bool Window::IsPaused() const
 {
 	return m_is_paused;
+}
+
+const std::string& Window::GetTitle() const
+{
+	return m_title;
 }

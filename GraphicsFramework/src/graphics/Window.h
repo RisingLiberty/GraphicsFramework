@@ -15,7 +15,7 @@ public:
 		bool vsync;
 	};
 
-	Window(unsigned int width, unsigned int height, bool isFullScreen = false, bool isVsync = true);
+	Window(const std::string& title, unsigned int width, unsigned int height, bool isFullScreen = false, bool isVsync = true);
 	virtual ~Window();
 
 	virtual int EventLoop() = 0;
@@ -26,11 +26,12 @@ public:
 
 	Properties GetPropeties() const;
 	bool IsPaused() const;
+	const std::string& GetTitle() const;
 
 protected:
 	Properties m_properties;
 
 	WindowEventCallback m_event_callback;
 	bool m_is_paused;
-	
+	std::string m_title;
 };

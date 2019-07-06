@@ -5,7 +5,7 @@
 class Win64Window : public Window
 {
 public: 
-	Win64Window(unsigned int width, unsigned int height, const std::wstring& title);
+	Win64Window(unsigned int width, unsigned int height, const std::string& title);
 	virtual ~Win64Window();
 
 	static LRESULT CALLBACK WindowProcdureStatic(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
