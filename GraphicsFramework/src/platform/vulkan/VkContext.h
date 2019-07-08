@@ -140,7 +140,7 @@ class VkContext : public Context
 {
 public:
 	VkContext(Window* window);
-	~VkContext();
+	virtual ~VkContext();
 
 	virtual void Initialize();
 	virtual void Present();
@@ -233,22 +233,11 @@ private:
 	std::vector<VkFence> m_in_flight_fences;
 	size_t m_current_frame = 0;
 	bool m_is_frame_buffer_resized = false;
-	std::unique_ptr<VkVertexBuffer> m_vertex_buffer;
-	std::unique_ptr<VkIndexBuffer> m_index_buffer;
-	//VkBuffer m_vertex_buffer;
-	//VkDeviceMemory m_vertex_buffer_memory;
-	//VkBuffer m_index_buffer;
-	//VkDeviceMemory m_index_buffer_memory;
 	VkDescriptorSetLayout m_descriptor_set_layout;
 	std::vector<VkBuffer> m_uniform_buffers;
 	std::vector<VkDeviceMemory> m_uniform_buffers_memory;
 	VkDescriptorPool m_descriptor_pool;
 	std::vector<VkDescriptorSet> m_descriptor_sets;
-	//uint32_t m_mip_levels;
-	//VkImage m_texture_image;
-	//VkDeviceMemory m_texture_image_memory;
-	//VkImageView m_texture_image_view;
-	//VkSampler m_texture_sampler;
 	VkImage m_depth_image;
 	VkDeviceMemory m_depth_image_memory;
 	VkImageView m_depth_image_view;
@@ -261,25 +250,13 @@ private:
 
 	const int MAX_FRAMES_IN_FLIGHT = 3;
 
-	std::vector<glm::vec3> m_vertices;
-	//{
-	//	//		Position				Color			TexCoord
-	//	//-----------------------------------------------------------
-	//	{{-0.5f, -0.5f,  0.0f},  {1.0f, 0.0f, 0.0f},  {1.0f, 0.0f}},
-	//	{{ 0.5f, -0.5f,  0.0f},  {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f}},
-	//	{{ 0.5f,  0.5f,  0.0f},  {0.0f, 0.0f, 1.0f},  {0.0f, 1.0f}},
-	//	{{-0.5f,  0.5f,  0.0f},  {1.0f, 1.0f, 1.0f},  {1.0f, 1.0f}}
-	//};
-	
-	std::vector<uint32_t> m_indices;
-	//{
-	//	//First plane
-	//	0,1,2, //top right
-	//	2,3,0,  //bottom left
-	//};
-	
 	bool m_enable_validation_layers = true;
 
 	const std::string MODEL_PATH = "data/meshes/chalet.obj";
 	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
+
+
+
+	std::unique_ptr<VkVertexBuffer> m_vertex_buffer;
+	std::unique_ptr<VkIndexBuffer> m_index_buffer;
 };

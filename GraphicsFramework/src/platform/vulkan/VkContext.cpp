@@ -8,6 +8,9 @@
 #include "VkVertexBuffer.h"
 #include "VkIndexBuffer.h"
 
+#include "VkVertexShader.h"
+#include "VkFragmentShader.h"
+
 //#define STB_IMAGE_IMPLEMENTATION
 //#include <stb/stb_image.h>
 
@@ -144,18 +147,6 @@ VkContext::VkContext(Window* window)
 	this->CreateInstance(window);
 	this->ShowExtentions();
 	this->CreateSurface(window);
-	this->SetupDebugCallback();
-	this->PickPhysicalDevice();
-	this->CreateLogicalDevice();
-	this->CreateSwapchain();
-	this->CreateImageViews();
-	this->CreateRenderPass();
-	this->CreateDescriptorSetLayout();
-	this->CreateGraphicsPipeline();
-	this->CreateCommandPool();
-	this->CreateColorResources();
-	this->CreateDepthResources();
-	this->CreateFrameBuffers();
 	//this->CreateTextureImage();
 	//this->CreateTextureImageView();
 	//this->CreateTextureSampler();
@@ -169,6 +160,18 @@ VkContext::~VkContext()
 
 void VkContext::Initialize()
 {
+	this->SetupDebugCallback();
+	this->PickPhysicalDevice();
+	this->CreateLogicalDevice();
+	this->CreateSwapchain();
+	this->CreateImageViews();
+	this->CreateRenderPass();
+	this->CreateDescriptorSetLayout();
+	this->CreateGraphicsPipeline();
+	this->CreateCommandPool();
+	this->CreateColorResources();
+	this->CreateDepthResources();
+	this->CreateFrameBuffers();
 	this->CreateVertexBuffer();
 	this->CreateIndexBuffer();
 	this->CreateUniformBuffer();
@@ -395,8 +398,8 @@ void VkContext::SetupDebugCallback()
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 	createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT |
-		VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
-		VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT;
+		VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;/* |
+		VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT;*/
 
 	createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
 		VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
@@ -675,25 +678,28 @@ void VkContext::CreateDescriptorSetLayout()
 
 void VkContext::CreateGraphicsPipeline()
 {
-	std::vector<char> vs_code = vk_utils::ReadFile("data/shaders/vulkan/bin/vert.spv");
-	std::vector<char> fs_code = vk_utils::ReadFile("data/shaders/vulkan/bin/frag.spv");
+	//std::vector<char> vs_code = vk_utils::ReadFile("data/shaders/vulkan/bin/vert.spv");
+	//std::vector<char> fs_code = vk_utils::ReadFile("data/shaders/vulkan/bin/frag.spv");
 
-	VkShaderModule vs_module = vk_utils::CreateShaderModule(vs_code, m_device);
-	VkShaderModule fs_module = vk_utils::CreateShaderModule(fs_code, m_device);
+	//VkShaderModule vs_module = vk_utils::CreateShaderModule(vs_code, m_device);
+	//VkShaderModule fs_module = vk_utils::CreateShaderModule(fs_code, m_device);
 
-	VkPipelineShaderStageCreateInfo vs_stage_info = {};
-	vs_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	vs_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
-	vs_stage_info.module = vs_module;
-	vs_stage_info.pName = "main";
+	//VkPipelineShaderStageCreateInfo vs_stage_info = {};
+	//vs_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	//vs_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
+	//vs_stage_info.module = vs_module;
+	//vs_stage_info.pName = "main";
 
-	VkPipelineShaderStageCreateInfo fs_stage_info = {};
-	fs_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	fs_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-	fs_stage_info.module = fs_module;
-	fs_stage_info.pName = "main";
+	std::unique_ptr<VkVertexShader> vs = std::make_unique<VkVertexShader>("data/shaders/vulkan/bin/vert.spv");
+	std::unique_ptr<VkFragmentShader> fs = std::make_unique<VkFragmentShader>("data/shaders/vulkan/bin/frag.spv");
 
-	VkPipelineShaderStageCreateInfo shader_stages[] = { vs_stage_info, fs_stage_info };
+	//VkPipelineShaderStageCreateInfo fs_stage_info = {};
+	//fs_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	//fs_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+	//fs_stage_info.module = fs_module;
+	//fs_stage_info.pName = "main";
+
+	VkPipelineShaderStageCreateInfo shader_stages[] = { vs->GetPipelineShaderStageCreateInfo(), fs->GetPipelineShaderStageCreateInfo() };
 	VkVertexInputBindingDescription binding_description = Vertex::GetBindingDescription();
 	std::array<VkVertexInputAttributeDescription, 1> attribute_descriptions = Vertex::GetAttributeDescriptions();
 
@@ -824,8 +830,8 @@ void VkContext::CreateGraphicsPipeline()
 
 	VKCALL(vkCreateGraphicsPipelines(m_device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &m_graphics_pipeline));
 
-	vkDestroyShaderModule(m_device, fs_module, nullptr);
-	vkDestroyShaderModule(m_device, vs_module, nullptr);
+	//vkDestroyShaderModule(m_device, fs_module, nullptr);
+	//vkDestroyShaderModule(m_device, vs_module, nullptr);
 }
 
 void VkContext::CreateCommandPool()
@@ -1003,34 +1009,45 @@ void VkContext::CreateFrameBuffers()
 
 void VkContext::CreateVertexBuffer()
 {
-	m_vertices.clear();
+	//m_vertices.clear();
 
-	m_vertices.push_back(glm::vec3(-0.5f, -0.5f, 0.0f));	//0
-	m_vertices.push_back(glm::vec3(0.5f, -0.5f, 0.0f));	//1
-	m_vertices.push_back(glm::vec3(0.5f, 0.5f, 0.0f));	//2
-	m_vertices.push_back(glm::vec3(-0.5f, 0.5f, 0.0f));	//3
+	//m_vertices.push_back(glm::vec3(-0.5f, -0.5f, 0.0f));	//0
+	//m_vertices.push_back(glm::vec3(0.5f, -0.5f, 0.0f));	//1
+	//m_vertices.push_back(glm::vec3(0.5f, 0.5f, 0.0f));	//2
+	//m_vertices.push_back(glm::vec3(-0.5f, 0.5f, 0.0f));	//3
 
-	VkDeviceSize buffer_size = (sizeof(m_vertices[0]) * m_vertices.size());
-	VkBuffer stagin_buffer;
-	VkDeviceMemory stagin_buffer_memory;
+	std::array<float, 16> positions =
+	{
+		-0.5f, -0.5f, 0.0f,	//0
+		 0.5f, -0.5f, 0.0f,	//1
+		 0.5f,  0.5f, 0.0f,	//2
+		-0.5f,  0.5f, 0.0f	//3
+	};
 
-	m_vertex_buffer = std::make_unique<VkVertexBuffer>((size_t)buffer_size, BufferUsage::STATIC, m_vertices.data());
+	VkDeviceSize buffer_size = (sizeof(positions[0]) * positions.size());
+
+	m_vertex_buffer = std::make_unique<VkVertexBuffer>((size_t)buffer_size, BufferUsage::STATIC, positions.data());
 }
 
 void VkContext::CreateIndexBuffer()
 {
-	m_indices.clear();
+	//m_indices.clear();
 
-	m_indices.resize(6);
-	m_indices.push_back(0);
-	m_indices.push_back(1);
-	m_indices.push_back(2);
-	m_indices.push_back(2);
-	m_indices.push_back(3);
-	m_indices.push_back(0);
+	//m_indices.resize(6);
+	//m_indices.push_back(0);
+	//m_indices.push_back(1);
+	//m_indices.push_back(2);
+	//m_indices.push_back(2);
+	//m_indices.push_back(3);
+	//m_indices.push_back(0);
 
+	std::array<int, 6> indices =
+	{
+		0,1,2,
+		2,3,0
+	};
 
-	m_index_buffer = std::make_unique<VkIndexBuffer>(m_indices.size(), BufferUsage::STATIC, m_indices.data());
+	m_index_buffer = std::make_unique<VkIndexBuffer>(indices.size(), BufferUsage::STATIC, indices.data());
 }
 
 void VkContext::CreateUniformBuffer()
@@ -1160,7 +1177,7 @@ void VkContext::CreateCommandBuffers()
 		vkCmdBindVertexBuffers(m_command_buffers[i], 0, 1, vertex_buffers, offsets);
 		vkCmdBindIndexBuffer(m_command_buffers[i], m_index_buffer->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
 		vkCmdBindDescriptorSets(m_command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &m_descriptor_sets[i], 0, nullptr);
-		vkCmdDrawIndexed(m_command_buffers[i], static_cast<uint32_t>(m_indices.size()), 1, 0, 0, 0);
+		vkCmdDrawIndexed(m_command_buffers[i], static_cast<uint32_t>(m_index_buffer->GetCount()), 1, 0, 0, 0);
 		vkCmdEndRenderPass(m_command_buffers[i]);
 
 		VKCALL(vkEndCommandBuffer(m_command_buffers[i]));

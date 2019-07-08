@@ -227,9 +227,11 @@
     <ClCompile Include="src\platform\opengl\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexShader.cpp" />
     <ClCompile Include="src\platform\vulkan\VkContext.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkFragmentShader.cpp" />
     <ClCompile Include="src\platform\vulkan\VkHelperMethods.cpp" />
     <ClCompile Include="src\platform\vulkan\VkIndexBuffer.cpp" />
     <ClCompile Include="src\platform\vulkan\VkVertexBuffer.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkVertexShader.cpp" />
     <ClCompile Include="src\platform\win64\Win64Application.cpp" />
     <ClCompile Include="src\platform\win64\Win64Window.cpp" />
     <ClCompile Include="src\scenegraph\Layer.cpp" />
@@ -349,9 +351,11 @@
     <ClInclude Include="src\platform\opengl\OpenGLVertexBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexShader.h" />
     <ClInclude Include="src\platform\vulkan\VkContext.h" />
+    <ClInclude Include="src\platform\vulkan\VkFragmentShader.h" />
     <ClInclude Include="src\platform\vulkan\VkHelperMethods.h" />
     <ClInclude Include="src\platform\vulkan\VkIndexBuffer.h" />
     <ClInclude Include="src\platform\vulkan\VkVertexBuffer.h" />
+    <ClInclude Include="src\platform\vulkan\VkVertexShader.h" />
     <ClInclude Include="src\platform\win64\Win64Application.h" />
     <ClInclude Include="src\platform\win64\Win64Window.h" />
     <ClInclude Include="src\scenegraph\Layer.h" />

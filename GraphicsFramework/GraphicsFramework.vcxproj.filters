@@ -306,6 +306,12 @@
     <ClCompile Include="src\platform\vulkan\VkIndexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\platform\vulkan\VkVertexShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\vulkan\VkFragmentShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -612,6 +618,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\vulkan\VkIndexBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\vulkan\VkVertexShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\vulkan\VkFragmentShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
