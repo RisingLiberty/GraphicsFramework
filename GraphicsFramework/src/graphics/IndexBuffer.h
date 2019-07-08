@@ -13,6 +13,7 @@ public:
 	virtual void Unbind() const = 0;
 
 	size_t GetCount() const;
+	size_t GetSize() const;
 
 	static std::unique_ptr<IndexBuffer> Create(size_t count, BufferUsage usage = BufferUsage::STATIC, void* data = nullptr);
 

@@ -36,3 +36,8 @@ size_t IndexBuffer::GetCount() const
 {
 	return m_count;	
 }
+
+size_t IndexBuffer::GetSize() const
+{
+	return sizeof(unsigned int) * m_count;
+}
