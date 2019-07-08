@@ -16,9 +16,9 @@ class Window;
 struct Vertex
 {
 	glm::vec3 Position;
-	glm::vec3 Color;
+	/*glm::vec3 Color;
 	glm::vec2 TexCoord;
-
+*/
 	static VkVertexInputBindingDescription GetBindingDescription()
 	{
 		//A vertex binding describes at which rate to load data from memory throught the vertices.
@@ -40,10 +40,10 @@ struct Vertex
 		return bindingDescription;
 	}
 
-	static std::array<VkVertexInputAttributeDescription, 3> GetAttributeDescriptions()
+	static std::array<VkVertexInputAttributeDescription, 1> GetAttributeDescriptions()
 	{
 		//The second structure that describes how to handle vertex input is VkVertexInputAttributeDescription.
-		std::array<VkVertexInputAttributeDescription, 3> attributeDescriptions = {};
+		std::array<VkVertexInputAttributeDescription, 1> attributeDescriptions = {};
 
 		//An attribute description struct describes how to extract a vertex attribute from a chuknk of vertex data.
 		//originating from a binding description.
@@ -77,27 +77,40 @@ struct Vertex
 
 		//COLOR
 		//-----------------
-		attributeDescriptions[1].binding = 0;
-		attributeDescriptions[1].location = 1;
-		attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
-		attributeDescriptions[1].offset = offsetof(Vertex, Color);
+		//attributeDescriptions[1].binding = 0;
+		//attributeDescriptions[1].location = 1;
+		//attributeDescriptions[1].format = VK_FORMAT_R32G32B32_SFLOAT;
+		//attributeDescriptions[1].offset = offsetof(Vertex, Color);
 
-		//TEXCOORD
-		//-----------------
-		attributeDescriptions[2].binding = 0;
-		attributeDescriptions[2].location = 2;
-		attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
-		attributeDescriptions[2].offset = offsetof(Vertex, TexCoord);
+		////TEXCOORD
+		////-----------------
+		//attributeDescriptions[2].binding = 0;
+		//attributeDescriptions[2].location = 2;
+		//attributeDescriptions[2].format = VK_FORMAT_R32G32_SFLOAT;
+		//attributeDescriptions[2].offset = offsetof(Vertex, TexCoord);
 
 		return attributeDescriptions;
 	}
 
 	bool operator==(const Vertex& other) const
 	{
-		return Position == other.Position && Color == other.Color && TexCoord == other.TexCoord;
+		return Position == other.Position;// && Color == other.Color && TexCoord == other.TexCoord;
 	}
 
 };
+
+namespace std
+{
+	template<> struct hash<Vertex>
+	{
+		size_t operator()(Vertex const& vertex) const
+		{
+			return ((hash<glm::vec3>()(vertex.Position)));/* ^
+				(hash<glm::vec3>()(vertex.Color) << 1)) >> 1) ^
+				(hash<glm::vec2>()(vertex.TexCoord) << 1);*/
+		}
+	};
+}
 
 struct QueueFamilyIndices
 {
@@ -116,23 +129,9 @@ struct SwapChainSupportDetails
 
 struct UniformBufferObject
 {
-	glm::mat4 Model;
-	glm::mat4 View;
-	glm::mat4 Proj;
+	glm::vec4 color;
 };
 
-namespace std
-{
-	template<> struct hash<Vertex>
-	{
-		size_t operator()(Vertex const& vertex) const
-		{
-			return ((hash<glm::vec3>()(vertex.Position) ^
-				(hash<glm::vec3>()(vertex.Color) << 1)) >> 1) ^
-				(hash<glm::vec2>()(vertex.TexCoord) << 1);
-		}
-	};
-}
 
 class VkContext : public Context
 {
@@ -167,7 +166,7 @@ private:
 	void CreateTextureImage();
 	void CreateTextureImageView();
 	void CreateTextureSampler();
-	void LoadModel();
+	//void LoadModel();
 	void CreateVertexBuffer();
 	void CreateIndexBuffer();
 	void CreateUniformBuffer();
@@ -239,11 +238,11 @@ private:
 	std::vector<VkDeviceMemory> m_uniform_buffers_memory;
 	VkDescriptorPool m_descriptor_pool;
 	std::vector<VkDescriptorSet> m_descriptor_sets;
-	uint32_t m_mip_levels;
-	VkImage m_texture_image;
-	VkDeviceMemory m_texture_image_memory;
-	VkImageView m_texture_image_view;
-	VkSampler m_texture_sampler;
+	//uint32_t m_mip_levels;
+	//VkImage m_texture_image;
+	//VkDeviceMemory m_texture_image_memory;
+	//VkImageView m_texture_image_view;
+	//VkSampler m_texture_sampler;
 	VkImage m_depth_image;
 	VkDeviceMemory m_depth_image_memory;
 	VkImageView m_depth_image_view;
@@ -254,24 +253,24 @@ private:
 	const std::vector<const char*> m_validation_layers = { "VK_LAYER_LUNARG_standard_validation" };
 	const std::vector<const char*> m_device_extentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
-	const int MAX_FRAMES_IN_FLIGHT = 2;
+	const int MAX_FRAMES_IN_FLIGHT = 3;
 
-	std::vector<Vertex> m_vertices =
-	{
-		//		Position				Color			TexCoord
-		//-----------------------------------------------------------
-		{{-0.5f, -0.5f,  0.0f},  {1.0f, 0.0f, 0.0f},  {1.0f, 0.0f}},
-		{{ 0.5f, -0.5f,  0.0f},  {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f}},
-		{{ 0.5f,  0.5f,  0.0f},  {0.0f, 0.0f, 1.0f},  {0.0f, 1.0f}},
-		{{-0.5f,  0.5f,  0.0f},  {1.0f, 1.0f, 1.0f},  {1.0f, 1.0f}}
-	};
+	std::vector<glm::vec3> m_vertices;
+	//{
+	//	//		Position				Color			TexCoord
+	//	//-----------------------------------------------------------
+	//	{{-0.5f, -0.5f,  0.0f},  {1.0f, 0.0f, 0.0f},  {1.0f, 0.0f}},
+	//	{{ 0.5f, -0.5f,  0.0f},  {0.0f, 1.0f, 0.0f},  {0.0f, 0.0f}},
+	//	{{ 0.5f,  0.5f,  0.0f},  {0.0f, 0.0f, 1.0f},  {0.0f, 1.0f}},
+	//	{{-0.5f,  0.5f,  0.0f},  {1.0f, 1.0f, 1.0f},  {1.0f, 1.0f}}
+	//};
 	
-	std::vector<uint32_t> m_indices =
-	{
-		//First plane
-		0,1,2, //top right
-		2,3,0,  //bottom left
-	};
+	std::vector<uint32_t> m_indices;
+	//{
+	//	//First plane
+	//	0,1,2, //top right
+	//	2,3,0,  //bottom left
+	//};
 	
 	bool m_enable_validation_layers = true;
 
