@@ -18,35 +18,35 @@ public:
 	void Push<float>(VertexAttributeType type, unsigned int count)
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::FLOAT, false, count));
-		m_size += count * VertexAttribute::GetSizeOfDataType(VertexAttributeDataType::FLOAT);
+		m_size += count * m_attributes.back().GetSize();
 	}
 
 	template <>
 	void Push<unsigned int>(VertexAttributeType type, unsigned int count)
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::UNSIGNED_INT, false, count));
-		m_size += count * VertexAttribute::GetSizeOfDataType(VertexAttributeDataType::UNSIGNED_INT);
+		m_size += count * m_attributes.back().GetSize();
 	}
 
 	template <>
 	void Push<int>(VertexAttributeType type, unsigned int count)
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::INT, false, count));
-		m_size += count * VertexAttribute::GetSizeOfDataType(VertexAttributeDataType::INT);
+		m_size += count * m_attributes.back().GetSize();
 	}
 
 	template <>
 	void Push<unsigned char>(VertexAttributeType type, unsigned int count)
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::UNSIGNED_BYTE, true, count));
-		m_size += count * VertexAttribute::GetSizeOfDataType(VertexAttributeDataType::UNSIGNED_BYTE);
+		m_size += count * m_attributes.back().GetSize();
 	}
 
 	template <>
 	void Push<char>(VertexAttributeType type, unsigned int count)
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::BYTE, false, count));
-		m_size += count * VertexAttribute::GetSizeOfDataType(VertexAttributeDataType::BYTE);
+		m_size += count * m_attributes.back().GetSize();
 	}
 
 	//template <>

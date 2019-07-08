@@ -8,7 +8,7 @@ public:
 	VkVertexLayout();
 	virtual ~VkVertexLayout();
 
-	const VkPipelineVertexInputStateCreateInfo& GetCreateInfo() const;
+	const VkPipelineVertexInputStateCreateInfo& GetCreateInfo();
 
 private:
 	VkPipelineVertexInputStateCreateInfo m_create_info;

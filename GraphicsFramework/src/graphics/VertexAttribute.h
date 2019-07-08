@@ -24,12 +24,13 @@ struct VertexAttribute
 public:
 	VertexAttribute(const VertexAttributeType attributeType, VertexAttributeDataType dataType, bool isNormalized, unsigned int count = 1);
 
-	static unsigned int GetSizeOfDataType(VertexAttributeDataType type);
+	unsigned int GetSize() const;
 	unsigned int GetOpenGLDataType() const;
+	VkFormat GetVulkanDataType() const;
 public:
 
-	VertexAttributeType AttributeType; //Attribute type for debug reasons
-	VertexAttributeDataType DataType; //What datatype is this? (float, int,...)
-	unsigned int Count; //How many datatypes are there?
-	bool IsNormalized;
+	VertexAttributeType attribute_type; //Attribute type for debug reasons
+	VertexAttributeDataType data_type; //What datatype is this? (float, int,...)
+	unsigned int count; //How many datatypes are there?
+	bool is_normalized;
 };

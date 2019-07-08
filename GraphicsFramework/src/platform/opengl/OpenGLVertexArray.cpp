@@ -23,8 +23,8 @@ OpenGLVertexArray::OpenGLVertexArray(const VertexBuffer* vb, const VertexLayout*
 	{
 		const VertexAttribute& attribute = attributes[i];
 		GLCALL(glEnableVertexAttribArray(i));
-		GLCALL(glVertexAttribPointer(i, attribute.Count, attribute.GetOpenGLDataType(), attribute.IsNormalized, layout->GetSize(), reinterpret_cast<const void*>(offset)));
-		offset += attribute.Count * VertexAttribute::GetSizeOfDataType(attribute.DataType);
+		GLCALL(glVertexAttribPointer(i, attribute.count, attribute.GetOpenGLDataType(), attribute.is_normalized, layout->GetSize(), reinterpret_cast<const void*>(offset)));
+		offset += attribute.GetSize();
 	}
 }
 

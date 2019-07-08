@@ -686,6 +686,7 @@ void VkContext::CreateGraphicsPipeline()
 
 	m_shader_program = std::make_unique<VkShaderProgram>(vs.get(), fs.get());
 	m_vertex_layout = std::make_unique<VkVertexLayout>();
+	m_vertex_layout->Push<float>(VertexAttributeType::POSITION, 3);
 
 	VkPipelineInputAssemblyStateCreateInfo input_assembly = {};
 	input_assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
