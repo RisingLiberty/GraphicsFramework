@@ -19,7 +19,7 @@ unsigned int GetUniformDataTypeSize(UniformDataType dataType)
 	return 0;
 }
 
-ShaderUniform::ShaderUniform(const std::string& name, UniformDataType type, int size, char* data) :
+ShaderUniform::ShaderUniform(const std::string& name, UniformDataType type, unsigned int size, char* data) :
 	name(name),
 	type(type),
 	size(size)

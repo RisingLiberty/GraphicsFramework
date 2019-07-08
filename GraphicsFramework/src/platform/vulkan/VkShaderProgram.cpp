@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "VkShaderProgram.h"
+#include "VkHelperMethods.h"
 
 #include "VkVertexShader.h"
 #include "VkFragmentShader.h"
@@ -8,7 +9,11 @@
 VkShaderProgram::VkShaderProgram(VertexShader* vs, FragmentShader* fs) :
 	ShaderProgram(vs, fs)
 {
+	unsigned int size = sizeof(float) * 4;
+	CreateBuffer(size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_uniform_buffer, m_uniform_buffer_memory);
 
+	float color[] = { 1.0f, 0.3f, 0.8f, 1.0f };
+	m_uniforms.push_back(std::make_unique<ShaderUniform>("u_Color", UniformDataType::VEC4, size, (char*)color));
 }
 
 VkShaderProgram::~VkShaderProgram()
@@ -35,4 +40,23 @@ void VkShaderProgram::Unbind() const
 
 void VkShaderProgram::UploadVariables()
 {
+	unsigned int offset = 0;
+	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
+	{
+		byte* data;
+		vkMapMemory(GetVkDevice(), m_uniform_buffer_memory, 0, uniform->size, 0, (void**)&data);
+		memcpy(&data[offset], uniform->data, uniform->size);
+		vkUnmapMemory(GetVkDevice(), m_uniform_buffer_memory);
+		offset += uniform->size;
+	}
+}
+
+VkBuffer VkShaderProgram::GetUniformBuffer() const
+{
+	return m_uniform_buffer;
+}
+
+VkDeviceMemory VkShaderProgram::GetUniformBufferMemory() const
+{
+	return m_uniform_buffer_memory;
 }

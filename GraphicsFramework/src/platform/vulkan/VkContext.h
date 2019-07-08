@@ -236,8 +236,8 @@ private:
 	size_t m_current_frame = 0;
 	bool m_is_frame_buffer_resized = false;
 	VkDescriptorSetLayout m_descriptor_set_layout;
-	std::vector<VkBuffer> m_uniform_buffers;
-	std::vector<VkDeviceMemory> m_uniform_buffers_memory;
+	//std::vector<VkBuffer> m_uniform_buffers;
+	//std::vector<VkDeviceMemory> m_uniform_buffers_memory;
 	VkDescriptorPool m_descriptor_pool;
 	std::vector<VkDescriptorSet> m_descriptor_sets;
 	VkImage m_depth_image;

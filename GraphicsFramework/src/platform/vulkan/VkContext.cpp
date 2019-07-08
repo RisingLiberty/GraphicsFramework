@@ -107,37 +107,6 @@ namespace vk_utils
 			return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 
-	VkShaderModule CreateShaderModule(const std::vector<char>& code, const VkDevice& device)
-	{
-		VkShaderModuleCreateInfo create_info = {};
-		create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-		create_info.codeSize = code.size();
-		create_info.pCode = reinterpret_cast<const uint32_t*>(code.data());
-
-		VkShaderModule module;
-		VKCALL(vkCreateShaderModule(device, &create_info, nullptr, &module));
-
-		return module;
-	}
-
-	static std::vector<char> ReadFile(const std::string& path)
-	{
-		std::ifstream file(path, std::ios::ate | std::ios::binary);
-
-		if (!file.is_open())
-			ThrowException("Failed to open vulkan shader file!");
-
-		size_t file_size = (size_t)file.tellg();
-		std::vector<char> buffer(file_size);
-
-		file.seekg(0);
-		file.read(buffer.data(), file_size);
-
-		file.close();
-
-		return buffer;
-	}
-
 	bool HasStencilComponent(VkFormat format)
 	{
 		return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
@@ -208,17 +177,11 @@ void VkContext::Cleanup()
 
 	vkDestroyDescriptorSetLayout(m_device, m_descriptor_set_layout, nullptr);
 
-	for (size_t i = 0; i < m_swapchain_images.size(); ++i)
-	{
-		vkDestroyBuffer(m_device, m_uniform_buffers[i], nullptr);
-		vkFreeMemory(m_device, m_uniform_buffers_memory[i], nullptr);
-	}
-
-	//vkDestroyBuffer(m_device, m_index_buffer, nullptr);
-	//vkFreeMemory(m_device, m_index_buffer_memory, nullptr);
-
-	//vkDestroyBuffer(m_device, m_vertex_buffer, nullptr);
-	//vkFreeMemory(m_device, m_vertex_buffer_memory, nullptr);
+	//for (size_t i = 0; i < m_swapchain_images.size(); ++i)
+	//{
+	//	vkDestroyBuffer(m_device, m_uniform_buffers[i], nullptr);
+	//	vkFreeMemory(m_device, m_uniform_buffers_memory[i], nullptr);
+	//}
 
 	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
 	{
@@ -414,7 +377,6 @@ void VkContext::SetupDebugCallback()
 	if (vk_utils::CreateDebugUtilsMessengerEXT(m_instance, &createInfo, nullptr, &m_debug_callback) != VK_SUCCESS)
 		throw std::runtime_error("failed to set up debug callback!");
 }
-
 
 void VkContext::PickPhysicalDevice()
 {
@@ -1027,15 +989,15 @@ void VkContext::CreateIndexBuffer()
 
 void VkContext::CreateUniformBuffer()
 {
-	VkDeviceSize buffer_size = sizeof(UniformBufferObject);
+	//VkDeviceSize buffer_size = sizeof(UniformBufferObject);
 
-	m_uniform_buffers.resize(m_swapchain_images.size());
-	m_uniform_buffers_memory.resize(m_swapchain_images.size());
+	//m_uniform_buffers.resize(m_swapchain_images.size());
+	//m_uniform_buffers_memory.resize(m_swapchain_images.size());
 
-	for (size_t i = 0; i < m_swapchain_images.size(); ++i)
-	{
-		CreateBuffer(buffer_size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_uniform_buffers[i], m_uniform_buffers_memory[i]);
-	}
+	//for (size_t i = 0; i < m_swapchain_images.size(); ++i)
+	//{
+	//	CreateBuffer(buffer_size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_uniform_buffers[i], m_uniform_buffers_memory[i]);
+	//}
 }
 
 void VkContext::CreateDescriptorPool()
@@ -1073,7 +1035,7 @@ void VkContext::CreateDescriptorSets()
 	for (size_t i = 0; i < m_swapchain_images.size(); ++i)
 	{
 		VkDescriptorBufferInfo buffer_info = {};
-		buffer_info.buffer = m_uniform_buffers[i];
+		buffer_info.buffer = m_shader_program->GetUniformBuffer();
 		buffer_info.offset = 0;
 		buffer_info.range = sizeof(UniformBufferObject);
 
@@ -1771,11 +1733,5 @@ void VkContext::RecreateSwapchain()
 
 void VkContext::UpdateUniformBuffer(uint32_t imageIndex)
 {
-	UniformBufferObject ubo = {};
-	ubo.color = { 1.0f, 0.3f, 0.8f, 1.0f };
-
-	void* data;
-	vkMapMemory(m_device, m_uniform_buffers_memory[imageIndex], 0, sizeof(ubo), 0, &data);
-	memcpy(data, &ubo, sizeof(ubo));
-	vkUnmapMemory(m_device, m_uniform_buffers_memory[imageIndex]);
+	m_shader_program->UploadVariables();
 }

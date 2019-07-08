@@ -47,8 +47,6 @@ void OpenGLShaderProgram::LoadUniforms()
 	int count;
 	GLCALL(glGetProgramiv(m_id, GL_ACTIVE_UNIFORMS, &count));
 
-	std::vector<std::unique_ptr<ShaderUniform>> uniforms;
-
 	for (int i = 0; i < count; ++i)
 	{
 		GLint size;
@@ -60,10 +58,8 @@ void OpenGLShaderProgram::LoadUniforms()
 
 		GLCALL(glGetActiveUniform(m_id, i, bufSize, &nameLength, &size, &type, name));
 
-		uniforms.push_back(std::make_unique<ShaderUniform>(name, GLUniformDataTypeToCustomDataType(type), size));
+		m_uniforms.push_back(std::make_unique<ShaderUniform>(name, GLUniformDataTypeToCustomDataType(type), size));
 	}
-
-	m_uniforms = std::move(uniforms);
 }
 
 void OpenGLShaderProgram::Create(const std::vector<unsigned int>& shaderIDs)
