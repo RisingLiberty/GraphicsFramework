@@ -99,6 +99,28 @@ struct Vertex
 
 };
 
+struct QueueFamilyIndices
+{
+	int graphics_familiy = -1;
+	int present_family = -1;
+
+	bool IsComplete() { return graphics_familiy >= 0 && present_family >= 0; }
+};
+
+struct SwapChainSupportDetails
+{
+	VkSurfaceCapabilitiesKHR capabilities;
+	std::vector<VkSurfaceFormatKHR> formats;
+	std::vector<VkPresentModeKHR> present_modes;
+};
+
+struct UniformBufferObject
+{
+	glm::mat4 Model;
+	glm::mat4 View;
+	glm::mat4 Proj;
+};
+
 namespace std
 {
 	template<> struct hash<Vertex>
@@ -112,8 +134,6 @@ namespace std
 	};
 }
 
-
-
 class VkContext : public Context
 {
 public:
@@ -124,11 +144,16 @@ public:
 	virtual void Present();
 	virtual API GetApiType() const;
 
+	VkDevice GetDevice() const;
+	VkInstance GetInstance() const;
+	VkPhysicalDevice GetSelectedGpu() const;
+
 private:
 	void CreateInstance(Window* window);
 	void ShowExtentions();
 	void SetupDebugCallback();
 	void PickPhysicalDevice();
+	void CreateSurface(Window* window);
 	void CreateLogicalDevice();
 	void CreateSwapchain();
 	void CreateImageViews();
@@ -156,10 +181,35 @@ private:
 
 	bool CheckValidationLayerSupport() const;
 	std::vector<const char*> GetRequiredExtentions() const;
+
 private:
-	VkInstance m_instance;
+	void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
+	bool IsGpuSuitable(const VkPhysicalDevice& gpu);
+	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice gpu);
+	int RateDeviceSuitability(VkPhysicalDevice gpu);
+	SwapChainSupportDetails QuerySwapchainSupport(VkPhysicalDevice device);
+	VkSurfaceFormatKHR ChooseSwapchainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+	VkPresentModeKHR ChooseSwapchainPresentMode(const std::vector<VkPresentModeKHR> availablePresentModes);
+	VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+	VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
+	VkSampleCountFlagBits GetMaxUsableSampleCount();
+	VkFormat FindDepthFormat();
+	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
+	void GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
+	void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
+	void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+	VkCommandBuffer BeginSingleTimeCommands();
+	void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
+	void RecreateSwapchain();
+	void UpdateUniformBuffer(uint32_t imageIndex);
+private:
+	VkInstance m_instance = nullptr;
 	VkDebugUtilsMessengerEXT m_debug_callback;
-	VkPhysicalDevice* m_physical_device;
+	VkPhysicalDevice m_physical_device = VK_NULL_HANDLE;
 	VkSurfaceKHR m_surface;
 	VkDevice m_device;
 	VkQueue m_graphics_queue;
@@ -170,7 +220,7 @@ private:
 	VkExtent2D m_swapchain_extent;
 	std::vector<VkImageView> m_swapchain_image_views;
 	VkRenderPass m_render_pass;
-	VkPipelineLayout m_pipeline_layout;
+	VkPipelineLayout m_pipeline_layout = {};
 	VkPipeline m_graphics_pipeline;
 	std::vector<VkFramebuffer> m_swapchain_frame_buffers;
 	VkCommandPool m_command_pool;
@@ -178,8 +228,8 @@ private:
 	std::vector<VkSemaphore> m_image_available_semaphores;
 	std::vector<VkSemaphore> m_render_finished_semaphores;
 	std::vector<VkFence> m_in_flight_fences;
-	size_t m_current_frame;
-	bool m_is_frame_buffer_resized;
+	size_t m_current_frame = 0;
+	bool m_is_frame_buffer_resized = false;
 	VkBuffer m_vertex_buffer;
 	VkDeviceMemory m_vertex_buffer_memory;
 	VkBuffer m_index_buffer;
@@ -197,16 +247,16 @@ private:
 	VkImage m_depth_image;
 	VkDeviceMemory m_depth_image_memory;
 	VkImageView m_depth_image_view;
-	VkSampleCountFlagBits m_msaa_samples;
+	VkSampleCountFlagBits m_msaa_samples = VK_SAMPLE_COUNT_1_BIT;
 	VkImage m_color_image;
 	VkDeviceMemory m_color_image_memory;
 	VkImageView m_color_image_view;
-	const std::vector<const char*> m_validation_layers = { "VK_LYER_LUNARG_standard_validation" };
+	const std::vector<const char*> m_validation_layers = { "VK_LAYER_LUNARG_standard_validation" };
 	const std::vector<const char*> m_device_extentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
 	const int MAX_FRAMES_IN_FLIGHT = 2;
 
-	std::vector<Vertex> m_Vertices =
+	std::vector<Vertex> m_vertices =
 	{
 		//		Position				Color			TexCoord
 		//-----------------------------------------------------------
@@ -216,7 +266,7 @@ private:
 		{{-0.5f,  0.5f,  0.0f},  {1.0f, 1.0f, 1.0f},  {1.0f, 1.0f}}
 	};
 	
-	std::vector<uint32_t> m_Indices =
+	std::vector<uint32_t> m_indices =
 	{
 		//First plane
 		0,1,2, //top right
@@ -226,5 +276,5 @@ private:
 	bool m_enable_validation_layers = true;
 
 	const std::string MODEL_PATH = "data/meshes/chalet.obj";
-	const std::string TEXTURE_PATH = "data/textures/chalet.obj";
+	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
 };

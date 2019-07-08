@@ -7,6 +7,7 @@
 #include "platform/directx11/Dx11Context.h"
 #include "platform/directx12/Dx12Context.h"
 #include "platform/directx12/Dx12Context.h"
+#include "platform/vulkan/VkContext.h"
 
 #include "controllers/ShaderController.h"
 #include "controllers/VertexArrayController.h"
@@ -30,11 +31,10 @@ void Context::Create(API api, Window* window)
 	case Context::API::DIRECTX11: s_current = std::make_unique<Dx11Context>(window); break;
 	case Context::API::DIRECTX12: s_current = std::make_unique<Dx12Context>(window); break;
 	case Context::API::OPENGL: s_current = std::make_unique<OpenGLContext>(window); break;
-	case Context::API::VULKAN:
-		break;
-	default:
-		break;
+	case Context::API::VULKAN: s_current = std::make_unique<VkContext>(window); break;
 	}
+
+	s_current->Initialize();
 }
 
 void Context::PreInitialize()
