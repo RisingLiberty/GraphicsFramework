@@ -10,6 +10,9 @@
 
 #include "VkVertexShader.h"
 #include "VkFragmentShader.h"
+#include "VkShaderProgram.h"
+
+#include "VkVertexLayout.h"
 
 //#define STB_IMAGE_IMPLEMENTATION
 //#include <stb/stb_image.h>
@@ -678,37 +681,11 @@ void VkContext::CreateDescriptorSetLayout()
 
 void VkContext::CreateGraphicsPipeline()
 {
-	//std::vector<char> vs_code = vk_utils::ReadFile("data/shaders/vulkan/bin/vert.spv");
-	//std::vector<char> fs_code = vk_utils::ReadFile("data/shaders/vulkan/bin/frag.spv");
-
-	//VkShaderModule vs_module = vk_utils::CreateShaderModule(vs_code, m_device);
-	//VkShaderModule fs_module = vk_utils::CreateShaderModule(fs_code, m_device);
-
-	//VkPipelineShaderStageCreateInfo vs_stage_info = {};
-	//vs_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	//vs_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
-	//vs_stage_info.module = vs_module;
-	//vs_stage_info.pName = "main";
-
 	std::unique_ptr<VkVertexShader> vs = std::make_unique<VkVertexShader>("data/shaders/vulkan/bin/vert.spv");
 	std::unique_ptr<VkFragmentShader> fs = std::make_unique<VkFragmentShader>("data/shaders/vulkan/bin/frag.spv");
 
-	//VkPipelineShaderStageCreateInfo fs_stage_info = {};
-	//fs_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	//fs_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-	//fs_stage_info.module = fs_module;
-	//fs_stage_info.pName = "main";
-
-	VkPipelineShaderStageCreateInfo shader_stages[] = { vs->GetPipelineShaderStageCreateInfo(), fs->GetPipelineShaderStageCreateInfo() };
-	VkVertexInputBindingDescription binding_description = Vertex::GetBindingDescription();
-	std::array<VkVertexInputAttributeDescription, 1> attribute_descriptions = Vertex::GetAttributeDescriptions();
-
-	VkPipelineVertexInputStateCreateInfo vertex_input_info = {};
-	vertex_input_info.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-	vertex_input_info.vertexBindingDescriptionCount = 1;
-	vertex_input_info.pVertexBindingDescriptions = &binding_description;
-	vertex_input_info.vertexAttributeDescriptionCount = static_cast<uint32_t>(attribute_descriptions.size());
-	vertex_input_info.pVertexAttributeDescriptions = attribute_descriptions.data();
+	m_shader_program = std::make_unique<VkShaderProgram>(vs.get(), fs.get());
+	m_vertex_layout = std::make_unique<VkVertexLayout>();
 
 	VkPipelineInputAssemblyStateCreateInfo input_assembly = {};
 	input_assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -812,8 +789,8 @@ void VkContext::CreateGraphicsPipeline()
 	VkGraphicsPipelineCreateInfo pipeline_info = {};
 	pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	pipeline_info.stageCount = 2;
-	pipeline_info.pStages = shader_stages;
-	pipeline_info.pVertexInputState = &vertex_input_info;
+	pipeline_info.pStages = m_shader_program->GetPipelineShaderStageCreateInfos().data();
+	pipeline_info.pVertexInputState = &m_vertex_layout->GetCreateInfo();
 	pipeline_info.pInputAssemblyState = &input_assembly;
 	pipeline_info.pViewportState = &viewport_state;
 	pipeline_info.pRasterizationState = &rasterizer;
@@ -829,9 +806,6 @@ void VkContext::CreateGraphicsPipeline()
 	pipeline_info.basePipelineIndex = -1;
 
 	VKCALL(vkCreateGraphicsPipelines(m_device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &m_graphics_pipeline));
-
-	//vkDestroyShaderModule(m_device, fs_module, nullptr);
-	//vkDestroyShaderModule(m_device, vs_module, nullptr);
 }
 
 void VkContext::CreateCommandPool()

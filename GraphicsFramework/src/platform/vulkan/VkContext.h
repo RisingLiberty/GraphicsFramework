@@ -15,6 +15,8 @@ class Window;
 
 class VkVertexBuffer;
 class VkIndexBuffer;
+class VkShaderProgram;
+class VkVertexLayout;
 
 struct Vertex
 {
@@ -256,7 +258,8 @@ private:
 	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
 
 
-
 	std::unique_ptr<VkVertexBuffer> m_vertex_buffer;
 	std::unique_ptr<VkIndexBuffer> m_index_buffer;
+	std::unique_ptr<VkShaderProgram> m_shader_program;
+	std::unique_ptr<VkVertexLayout> m_vertex_layout;
 };
