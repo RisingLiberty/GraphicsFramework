@@ -55,3 +55,17 @@ void CreateBuffer(size_t size, VkBufferUsageFlags usage, VkMemoryPropertyFlags p
 
 	vkBindBufferMemory(GetVkDevice(), buffer, bufferMemory, 0);
 }
+
+void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+{
+	VkCommandBuffer command_buffer = GetVkContext()->BeginSingleTimeCommands();
+
+	VkBufferCopy copy_region = {};
+	copy_region.srcOffset = 0;
+	copy_region.dstOffset = 0;
+	copy_region.size = size;
+
+	vkCmdCopyBuffer(command_buffer, srcBuffer, dstBuffer, 1, &copy_region);
+
+	GetVkContext()->EndSingleTimeCommands(command_buffer);
+}

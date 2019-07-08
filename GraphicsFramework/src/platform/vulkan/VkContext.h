@@ -13,6 +13,9 @@ class Window;
 
 #include <glm/gtc/matrix_transform.hpp>
 
+class VkVertexBuffer;
+class VkIndexBuffer;
+
 struct Vertex
 {
 	glm::vec3 Position;
@@ -147,6 +150,9 @@ public:
 	VkInstance GetInstance() const;
 	VkPhysicalDevice GetSelectedGpu() const;
 
+	VkCommandBuffer BeginSingleTimeCommands();
+	void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
+
 private:
 	void CreateInstance(Window* window);
 	void ShowExtentions();
@@ -193,16 +199,14 @@ private:
 	VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
 	VkSampleCountFlagBits GetMaxUsableSampleCount();
 	VkFormat FindDepthFormat();
-	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	//void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 	void GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 	void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
-	void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
+	//void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
-	VkCommandBuffer BeginSingleTimeCommands();
-	void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
 	void RecreateSwapchain();
 	void UpdateUniformBuffer(uint32_t imageIndex);
 private:
@@ -229,10 +233,12 @@ private:
 	std::vector<VkFence> m_in_flight_fences;
 	size_t m_current_frame = 0;
 	bool m_is_frame_buffer_resized = false;
-	VkBuffer m_vertex_buffer;
-	VkDeviceMemory m_vertex_buffer_memory;
-	VkBuffer m_index_buffer;
-	VkDeviceMemory m_index_buffer_memory;
+	std::unique_ptr<VkVertexBuffer> m_vertex_buffer;
+	std::unique_ptr<VkIndexBuffer> m_index_buffer;
+	//VkBuffer m_vertex_buffer;
+	//VkDeviceMemory m_vertex_buffer_memory;
+	//VkBuffer m_index_buffer;
+	//VkDeviceMemory m_index_buffer_memory;
 	VkDescriptorSetLayout m_descriptor_set_layout;
 	std::vector<VkBuffer> m_uniform_buffers;
 	std::vector<VkDeviceMemory> m_uniform_buffers_memory;

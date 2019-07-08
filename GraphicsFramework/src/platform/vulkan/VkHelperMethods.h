@@ -11,3 +11,4 @@ VkDevice GetVkDevice();
 VkInstance GetVkInstance();
 uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 void CreateBuffer(size_t size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
