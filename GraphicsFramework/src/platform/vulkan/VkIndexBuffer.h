@@ -6,11 +6,11 @@ class VkIndexBuffer : public IndexBuffer
 {
 public:
 	VkIndexBuffer(size_t count, BufferUsage usage, const void* data);
-	~VkIndexBuffer();
+	virtual ~VkIndexBuffer();
 
-	void SetData(const void* indices) override;
-	void Bind() const override;
-	void Unbind() const override;
+	virtual void SetData(const void* indices) override;
+	virtual void Bind() const override;
+	virtual void Unbind() const override;
 
 	VkBuffer GetGpuBuffer() const;
 

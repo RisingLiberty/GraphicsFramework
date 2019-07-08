@@ -6,13 +6,13 @@ class VkVertexBuffer : public VertexBuffer
 {
 public:
 	VkVertexBuffer(size_t size, BufferUsage usage, const void* data);
-	~VkVertexBuffer();
+	virtual ~VkVertexBuffer();
 
-	void SetData(const void* vertices) override;
-	VkBuffer GetGpuBuffer() const;
-
+	virtual void SetData(const void* vertices) override;
 	virtual void Bind() const override;
 	virtual void Unbind() const override;
+
+	VkBuffer GetGpuBuffer() const;
 
 private:
 	VkBuffer m_buffer_gpu;
