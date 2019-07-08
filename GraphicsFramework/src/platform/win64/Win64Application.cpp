@@ -18,7 +18,7 @@ namespace
 {
 	const int WINDOW_WIDTH = 720;
 	const int WINDOW_HEIGHT = 480;
-	const std::wstring& WINDOW_TITLE = L"Sandbox";
+	const std::string& WINDOW_TITLE = "Sandbox";
 
 	const float UPDATE_FREQUENCY = 60; //frames per seconds
 	const float SECONDS_PER_UPDATE = 1.0f / UPDATE_FREQUENCY;
@@ -30,9 +30,7 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped):
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	Context::Create(Context::API::DIRECTX12, m_window.get());
-	Context::GetCurrent()->PreInitialize();
-	Context::GetCurrent()->Initialize();
+	Context::Create(Context::API::VULKAN, m_window.get());
 }
 
 Win64Application::~Win64Application() = default;

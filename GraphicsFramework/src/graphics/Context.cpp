@@ -34,6 +34,7 @@ void Context::Create(API api, Window* window)
 	case Context::API::VULKAN: s_current = std::make_unique<VkContext>(window); break;
 	}
 
+	s_current->PreInitialize();
 	s_current->Initialize();
 }
 
