@@ -23,9 +23,9 @@
 //#include <objreader/tiny_obj_loader.h>
 //#endif
 
+
 namespace vk_utils
 {
-
 	typedef VkFlags VkWin32SurfaceCreateFlagsKHR;
 	typedef struct VkWin32SurfaceCreateInfoKHR
 	{
@@ -37,28 +37,6 @@ namespace vk_utils
 	} VkWin32SurfaceCreateInfoKHR;
 	typedef VkResult(APIENTRY *PFN_vkCreateWin32SurfaceKHR)(VkInstance, const VkWin32SurfaceCreateInfoKHR*, const VkAllocationCallbacks*, VkSurfaceKHR*);
 
-	//void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
-	//{
-	//	VkBufferCreateInfo buffer_info = {};
-	//	buffer_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-	//	buffer_info.size = size;
-	//	buffer_info.usage = usage;
-	//	buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-	//
-	//	VKCALL(vkCreateBuffer(GetVkDevice(), &buffer_info, nullptr, &buffer));
-	//
-	//	VkMemoryRequirements mem_requirements;
-	//	vkGetBufferMemoryRequirements(GetVkDevice(), buffer, &mem_requirements);
-	//
-	//	VkMemoryAllocateInfo alloc_info = {};
-	//	alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	//	alloc_info.allocationSize = mem_requirements.size;
-	//	alloc_info.memoryTypeIndex = FindMemoryType(mem_requirements.memoryTypeBits, properties);
-	//
-	//	VKCALL(vkAllocateMemory(GetVkDevice(), &alloc_info, nullptr, &bufferMemory));
-	//
-	//	vkBindBufferMemory(GetVkDevice(), buffer, bufferMemory, 0);
-	//}
 	VkResult CreateWindowSurface(VkInstance instance,
 		Window* window,
 		const VkAllocationCallbacks* allocator,
@@ -113,12 +91,17 @@ namespace vk_utils
 	}
 }
 
+void CheckVkResult(VkResult err)
+{
+	VKCALL(err);
+}
 
 VkContext::VkContext(Window* window)
 {
 	this->CreateInstance(window);
 	this->ShowExtentions();
 	this->CreateSurface(window);
+
 	//this->CreateTextureImage();
 	//this->CreateTextureImageView();
 	//this->CreateTextureSampler();
@@ -127,7 +110,7 @@ VkContext::VkContext(Window* window)
 
 VkContext::~VkContext()
 {
-
+	//delete m_vulkan_window;
 }
 
 void VkContext::Initialize()
@@ -151,6 +134,28 @@ void VkContext::Initialize()
 	this->CreateDescriptorSets();
 	this->CreateCommandBuffers();
 	this->CreateSyncObjects();
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplVulkan_InitInfo init_info = {};
+	init_info.Instance = m_instance;
+	init_info.PhysicalDevice = m_physical_device;
+	init_info.Device = m_device;
+	init_info.QueueFamily = FindQueueFamilies(m_physical_device).graphics_familiy;
+	init_info.Queue = m_graphics_queue;
+	init_info.PipelineCache = nullptr;
+	init_info.DescriptorPool = m_imgui_descriptor_pool;
+	init_info.Allocator = nullptr;
+	init_info.MinImageCount = MAX_FRAMES_IN_FLIGHT;
+	init_info.ImageCount = MAX_FRAMES_IN_FLIGHT; //  m_vulkan_window->ImageCount;
+	init_info.CheckVkResultFn = CheckVkResult;
+	ImGui_ImplVulkan_Init(&init_info, m_render_pass);
+
+	// Load Fonts
+	VkCommandBuffer command_buffer = BeginSingleTimeCommands();
+	ImGui_ImplVulkan_CreateFontsTexture(command_buffer);
+	EndSingleTimeCommands(command_buffer);
+
+	ImGui_ImplVulkan_DestroyFontUploadObjects();
 }
 
 void VkContext::Cleanup()
@@ -219,9 +224,58 @@ void VkContext::CleanupSwapchain()
 
 void VkContext::Present()
 {
+	ImGui_ImplVulkan_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	bool open = true;
+	ImGui::Begin("Title", &open, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize);
+	ImGui::Button("some buttons", ImVec2(100, 100));
+	ImGui::End();
+
+	ImGui::Render();
+
 	vkWaitForFences(m_device, 1, &m_in_flight_fences[m_current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 	uint32_t image_index;
 	VkResult result = vkAcquireNextImageKHR(m_device, m_swapchain, std::numeric_limits<uint64_t>::max(), m_image_available_semaphores[m_current_frame], VK_NULL_HANDLE, &image_index);
+
+	VkCommandBufferBeginInfo info = {};
+	info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+	info.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+	VKCALL(vkBeginCommandBuffer(m_command_buffers[image_index], &info));
+
+	VkRenderPassBeginInfo render_pass_info = {};
+	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
+	render_pass_info.renderPass = m_render_pass;
+	render_pass_info.framebuffer = m_swapchain_frame_buffers[image_index];
+	render_pass_info.renderArea.offset = { 0, 0 };
+	render_pass_info.renderArea.extent = m_swapchain_extent;
+	render_pass_info.clearValueCount = 1;
+
+	std::array<VkClearValue, 2> clear_values = {};
+	clear_values[0].color = { 1.0f, 0.0f, 0.0f, 1.0f };
+	clear_values[1].depthStencil = { 1.0f, 0 };
+
+	render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
+	render_pass_info.pClearValues = clear_values.data();
+
+	vkCmdBeginRenderPass(m_command_buffers[image_index], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdBindPipeline(m_command_buffers[image_index], VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphics_pipeline);
+
+	VkBuffer vertex_buffers[] = { m_vertex_buffer->GetGpuBuffer() };
+	VkDeviceSize offsets[] = { 0 };
+
+	vkCmdBindVertexBuffers(m_command_buffers[image_index], 0, 1, vertex_buffers, offsets);
+	vkCmdBindIndexBuffer(m_command_buffers[image_index], m_index_buffer->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
+	vkCmdBindDescriptorSets(m_command_buffers[image_index], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &m_descriptor_sets[image_index], 0, nullptr);
+	vkCmdDrawIndexed(m_command_buffers[image_index], static_cast<uint32_t>(m_index_buffer->GetCount()), 1, 0, 0, 0);
+
+	// Record Imgui Draw Data and draw funcs into command buffer
+	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), m_command_buffers[image_index]);
+
+	// Submit command buffer
+	vkCmdEndRenderPass(m_command_buffers[image_index]);
+	VKCALL(vkEndCommandBuffer(m_command_buffers[image_index]));
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
 	{
@@ -533,7 +587,7 @@ void VkContext::CreateSwapchain()
 
 void VkContext::CreateImageViews()
 {
-	m_swapchain_image_views.resize(m_swapchain_images.size());
+	m_swapchain_image_views.resize(MAX_FRAMES_IN_FLIGHT);
 
 	for (size_t i = 0; i < m_swapchain_images.size(); ++i)
 		m_swapchain_image_views[i] = CreateImageView(m_swapchain_images[i], m_swapchain_image_format, VK_IMAGE_ASPECT_COLOR_BIT, 1);
@@ -543,7 +597,7 @@ void VkContext::CreateRenderPass()
 {
 	VkAttachmentDescription color_attachment = {};
 	color_attachment.format = m_swapchain_image_format;
-	color_attachment.samples = m_msaa_samples;
+	color_attachment.samples = VK_SAMPLE_COUNT_1_BIT; // needs to be this for imgui! aka no multi sampling
 	color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	color_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -551,44 +605,44 @@ void VkContext::CreateRenderPass()
 	color_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	color_attachment.finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentDescription color_attachment_resolve = {};
-	color_attachment_resolve.format = m_swapchain_image_format;
-	color_attachment_resolve.samples = VK_SAMPLE_COUNT_1_BIT;
-	color_attachment_resolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	color_attachment_resolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	color_attachment_resolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	color_attachment_resolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	color_attachment_resolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	color_attachment_resolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+	//VkAttachmentDescription color_attachment_resolve = {};
+	//color_attachment_resolve.format = m_swapchain_image_format;
+	//color_attachment_resolve.samples = VK_SAMPLE_COUNT_1_BIT;
+	//color_attachment_resolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	//color_attachment_resolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	//color_attachment_resolve.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	//color_attachment_resolve.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	//color_attachment_resolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	//color_attachment_resolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-	VkAttachmentDescription depth_attachment = {};
-	depth_attachment.format = FindDepthFormat();
-	depth_attachment.samples = m_msaa_samples;
-	depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	depth_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	depth_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-	depth_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	depth_attachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+	//VkAttachmentDescription depth_attachment = {};
+	//depth_attachment.format = FindDepthFormat();
+	//depth_attachment.samples = m_msaa_samples;
+	//depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	//depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	//depth_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+	//depth_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	//depth_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+	//depth_attachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
 
 	VkAttachmentReference color_attachment_ref = {};
 	color_attachment_ref.attachment = 0;
 	color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentReference color_attachment_resolve_ref = {};
-	color_attachment_resolve_ref.attachment = 2;
-	color_attachment_resolve_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	//VkAttachmentReference color_attachment_resolve_ref = {};
+	//color_attachment_resolve_ref.attachment = 2;
+	//color_attachment_resolve_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-	VkAttachmentReference depth_attachment_ref = {};
-	depth_attachment_ref.attachment = 1;
-	depth_attachment_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+	//VkAttachmentReference depth_attachment_ref = {};
+	//depth_attachment_ref.attachment = 1;
+	//depth_attachment_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
 	VkSubpassDescription subpass = {};
 	subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
 	subpass.colorAttachmentCount = 1;
 	subpass.pColorAttachments = &color_attachment_ref;
-	subpass.pDepthStencilAttachment = &depth_attachment_ref;
-	subpass.pResolveAttachments = &color_attachment_resolve_ref;
+	//subpass.pDepthStencilAttachment = &depth_attachment_ref;
+	//subpass.pResolveAttachments = &color_attachment_resolve_ref;
 
 	VkSubpassDependency dependency = {};
 	dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
@@ -598,7 +652,7 @@ void VkContext::CreateRenderPass()
 	dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 	dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
 
-	std::array<VkAttachmentDescription, 3> attachments = { color_attachment, depth_attachment, color_attachment_resolve };
+	std::array<VkAttachmentDescription, 1> attachments = { color_attachment };// , depth_attachment, color_attachment_resolve
 
 	VkRenderPassCreateInfo render_pass_info = {};
 	render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -610,6 +664,7 @@ void VkContext::CreateRenderPass()
 	render_pass_info.pDependencies = &dependency;
 
 	VKCALL(vkCreateRenderPass(m_device, &render_pass_info, nullptr, &m_render_pass));
+	VKCALL(vkCreateRenderPass(m_device, &render_pass_info, nullptr, &m_imgui_render_pass));
 
 }
 
@@ -811,14 +866,19 @@ void VkContext::CreateDepthResources()
 
 void VkContext::CreateFrameBuffers()
 {
-	m_swapchain_frame_buffers.resize(m_swapchain_image_views.size());
+	m_swapchain_frame_buffers.resize(MAX_FRAMES_IN_FLIGHT);
 
-	for (size_t i = 0; i < m_swapchain_image_views.size(); ++i)
+	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
 	{
-		std::array<VkImageView, 3> attachments =
+		//std::array<VkImageView, 3> attachments =
+		//{
+		//	m_color_image_view,
+		//	m_depth_image_view,
+		//	m_swapchain_image_views[i]
+		//};
+
+		std::array<VkImageView, 1> attachments =
 		{
-			m_color_image_view,
-			m_depth_image_view,
 			m_swapchain_image_views[i]
 		};
 
@@ -1016,6 +1076,28 @@ void VkContext::CreateDescriptorPool()
 	pool_info.maxSets = static_cast<uint32_t>(m_swapchain_images.size());
 
 	VKCALL(vkCreateDescriptorPool(m_device, &pool_info, nullptr, &m_descriptor_pool));
+
+	VkDescriptorPoolSize pool_sizes_arr[] =
+	{
+		{ VK_DESCRIPTOR_TYPE_SAMPLER, 1000 },
+		{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1000 },
+		{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1000 },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, 1000 },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, 1000 },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, 1000 },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1000 },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1000 },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1000 },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, 1000 },
+		{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1000 }
+	};
+	pool_info = {};
+	pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
+	pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
+	pool_info.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes_arr);
+	pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes_arr);
+	pool_info.pPoolSizes = pool_sizes_arr;
+	VKCALL(vkCreateDescriptorPool(m_device, &pool_info, nullptr, &m_imgui_descriptor_pool));
 }
 
 void VkContext::CreateDescriptorSets()
@@ -1072,7 +1154,7 @@ void VkContext::CreateDescriptorSets()
 
 void VkContext::CreateCommandBuffers()
 {
-	m_command_buffers.resize(m_swapchain_frame_buffers.size());
+	m_command_buffers.resize(MAX_FRAMES_IN_FLIGHT);
 
 	VkCommandBufferAllocateInfo alloc_info = {};
 	alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -1105,19 +1187,19 @@ void VkContext::CreateCommandBuffers()
 		render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
 		render_pass_info.pClearValues = clear_values.data();
 
-		vkCmdBeginRenderPass(m_command_buffers[i], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
-		vkCmdBindPipeline(m_command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphics_pipeline);
+		//vkCmdBeginRenderPass(m_command_buffers[i], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+		//vkCmdBindPipeline(m_command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphics_pipeline);
 
-		VkBuffer vertex_buffers[] = { m_vertex_buffer->GetGpuBuffer() };
-		VkDeviceSize offsets[] = { 0 };
+		//VkBuffer vertex_buffers[] = { m_vertex_buffer->GetGpuBuffer() };
+		//VkDeviceSize offsets[] = { 0 };
 
-		vkCmdBindVertexBuffers(m_command_buffers[i], 0, 1, vertex_buffers, offsets);
-		vkCmdBindIndexBuffer(m_command_buffers[i], m_index_buffer->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
-		vkCmdBindDescriptorSets(m_command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &m_descriptor_sets[i], 0, nullptr);
-		vkCmdDrawIndexed(m_command_buffers[i], static_cast<uint32_t>(m_index_buffer->GetCount()), 1, 0, 0, 0);
-		vkCmdEndRenderPass(m_command_buffers[i]);
+		//vkCmdBindVertexBuffers(m_command_buffers[i], 0, 1, vertex_buffers, offsets);
+		//vkCmdBindIndexBuffer(m_command_buffers[i], m_index_buffer->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
+		//vkCmdBindDescriptorSets(m_command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &m_descriptor_sets[i], 0, nullptr);
+		//vkCmdDrawIndexed(m_command_buffers[i], static_cast<uint32_t>(m_index_buffer->GetCount()), 1, 0, 0, 0);
+		//vkCmdEndRenderPass(m_command_buffers[i]);
 
-		VKCALL(vkEndCommandBuffer(m_command_buffers[i]));
+		//VKCALL(vkEndCommandBuffer(m_command_buffers[i]));
 	}
 }
 

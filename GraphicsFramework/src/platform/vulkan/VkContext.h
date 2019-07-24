@@ -3,6 +3,7 @@
 #include "graphics/Context.h"
 
 class Window;
+struct Imgui_ImplVulkanH_Window;
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
@@ -224,6 +225,7 @@ private:
 	VkFormat m_swapchain_image_format;
 	VkExtent2D m_swapchain_extent;
 	std::vector<VkImageView> m_swapchain_image_views;
+	VkRenderPass m_imgui_render_pass;
 	VkRenderPass m_render_pass;
 	VkPipelineLayout m_pipeline_layout = {};
 	VkPipeline m_graphics_pipeline;
@@ -239,6 +241,7 @@ private:
 	//std::vector<VkBuffer> m_uniform_buffers;
 	//std::vector<VkDeviceMemory> m_uniform_buffers_memory;
 	VkDescriptorPool m_descriptor_pool;
+	VkDescriptorPool m_imgui_descriptor_pool;
 	std::vector<VkDescriptorSet> m_descriptor_sets;
 	VkImage m_depth_image;
 	VkDeviceMemory m_depth_image_memory;
@@ -257,6 +260,8 @@ private:
 	const std::string MODEL_PATH = "data/meshes/chalet.obj";
 	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
 
+	ImGui_ImplVulkanH_Frame*            Frames;
+	ImGui_ImplVulkanH_FrameSemaphores*  FrameSemaphores;	
 
 	std::unique_ptr<VkVertexBuffer> m_vertex_buffer;
 	std::unique_ptr<VkIndexBuffer> m_index_buffer;
