@@ -40,7 +40,7 @@ bool CheckD3D11Error(HRESULT result)
 
 Dx11Context* GetDx11Context()
 {
-	return dynamic_cast<Dx11Context*>(Context::GetCurrent());
+	return static_cast<Dx11Context*>(Context::GetCurrent());
 }
 
 ID3D11Device* GetDx11Device()

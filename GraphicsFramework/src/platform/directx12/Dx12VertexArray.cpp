@@ -32,7 +32,7 @@ Dx12VertexArray::~Dx12VertexArray()
 
 void Dx12VertexArray::Bind() const
 {
-	const Dx12VertexBuffer* dx_vb = dynamic_cast<const Dx12VertexBuffer*>(m_vertex_buffer);
+	const Dx12VertexBuffer* dx_vb = static_cast<const Dx12VertexBuffer*>(m_vertex_buffer);
 	D3D12_VERTEX_BUFFER_VIEW vbv = GetVertexBufferView(dx_vb, m_vertex_layout);
 	GetDx12CommandList()->IASetVertexBuffers(0, 1, &vbv);
 }

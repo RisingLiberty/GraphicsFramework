@@ -50,7 +50,7 @@ void Dx12ShaderProgram::UploadVariables()
 {
 	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
 	{
-		const Dx12ShaderUniform* dx_uniform = dynamic_cast<const Dx12ShaderUniform*>(uniform.get());
+		const Dx12ShaderUniform* dx_uniform = static_cast<const Dx12ShaderUniform*>(uniform.get());
 		m_constant_buffer->CopyData(dx_uniform->data, dx_uniform->size, dx_uniform->offset);
 	}
 }
@@ -113,10 +113,10 @@ void Dx12ShaderProgram::BuildRootSignature(Dx12ParsedShader* vs_parsed, Dx12Pars
 
 Dx12VertexShader* Dx12ShaderProgram::GetDxVertexShader() const
 {
-	return dynamic_cast<Dx12VertexShader*>(m_vertex_shader);
+	return static_cast<Dx12VertexShader*>(m_vertex_shader);
 }
 
 Dx12FragmentShader* Dx12ShaderProgram::GetDxFragmentShader() const
 {
-	return dynamic_cast<Dx12FragmentShader*>(m_fragment_shader);
+	return static_cast<Dx12FragmentShader*>(m_fragment_shader);
 }

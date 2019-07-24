@@ -51,7 +51,7 @@ bool CheckD3D12Error(HRESULT result)
 
 Dx12Context* GetDx12Context()
 {
-	return dynamic_cast<Dx12Context*>(Context::GetCurrent());
+	return static_cast<Dx12Context*>(Context::GetCurrent());
 }
 
 ID3D12Device* GetDx12Device()

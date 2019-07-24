@@ -403,11 +403,11 @@ void Dx12Context::BuildPSO()
 	if (!m_bound_shader_program)
 		return;
 
-	auto dx_vs = dynamic_cast<Dx12VertexShader*>(m_bound_shader_program->GetVertexShader());
-	auto dx_fs = dynamic_cast<Dx12FragmentShader*>(m_bound_shader_program->GetFragmentShader());
+	auto dx_vs = static_cast<Dx12VertexShader*>(m_bound_shader_program->GetVertexShader());
+	auto dx_fs = static_cast<Dx12FragmentShader*>(m_bound_shader_program->GetFragmentShader());
 
-	const Dx12VertexLayout* dx_vertex_layout = dynamic_cast<const Dx12VertexLayout*>(m_bound_vertex_array->GetVertexLayout());
-	Dx12ShaderProgram* dx_shader_program = dynamic_cast<Dx12ShaderProgram*>(m_bound_shader_program);
+	const Dx12VertexLayout* dx_vertex_layout = static_cast<const Dx12VertexLayout*>(m_bound_vertex_array->GetVertexLayout());
+	Dx12ShaderProgram* dx_shader_program = static_cast<Dx12ShaderProgram*>(m_bound_shader_program);
 
 	Dx12UploadBuffer* upload_buffer = dx_shader_program->GetUploadBuffer();
 	
@@ -491,10 +491,10 @@ void Dx12Context::BindResourcesToPipeline()
 {
 	ID3D12DescriptorHeap* descriptorHeaps[] = { m_cbv_heap.Get() };
 	m_command_list->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-	m_command_list->SetGraphicsRootSignature(dynamic_cast<Dx12ShaderProgram*>(m_bound_shader_program)->GetRootSignature());
+	m_command_list->SetGraphicsRootSignature(static_cast<Dx12ShaderProgram*>(m_bound_shader_program)->GetRootSignature());
 
-	dynamic_cast<Dx12VertexArray*>(m_bound_vertex_array)->Bind();
-	dynamic_cast<Dx12IndexBuffer*>(m_bound_ib)->Bind();
+	static_cast<Dx12VertexArray*>(m_bound_vertex_array)->Bind();
+	static_cast<Dx12IndexBuffer*>(m_bound_ib)->Bind();
 
 	m_command_list->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_command_list->SetGraphicsRootDescriptorTable(0, m_cbv_heap->GetGPUDescriptorHandleForHeapStart());

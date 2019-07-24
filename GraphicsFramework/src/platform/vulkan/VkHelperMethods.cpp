@@ -6,7 +6,7 @@
 
 VkContext* GetVkContext()
 {
-	return dynamic_cast<VkContext*>(Context::GetCurrent());
+	return static_cast<VkContext*>(Context::GetCurrent());
 }
 
 VkDevice GetVkDevice()

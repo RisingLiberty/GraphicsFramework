@@ -15,8 +15,8 @@
 Dx11ShaderProgram::Dx11ShaderProgram(VertexShader* vs, FragmentShader* fs):
 	ShaderProgram(vs, fs)
 {
-	Dx11VertexShader* dx_vs = dynamic_cast<Dx11VertexShader*>(vs);
-	Dx11FragmentShader* dx_fs = dynamic_cast<Dx11FragmentShader*>(fs);
+	Dx11VertexShader* dx_vs = static_cast<Dx11VertexShader*>(vs);
+	Dx11FragmentShader* dx_fs = static_cast<Dx11FragmentShader*>(fs);
 
 	Dx11ShaderParser parser;
 	
@@ -49,8 +49,8 @@ Dx11ShaderProgram::~Dx11ShaderProgram()
 
 void Dx11ShaderProgram::Bind() const
 {
-	Dx11VertexShader* dx_vs = dynamic_cast<Dx11VertexShader*>(m_vertex_shader);
-	Dx11FragmentShader* dx_fs = dynamic_cast<Dx11FragmentShader*>(m_fragment_shader);
+	Dx11VertexShader* dx_vs = static_cast<Dx11VertexShader*>(m_vertex_shader);
+	Dx11FragmentShader* dx_fs = static_cast<Dx11FragmentShader*>(m_fragment_shader);
 
 	GetDx11Context()->BindVertexShader(dx_vs);
 	GetDx11Context()->BindFragmentShader(dx_fs);
@@ -128,10 +128,10 @@ void Dx11ShaderProgram::UploadFragmentConstantBuffer()
 
 Dx11VertexShader* Dx11ShaderProgram::GetDxVertexShader() const
 {
-	return dynamic_cast<Dx11VertexShader*>(m_vertex_shader);
+	return static_cast<Dx11VertexShader*>(m_vertex_shader);
 }
 
 Dx11FragmentShader* Dx11ShaderProgram::GetDxFragmentShader() const
 {
-	return dynamic_cast<Dx11FragmentShader*>(m_fragment_shader);
+	return static_cast<Dx11FragmentShader*>(m_fragment_shader);
 }
