@@ -100,6 +100,8 @@ void CheckVkResult(VkResult err)
 
 VkContext::VkContext(Window* window)
 {
+	spdlog::info("Using Vulkan");
+
 	this->CreateInstance(window);
 	this->ShowExtentions();
 	this->CreateSurface(window);
