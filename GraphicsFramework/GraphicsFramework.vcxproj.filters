@@ -336,6 +336,9 @@
     <ClCompile Include="src\platform\vulkan\VkRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\graphics\GraphicsResource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -672,6 +675,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\vulkan\VkRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\GraphicsResource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

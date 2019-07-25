@@ -1,8 +1,9 @@
 #pragma once
 
 #include "BufferUsage.h"
+#include "GraphicsResource.h"
 
-class VertexBuffer
+class VertexBuffer : public GraphicsResource<VertexBuffer>
 {
 public:
 

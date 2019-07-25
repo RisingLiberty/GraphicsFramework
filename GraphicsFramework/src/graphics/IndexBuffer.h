@@ -1,8 +1,9 @@
 #pragma once
 
+#include "GraphicsResource.h"
 #include "BufferUsage.h"
 
-class IndexBuffer
+class IndexBuffer : public GraphicsResource<IndexBuffer>
 {
 public:
 	IndexBuffer(size_t count, BufferUsage usage);

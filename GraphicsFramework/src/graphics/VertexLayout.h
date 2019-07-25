@@ -1,8 +1,9 @@
 #pragma once
 
 #include "VertexAttribute.h"
+#include "GraphicsResource.h"
 
-class VertexLayout
+class VertexLayout : public GraphicsResource<VertexLayout>
 {
 public:
 	VertexLayout();

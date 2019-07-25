@@ -1,9 +1,11 @@
 #pragma once
 
+#include "GraphicsResource.h"
+
 class VertexBuffer;
 class VertexLayout;
 
-class VertexArray
+class VertexArray : public GraphicsResource<VertexArray>
 {
 public:
 	virtual ~VertexArray();

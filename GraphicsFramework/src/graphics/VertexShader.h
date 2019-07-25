@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Shader.h"
+#include "GraphicsResource.h"
 
-class VertexShader : public Shader
+class VertexShader : public Shader, public GraphicsResource<VertexShader>
 {
 public:
 	VertexShader(const std::string& path);

@@ -1,11 +1,12 @@
 #pragma once
 
+#include "GraphicsResource.h"
 #include "ShaderUniform.h"
 
 class VertexShader;
 class FragmentShader;
 
-class ShaderProgram
+class ShaderProgram : public GraphicsResource<ShaderProgram>
 {
 public:
 	ShaderProgram(VertexShader* vertexShader, FragmentShader* fragmentShader);

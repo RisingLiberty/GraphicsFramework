@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\graphics\GraphicsResource.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11IndexBuffer.cpp" />
@@ -285,6 +286,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\graphics\BufferUsage.h" />
+    <ClInclude Include="src\graphics\GraphicsResource.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11FragmentShader.h" />
     <ClInclude Include="src\platform\directx11\Dx11IndexBuffer.h" />

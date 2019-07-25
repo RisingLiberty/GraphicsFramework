@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Shader.h"
+#include "GraphicsResource.h"
 
-class FragmentShader : public Shader
+class FragmentShader : public Shader, public GraphicsResource<FragmentShader>
 {
 public:
 	FragmentShader(const std::string& path);

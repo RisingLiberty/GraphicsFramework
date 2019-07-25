@@ -1,10 +1,11 @@
 #pragma once
 
+#include "GraphicsResource.h"
 #include "MaterialParameter.h"
 
 class ShaderProgram;
 
-class Material
+class Material : public GraphicsResource<Material>
 {
 public:
 	Material(ShaderProgram* program);
