@@ -2,11 +2,11 @@
 
 #include "graphics/Renderer.h"
 
-class Dx11Renderer : public Renderer
+class VkRenderer : public Renderer
 {
-public:
-	Dx11Renderer(ID3D11RenderTargetView* renderTargetView, ID3D11DepthStencilView* depthStencilView);
-	virtual ~Dx11Renderer();
+public: 
+	VkRenderer();
+	virtual ~VkRenderer();
 
 	virtual void Draw() override;
 	virtual void ClearAllBuffers() override;
@@ -15,9 +15,8 @@ public:
 	virtual void ClearDepthBuffer() override;
 	virtual void ClearStencilBuffer() override;
 
+	virtual void Begin() override;
+	virtual void End() override;
 	virtual void RenderImgui() override;
 
-private:
-	ComPtr<ID3D11RenderTargetView> m_render_target_view;
-	ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
 };

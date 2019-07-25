@@ -23,6 +23,7 @@ namespace
 Dx12VertexArray::Dx12VertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	VertexArray(vb, layout)
 {
+	GetDx12Context()->BindVertexArray(static_cast<Dx12VertexArray*>(this));
 }
 
 Dx12VertexArray::~Dx12VertexArray()

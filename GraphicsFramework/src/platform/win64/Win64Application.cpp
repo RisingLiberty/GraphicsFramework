@@ -99,12 +99,14 @@ void Win64Application::Update(float dTime)
 
 void Win64Application::Draw()
 {
+	Context::GetCurrent()->Start();
 	Context::GetCurrent()->GetRenderer()->Begin();
 	Context::GetCurrent()->GetRenderer()->ClearAllBuffers();
 	m_scene_controller->Draw();
-	Context::GetCurrent()->GetRenderer()->Present();
+	Context::GetCurrent()->GetRenderer()->Draw();
 	Context::GetCurrent()->GetRenderer()->RenderImgui();
 	Context::GetCurrent()->GetRenderer()->End();
+	Context::GetCurrent()->Finish();
 }
 
 void Win64Application::OnEvent(const Event& event)

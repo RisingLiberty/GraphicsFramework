@@ -1,25 +1,26 @@
 #include "stdafx.h"
 
-#include "Dx11UILayer.h"
+#include "VkUILayer.h"
 #include "scenegraph/LayerObject.h"
 
-Dx11UILayer::Dx11UILayer(const std::string& title):
+VkUILayer::VkUILayer(const std::string& title) :
 	UILayer(title)
 {
 }
 
-Dx11UILayer::~Dx11UILayer()
-{
-}
-
-void Dx11UILayer::Update(float dTime)
+VkUILayer::~VkUILayer()
 {
 
 }
 
-void Dx11UILayer::Draw()
+void VkUILayer::Update(float dTime)
 {
-	ImGui_ImplDX11_NewFrame();
+
+}
+
+void VkUILayer::Draw()
+{
+	ImGui_ImplVulkan_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
@@ -28,7 +29,6 @@ void Dx11UILayer::Draw()
 	{
 		object->Draw();
 	}
-
 	ImGui::End();
 
 }

@@ -7,6 +7,7 @@
 #include "platform/opengl/OpenGLVertexShader.h"
 #include "platform/directx11/Dx11VertexShader.h"
 #include "platform/directx12/Dx12VertexShader.h"
+#include "platform/vulkan/VkVertexShader.h"
 
 #include "controllers/ShaderController.h"
 
@@ -37,6 +38,9 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 	case Context::API::DIRECTX12:
 		path += "directx12/" + shaderName + ".hlsl";
 		break;
+	case Context::API::VULKAN:
+		path += "vulkan/bin/" + shaderName + ".spv";
+		break;
 	}
 
 	ShaderController* shader_controller = Context::GetCurrent()->GetShaderController();
@@ -61,6 +65,11 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 		break;
 	case Context::API::DIRECTX12:
 		unique_shader = std::make_unique<Dx12VertexShader>(path);
+		shader = unique_shader.get();
+		shader_controller->PushVertexShader(unique_shader);
+		break;
+	case Context::API::VULKAN:
+		unique_shader = std::make_unique<VkVertexShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);
 		break;

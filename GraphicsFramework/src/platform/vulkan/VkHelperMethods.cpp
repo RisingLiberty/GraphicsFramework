@@ -14,6 +14,11 @@ VkDevice GetVkDevice()
 	return GetVkContext()->GetDevice();
 }
 
+VkCommandBuffer GetVkCurrentCommandBuffer()
+{
+	return GetVkContext()->GetCurrentCommandBuffer();
+}
+
 VkInstance GetVkInstance()
 {
 	return GetVkContext()->GetInstance();

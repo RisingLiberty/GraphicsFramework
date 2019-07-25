@@ -27,7 +27,7 @@ Dx11Renderer::~Dx11Renderer()
 	ImGui_ImplDX11_Shutdown();
 }
 
-void Dx11Renderer::Present()
+void Dx11Renderer::Draw()
 {
 	for (SceneObject* object : m_scene_objects)
 	{

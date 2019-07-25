@@ -19,6 +19,7 @@ public:
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::FLOAT, false, count));
 		m_size += count * m_attributes.back().GetSize();
+		this->OnAfterPush();
 	}
 
 	template <>
@@ -26,6 +27,7 @@ public:
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::UNSIGNED_INT, false, count));
 		m_size += count * m_attributes.back().GetSize();
+		this->OnAfterPush();
 	}
 
 	template <>
@@ -33,6 +35,7 @@ public:
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::INT, false, count));
 		m_size += count * m_attributes.back().GetSize();
+		this->OnAfterPush();
 	}
 
 	template <>
@@ -40,6 +43,7 @@ public:
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::UNSIGNED_BYTE, true, count));
 		m_size += count * m_attributes.back().GetSize();
+		this->OnAfterPush();
 	}
 
 	template <>
@@ -47,6 +51,7 @@ public:
 	{
 		m_attributes.push_back(VertexAttribute(type, VertexAttributeDataType::BYTE, false, count));
 		m_size += count * m_attributes.back().GetSize();
+		this->OnAfterPush();
 	}
 
 	//template <>
@@ -78,7 +83,7 @@ public:
 	static std::unique_ptr<VertexLayout> Create();
 
 protected:
-
+	virtual void OnAfterPush() {};
 
 protected:
 	std::vector<VertexAttribute> m_attributes;

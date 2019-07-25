@@ -18,6 +18,8 @@ class VkVertexBuffer;
 class VkIndexBuffer;
 class VkShaderProgram;
 class VkVertexLayout;
+class VertexArray;
+class VkVertexArray;
 
 struct Vertex
 {
@@ -146,15 +148,24 @@ public:
 	virtual ~VkContext();
 
 	virtual void Initialize();
+	virtual void Start() override;
 	virtual void Present();
+	virtual void Finish() override;
 	virtual API GetApiType() const;
+
+	void BindResourcesToPipeline();
 
 	VkDevice GetDevice() const;
 	VkInstance GetInstance() const;
 	VkPhysicalDevice GetSelectedGpu() const;
+	VkCommandBuffer GetCurrentCommandBuffer() const;
 
 	VkCommandBuffer BeginSingleTimeCommands();
 	void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
+
+	void BindVertexArray(VkVertexArray* vertexArray);
+	void BindIndexBuffer(VkIndexBuffer* indexBuffer);
+	void BindShaderProgram(VkShaderProgram* shaderProgram);
 
 private:
 	void CreateInstance(Window* window);
@@ -176,8 +187,6 @@ private:
 	void CreateTextureImageView();
 	void CreateTextureSampler();
 	//void LoadModel();
-	void CreateVertexBuffer();
-	void CreateIndexBuffer();
 	void CreateUniformBuffer();
 	void CreateDescriptorPool();
 	void CreateDescriptorSets();
@@ -260,11 +269,9 @@ private:
 	const std::string MODEL_PATH = "data/meshes/chalet.obj";
 	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
 
-	ImGui_ImplVulkanH_Frame*            Frames;
-	ImGui_ImplVulkanH_FrameSemaphores*  FrameSemaphores;	
-
-	std::unique_ptr<VkVertexBuffer> m_vertex_buffer;
-	std::unique_ptr<VkIndexBuffer> m_index_buffer;
-	std::unique_ptr<VkShaderProgram> m_shader_program;
-	std::unique_ptr<VkVertexLayout> m_vertex_layout;
+	const VkVertexBuffer* m_bound_vertex_buffer;
+	const VkVertexArray* m_bound_vertex_array;
+	const VkVertexLayout* m_bound_vertex_layout;
+	const VkIndexBuffer* m_bound_index_buffer;
+	VkShaderProgram* m_bound_shader_program;
 };

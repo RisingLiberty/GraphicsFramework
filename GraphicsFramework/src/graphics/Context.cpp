@@ -6,8 +6,8 @@
 #include "platform/opengl/OpenGLContext.h"
 #include "platform/directx11/Dx11Context.h"
 #include "platform/directx12/Dx12Context.h"
-#include "platform/directx12/Dx12Context.h"
 #include "platform/vulkan/VkContext.h"
+#include "platform/vulkan/VkTestContext.h"
 
 #include "controllers/ShaderController.h"
 #include "controllers/VertexArrayController.h"

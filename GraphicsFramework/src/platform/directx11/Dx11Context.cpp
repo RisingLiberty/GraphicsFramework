@@ -27,7 +27,7 @@ void Dx11Context::Initialize()
 
 void Dx11Context::InitD3D(Window* window)
 {
-	Win64Window* win64_window = dynamic_cast<Win64Window*>(window);
+	Win64Window* win64_window = static_cast<Win64Window*>(window);
 	assert(win64_window);
 
 	HWND handle = (HWND)win64_window->GetHandle();

@@ -2,11 +2,11 @@
 
 #include "Mesh.h"
 
-//Define to include the function bodies and avoid linker issues
-#ifndef TINYOBJLOADER_IMPLEMENTATION
-#define TINYOBJLOADER_IMPLEMENTATION
-#include <objreader/tiny_obj_loader.h>
-#endif
+////Define to include the function bodies and avoid linker issues
+//#ifndef TINYOBJLOADER_IMPLEMENTATION
+//#define TINYOBJLOADER_IMPLEMENTATION
+//#include <objreader/tiny_obj_loader.h>
+//#endif
 
 #include "VertexBuffer.h"
 #include "VertexLayout.h"

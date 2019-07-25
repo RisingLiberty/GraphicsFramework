@@ -3,9 +3,13 @@
 #include "VkIndexBuffer.h"
 #include "VkHelperMethods.h"
 
+#include "VkContext.h"
+
 VkIndexBuffer::VkIndexBuffer(size_t count, BufferUsage usage, const void* data):
 	IndexBuffer(count, usage)
 {
+	GetVkContext()->BindIndexBuffer(this);
+
 	if (data)
 		this->SetData(data);
 }

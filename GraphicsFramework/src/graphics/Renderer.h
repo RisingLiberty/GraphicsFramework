@@ -10,7 +10,7 @@ public:
 
 	void SubmitObject(SceneObject* mesh);
 	
-	virtual void Present() = 0;
+	virtual void Draw() = 0;
 	virtual void ClearAllBuffers() = 0;
 	virtual void ClearColorBuffer() = 0;
 	virtual void ClearDepthStencilBuffer() = 0;

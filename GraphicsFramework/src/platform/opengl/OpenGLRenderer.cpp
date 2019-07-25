@@ -28,7 +28,7 @@ OpenGLRenderer::~OpenGLRenderer()
 	ImGui_ImplOpenGL3_Shutdown();
 }
 
-void OpenGLRenderer::Present()
+void OpenGLRenderer::Draw()
 {
 	for (SceneObject* object : m_scene_objects)
 	{

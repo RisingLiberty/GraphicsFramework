@@ -8,6 +8,7 @@
 #include "platform/opengl/OpenGLVertexArray.h"
 #include "platform/directx11/Dx11VertexArray.h"
 #include "platform/directx12/Dx12VertexArray.h"
+#include "platform/vulkan/VkVertexArray.h"
 
 #include "platform/directx12/Dx12HelperMethods.h"
 #include "platform/directx12/Dx12Context.h"
@@ -48,10 +49,12 @@ VertexArray* VertexArray::Create(const VertexBuffer* vb, const VertexLayout* lay
 		vertex_array = unique_array.get();
 		vertex_array_controller->PushVertexArray(unique_array);
 		break;
+	case Context::API::VULKAN:
+		unique_array = std::make_unique<VkVertexArray>(vb, layout);
+		vertex_array = unique_array.get();
+		vertex_array_controller->PushVertexArray(unique_array);
 	}
 
-	if (Context::GetApi() == Context::API::DIRECTX12)
-		GetDx12Context()->BindVertexArray(dynamic_cast<Dx12VertexArray*>(vertex_array));
 	return vertex_array;
 }
 

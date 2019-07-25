@@ -8,7 +8,7 @@ public:
 	Dx12Renderer();
 	virtual ~Dx12Renderer();
 
-	virtual void Present() override;
+	virtual void Draw() override;
 	virtual void ClearAllBuffers() override;
 	virtual void ClearColorBuffer() override;
 	virtual void ClearDepthStencilBuffer() override;

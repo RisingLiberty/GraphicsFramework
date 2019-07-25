@@ -30,7 +30,7 @@ Dx12Renderer::~Dx12Renderer()
 	ImGui_ImplDX12_Shutdown();
 }
 
-void Dx12Renderer::Present()
+void Dx12Renderer::Draw()
 {
 	for (SceneObject* object : m_scene_objects)
 	{

@@ -8,6 +8,7 @@
 #include "platform/opengl/OpenGLShaderProgram.h"
 #include "platform/directx11/Dx11ShaderProgram.h"
 #include "platform/directx12/Dx12ShaderProgram.h"
+#include "platform/vulkan/VkShaderProgram.h"
 
 ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
 {
@@ -41,6 +42,11 @@ ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
 		shader_controller->PushShaderProgram(unique_program);
 		break;
 	}
+	case Context::API::VULKAN:
+		unique_program = std::make_unique<VkShaderProgram>(vs, fs);
+		program = unique_program.get();
+		shader_controller->PushShaderProgram(unique_program);
+		break;
 	}
 
 	return program;

@@ -2,6 +2,7 @@
 
 #include "VkShaderProgram.h"
 #include "VkHelperMethods.h"
+#include "VkContext.h"
 
 #include "VkVertexShader.h"
 #include "VkFragmentShader.h"
@@ -9,6 +10,8 @@
 VkShaderProgram::VkShaderProgram(VertexShader* vs, FragmentShader* fs) :
 	ShaderProgram(vs, fs)
 {
+	GetVkContext()->BindShaderProgram(this);
+
 	unsigned int size = sizeof(float) * 4;
 	CreateBuffer(size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_uniform_buffer, m_uniform_buffer_memory);
 

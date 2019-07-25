@@ -11,8 +11,10 @@
 #include "VkVertexShader.h"
 #include "VkFragmentShader.h"
 #include "VkShaderProgram.h"
-
 #include "VkVertexLayout.h"
+#include "VkVertexArray.h"
+
+#include "VkRenderer.h"
 
 //#define STB_IMAGE_IMPLEMENTATION
 //#include <stb/stb_image.h>
@@ -110,7 +112,6 @@ VkContext::VkContext(Window* window)
 
 VkContext::~VkContext()
 {
-	//delete m_vulkan_window;
 }
 
 void VkContext::Initialize()
@@ -122,16 +123,14 @@ void VkContext::Initialize()
 	this->CreateImageViews();
 	this->CreateRenderPass();
 	this->CreateDescriptorSetLayout();
-	this->CreateGraphicsPipeline();
+	//this->CreateGraphicsPipeline();
 	this->CreateCommandPool();
 	this->CreateColorResources();
 	this->CreateDepthResources();
 	this->CreateFrameBuffers();
-	this->CreateVertexBuffer();
-	this->CreateIndexBuffer();
 	this->CreateUniformBuffer();
 	this->CreateDescriptorPool();
-	this->CreateDescriptorSets();
+	//this->CreateDescriptorSets();
 	this->CreateCommandBuffers();
 	this->CreateSyncObjects();
 
@@ -156,6 +155,8 @@ void VkContext::Initialize()
 	EndSingleTimeCommands(command_buffer);
 
 	ImGui_ImplVulkan_DestroyFontUploadObjects();
+
+	m_renderer = std::make_unique<VkRenderer>();
 }
 
 void VkContext::Cleanup()
@@ -222,18 +223,21 @@ void VkContext::CleanupSwapchain()
 	vkDestroySwapchainKHR(m_device, m_swapchain, nullptr);
 }
 
-void VkContext::Present()
+void VkContext::BindResourcesToPipeline()
 {
-	ImGui_ImplVulkan_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	VkBuffer vertex_buffers[] = { m_bound_vertex_buffer->GetGpuBuffer() };
+	VkDeviceSize offsets[] = { 0 };
 
-	bool open = true;
-	ImGui::Begin("Title", &open, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::Button("some buttons", ImVec2(100, 100));
-	ImGui::End();
+	vkCmdBindVertexBuffers(m_command_buffers[m_current_frame], 0, 1, vertex_buffers, offsets);
+	vkCmdBindIndexBuffer(m_command_buffers[m_current_frame], m_bound_index_buffer->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
+	vkCmdBindDescriptorSets(m_command_buffers[m_current_frame], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &m_descriptor_sets[m_current_frame], 0, nullptr);
+}
 
-	ImGui::Render();
+void VkContext::Start()
+{
+	this->CreateGraphicsPipeline();
+	this->CreateDescriptorSets();
+
 
 	vkWaitForFences(m_device, 1, &m_in_flight_fences[m_current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 	uint32_t image_index;
@@ -261,21 +265,18 @@ void VkContext::Present()
 
 	vkCmdBeginRenderPass(m_command_buffers[image_index], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 	vkCmdBindPipeline(m_command_buffers[image_index], VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphics_pipeline);
+}
 
-	VkBuffer vertex_buffers[] = { m_vertex_buffer->GetGpuBuffer() };
-	VkDeviceSize offsets[] = { 0 };
+void VkContext::Present()
+{
+}
 
-	vkCmdBindVertexBuffers(m_command_buffers[image_index], 0, 1, vertex_buffers, offsets);
-	vkCmdBindIndexBuffer(m_command_buffers[image_index], m_index_buffer->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
-	vkCmdBindDescriptorSets(m_command_buffers[image_index], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &m_descriptor_sets[image_index], 0, nullptr);
-	vkCmdDrawIndexed(m_command_buffers[image_index], static_cast<uint32_t>(m_index_buffer->GetCount()), 1, 0, 0, 0);
+void VkContext::Finish()
+{
+	VkResult result = VK_SUCCESS;
 
-	// Record Imgui Draw Data and draw funcs into command buffer
-	ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), m_command_buffers[image_index]);
-
-	// Submit command buffer
-	vkCmdEndRenderPass(m_command_buffers[image_index]);
-	VKCALL(vkEndCommandBuffer(m_command_buffers[image_index]));
+	vkCmdEndRenderPass(m_command_buffers[m_current_frame]);
+	VKCALL(vkEndCommandBuffer(m_command_buffers[m_current_frame]));
 
 	if (result == VK_ERROR_OUT_OF_DATE_KHR)
 	{
@@ -286,7 +287,7 @@ void VkContext::Present()
 	else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
 		ASSERT(false, "failed to acquire swap chain image!");
 
-	UpdateUniformBuffer(image_index);
+	UpdateUniformBuffer(m_current_frame);
 	VkSubmitInfo submit_info = {};
 	submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
@@ -296,7 +297,7 @@ void VkContext::Present()
 	submit_info.pWaitSemaphores = wait_semaphores;
 	submit_info.pWaitDstStageMask = wait_stages;
 	submit_info.commandBufferCount = 1;
-	submit_info.pCommandBuffers = &m_command_buffers[image_index];
+	submit_info.pCommandBuffers = &m_command_buffers[m_current_frame];
 
 	VkSemaphore signal_semaphores[] = { m_render_finished_semaphores[m_current_frame] };
 	submit_info.signalSemaphoreCount = 1;
@@ -315,7 +316,7 @@ void VkContext::Present()
 
 	present_info.swapchainCount = 1;
 	present_info.pSwapchains = swapchains;
-	present_info.pImageIndices = &image_index;
+	present_info.pImageIndices = (uint32_t*)&m_current_frame;
 	present_info.pResults = nullptr;
 
 	result = vkQueuePresentKHR(m_present_queue, &present_info);
@@ -339,6 +340,11 @@ Context::API VkContext::GetApiType() const
 VkDevice VkContext::GetDevice() const
 {
 	return m_device;
+}
+
+VkCommandBuffer VkContext::GetCurrentCommandBuffer() const
+{
+	return m_command_buffers[m_current_frame];
 }
 
 VkInstance VkContext::GetInstance() const
@@ -698,12 +704,13 @@ void VkContext::CreateDescriptorSetLayout()
 
 void VkContext::CreateGraphicsPipeline()
 {
-	std::unique_ptr<VkVertexShader> vs = std::make_unique<VkVertexShader>("data/shaders/vulkan/bin/vert.spv");
-	std::unique_ptr<VkFragmentShader> fs = std::make_unique<VkFragmentShader>("data/shaders/vulkan/bin/frag.spv");
+	if (m_graphics_pipeline)
+		return;
 
-	m_shader_program = std::make_unique<VkShaderProgram>(vs.get(), fs.get());
-	m_vertex_layout = std::make_unique<VkVertexLayout>();
-	m_vertex_layout->Push<float>(VertexAttributeType::POSITION, 3);
+	//std::unique_ptr<VkVertexShader> vs = std::make_unique<VkVertexShader>("data/shaders/vulkan/bin/vertexshader.spv");
+	//std::unique_ptr<VkFragmentShader> fs = std::make_unique<VkFragmentShader>("data/shaders/vulkan/bin/fragmentshader.spv");
+
+	//m_shader_program = std::make_unique<VkShaderProgram>(vs.get(), fs.get());
 
 	VkPipelineInputAssemblyStateCreateInfo input_assembly = {};
 	input_assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
@@ -807,8 +814,8 @@ void VkContext::CreateGraphicsPipeline()
 	VkGraphicsPipelineCreateInfo pipeline_info = {};
 	pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	pipeline_info.stageCount = 2;
-	pipeline_info.pStages = m_shader_program->GetPipelineShaderStageCreateInfos().data();
-	pipeline_info.pVertexInputState = &m_vertex_layout->GetCreateInfo();
+	pipeline_info.pStages = m_bound_shader_program->GetPipelineShaderStageCreateInfos().data();
+	pipeline_info.pVertexInputState = &m_bound_vertex_layout->GetCreateInfo();
 	pipeline_info.pInputAssemblyState = &input_assembly;
 	pipeline_info.pViewportState = &viewport_state;
 	pipeline_info.pRasterizationState = &rasterizer;
@@ -1004,49 +1011,6 @@ void VkContext::CreateFrameBuffers()
 //	}
 //}
 
-void VkContext::CreateVertexBuffer()
-{
-	//m_vertices.clear();
-
-	//m_vertices.push_back(glm::vec3(-0.5f, -0.5f, 0.0f));	//0
-	//m_vertices.push_back(glm::vec3(0.5f, -0.5f, 0.0f));	//1
-	//m_vertices.push_back(glm::vec3(0.5f, 0.5f, 0.0f));	//2
-	//m_vertices.push_back(glm::vec3(-0.5f, 0.5f, 0.0f));	//3
-
-	std::array<float, 16> positions =
-	{
-		-0.5f, -0.5f, 0.0f,	//0
-		 0.5f, -0.5f, 0.0f,	//1
-		 0.5f,  0.5f, 0.0f,	//2
-		-0.5f,  0.5f, 0.0f	//3
-	};
-
-	VkDeviceSize buffer_size = (sizeof(positions[0]) * positions.size());
-
-	m_vertex_buffer = std::make_unique<VkVertexBuffer>((size_t)buffer_size, BufferUsage::STATIC, positions.data());
-}
-
-void VkContext::CreateIndexBuffer()
-{
-	//m_indices.clear();
-
-	//m_indices.resize(6);
-	//m_indices.push_back(0);
-	//m_indices.push_back(1);
-	//m_indices.push_back(2);
-	//m_indices.push_back(2);
-	//m_indices.push_back(3);
-	//m_indices.push_back(0);
-
-	std::array<int, 6> indices =
-	{
-		0,1,2,
-		2,3,0
-	};
-
-	m_index_buffer = std::make_unique<VkIndexBuffer>(indices.size(), BufferUsage::STATIC, indices.data());
-}
-
 void VkContext::CreateUniformBuffer()
 {
 	//VkDeviceSize buffer_size = sizeof(UniformBufferObject);
@@ -1102,6 +1066,9 @@ void VkContext::CreateDescriptorPool()
 
 void VkContext::CreateDescriptorSets()
 {
+	if (!m_descriptor_sets.empty())
+		return;
+
 	std::vector<VkDescriptorSetLayout> layouts(m_swapchain_images.size(), m_descriptor_set_layout);
 
 	VkDescriptorSetAllocateInfo alloc_info = {};
@@ -1117,7 +1084,7 @@ void VkContext::CreateDescriptorSets()
 	for (size_t i = 0; i < m_swapchain_images.size(); ++i)
 	{
 		VkDescriptorBufferInfo buffer_info = {};
-		buffer_info.buffer = m_shader_program->GetUniformBuffer();
+		buffer_info.buffer = m_bound_shader_program->GetUniformBuffer();
 		buffer_info.offset = 0;
 		buffer_info.range = sizeof(UniformBufferObject);
 
@@ -1186,20 +1153,6 @@ void VkContext::CreateCommandBuffers()
 
 		render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
 		render_pass_info.pClearValues = clear_values.data();
-
-		//vkCmdBeginRenderPass(m_command_buffers[i], &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
-		//vkCmdBindPipeline(m_command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_graphics_pipeline);
-
-		//VkBuffer vertex_buffers[] = { m_vertex_buffer->GetGpuBuffer() };
-		//VkDeviceSize offsets[] = { 0 };
-
-		//vkCmdBindVertexBuffers(m_command_buffers[i], 0, 1, vertex_buffers, offsets);
-		//vkCmdBindIndexBuffer(m_command_buffers[i], m_index_buffer->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
-		//vkCmdBindDescriptorSets(m_command_buffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &m_descriptor_sets[i], 0, nullptr);
-		//vkCmdDrawIndexed(m_command_buffers[i], static_cast<uint32_t>(m_index_buffer->GetCount()), 1, 0, 0, 0);
-		//vkCmdEndRenderPass(m_command_buffers[i]);
-
-		//VKCALL(vkEndCommandBuffer(m_command_buffers[i]));
 	}
 }
 
@@ -1799,6 +1752,23 @@ void VkContext::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 	vkFreeCommandBuffers(m_device, m_command_pool, 1, &commandBuffer);
 }
 
+void VkContext::BindVertexArray(VkVertexArray* vertexArray)
+{
+	m_bound_vertex_array = vertexArray;
+	m_bound_vertex_buffer = static_cast<const VkVertexBuffer*>(m_bound_vertex_array->GetVertexBuffer());
+	m_bound_vertex_layout = static_cast<const VkVertexLayout*>(m_bound_vertex_array->GetVertexLayout());
+}
+
+void VkContext::BindIndexBuffer(VkIndexBuffer* indexBuffer)
+{
+	m_bound_index_buffer = indexBuffer;
+}
+
+void VkContext::BindShaderProgram(VkShaderProgram* shaderProgram)
+{
+	m_bound_shader_program = shaderProgram;
+}
+
 void VkContext::RecreateSwapchain()
 {
 	vkDeviceWaitIdle(m_device);
@@ -1815,5 +1785,5 @@ void VkContext::RecreateSwapchain()
 
 void VkContext::UpdateUniformBuffer(uint32_t imageIndex)
 {
-	m_shader_program->UploadVariables();
+	m_bound_shader_program->UploadVariables();
 }

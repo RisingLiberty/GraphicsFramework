@@ -6,6 +6,7 @@
 #include "platform/opengl/OpenGLUILayer.h"
 #include "platform/directx11/Dx11UILayer.h"
 #include "platform/directx12/Dx12UILayer.h"
+#include "platform/vulkan/VkUILayer.h"
 
 UILayer::UILayer(const std::string& title):
 	Layer2D(title)
@@ -25,6 +26,7 @@ std::unique_ptr<Layer> UILayer::Create(const std::string& title)
 	case Context::API::OPENGL: return std::make_unique<OpenGLUILayer>(title);
 	case Context::API::DIRECTX11: return std::make_unique<Dx11UILayer>(title);
 	case Context::API::DIRECTX12: return std::make_unique<Dx12UILayer>(title);
+	case Context::API::VULKAN: return std::make_unique<VkUILayer>(title);
 	}
 
 	return nullptr;
