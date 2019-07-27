@@ -17,3 +17,8 @@ bool GLLogCall(const char* glFunction, const char* function, const char* file, i
 	}
 	return true;
 }
+
+OpenGLContext* GetOpenGLContext()
+{
+	return static_cast<OpenGLContext*>(Context::GetCurrent());
+}

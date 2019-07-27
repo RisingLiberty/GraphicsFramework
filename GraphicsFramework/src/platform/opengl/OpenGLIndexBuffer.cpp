@@ -5,6 +5,8 @@
 #include <GL/glew.h>
 #include "OpenGLHelperMethods.h"
 
+#include "OpenGLContext.h"
+
 namespace
 {
 	int CustomBufferUsageToGLUsage(BufferUsage usage)
@@ -21,8 +23,8 @@ namespace
 	}
 }
 
-OpenGLIndexBuffer::OpenGLIndexBuffer(size_t count, BufferUsage usage, void* data):
-	IndexBuffer(count, usage)
+OpenGLIndexBuffer::OpenGLIndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, void* data):
+	IndexBuffer(count, usage, format, topology)
 {
 	GLCALL(glGenBuffers(1, &m_id));
 
@@ -38,15 +40,20 @@ OpenGLIndexBuffer::~OpenGLIndexBuffer()
 void OpenGLIndexBuffer::SetData(const void* data)
 {
 	this->Bind();
-	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_count * sizeof(unsigned int), data, CustomBufferUsageToGLUsage(m_usage)));
+	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->GetSize(), data, CustomBufferUsageToGLUsage(m_usage)));
 }
 
 void OpenGLIndexBuffer::Bind() const
 {
-	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id));
+	Context::GetCurrent()->BindIndexBuffer(this);
 }
 
 void OpenGLIndexBuffer::Unbind() const
 {
-	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	Context::GetCurrent()->UnbindIndexBuffer();
+}
+
+unsigned int OpenGLIndexBuffer::GetId() const
+{
+	return m_id;
 }

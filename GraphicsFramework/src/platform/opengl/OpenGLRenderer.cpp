@@ -16,6 +16,10 @@
 #include "OpenGLVertexShader.h"
 #include "OpenGLFragmentShader.h"
 
+namespace
+{
+	unsigned int* NULL_OFFSET = nullptr;
+}
 
 OpenGLRenderer::OpenGLRenderer()
 {
@@ -37,10 +41,16 @@ void OpenGLRenderer::Draw()
 
 		material->Use();
 
-		VertexArray* va = VertexArray::Create(mesh->GetVertices(), mesh->GetVertexLayout());
+		mesh->GetVertexArray()->Bind();
 		mesh->GetIndices()->Bind();
+		
+		Format format = mesh->GetIndices()->GetFormat();
+		unsigned int count = (GLsizei)mesh->GetIndices()->GetCount();
+		Topology topology = mesh->GetIndices()->GetTopology();
 
-		GLCALL(glDrawElements(GL_TRIANGLES, (GLsizei)mesh->GetIndices()->GetCount(), GL_UNSIGNED_INT, 0));
+		unsigned int* offset = NULL_OFFSET;
+
+		GLCALL(glDrawElements(topology.ToOpenGL(), count, format.ToOpenGL(), offset));
 	}
 
 	m_scene_objects.clear();
