@@ -12,14 +12,12 @@ public:
 	Dx11ShaderProgram(VertexShader* vs, FragmentShader* fs);
 	virtual ~Dx11ShaderProgram();
 
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
-	virtual void UploadVariables() override;
+	virtual void UploadVariables() const override;
 
 private:
 
-	void UploadVertexConstantBuffer();
-	void UploadFragmentConstantBuffer();
+	void UploadVertexConstantBuffer() const;
+	void UploadFragmentConstantBuffer() const;
 
 	class Dx11VertexShader* GetDxVertexShader() const;
 	class Dx11FragmentShader* GetDxFragmentShader() const;

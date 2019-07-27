@@ -23,6 +23,9 @@ public:
 
 	void ResizeBuffers(unsigned int width, unsigned int height);
 
+	void BindVertexShader(Dx11VertexShader* vertexShader);
+	void BindFragmentShader(Dx11FragmentShader* fragmentShader);
+
 	virtual void Initialize() override;
 	virtual void Present() override;
 	virtual API GetApiType() const override;
@@ -32,13 +35,17 @@ public:
 	ID3D11Device* GetDevice() const;
 	ID3D11DeviceContext* GetDeviceContext() const;
 	
-	void BindVertexShader(Dx11VertexShader* vertexShader);
-	void BindFragmentShader(Dx11FragmentShader* fragmentShader);
-
-	Dx11VertexShader* GetBoundVertexShader();
-	Dx11FragmentShader* GetBoundFragmentShader();
+	const Dx11VertexShader* GetBoundVertexShader() const;
 
 protected:
+	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
+	void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
+
+	void BindVertexArrayInternal(const VertexArray* vertexArray) override;
+	void UnbindVertexArrayInternal(const VertexArray* vertexArray) override;
+
+	void BindShaderProgramInternal(const ShaderProgram* shaderProgram) override;
+	void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram) override;
 
 private:
 	void InitD3D(Window* window);

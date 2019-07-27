@@ -47,28 +47,13 @@ Dx11ShaderProgram::~Dx11ShaderProgram()
 {
 }
 
-void Dx11ShaderProgram::Bind() const
-{
-	Dx11VertexShader* dx_vs = static_cast<Dx11VertexShader*>(m_vertex_shader);
-	Dx11FragmentShader* dx_fs = static_cast<Dx11FragmentShader*>(m_fragment_shader);
-
-	GetDx11Context()->BindVertexShader(dx_vs);
-	GetDx11Context()->BindFragmentShader(dx_fs);
-}
-
-void Dx11ShaderProgram::Unbind() const
-{
-	GetDx11Context()->BindVertexShader(nullptr);
-	GetDx11Context()->BindFragmentShader(nullptr);
-}
-
-void Dx11ShaderProgram::UploadVariables()
+void Dx11ShaderProgram::UploadVariables() const
 {
 	this->UploadVertexConstantBuffer();
 	this->UploadFragmentConstantBuffer();
 }
 
-void Dx11ShaderProgram::UploadVertexConstantBuffer()
+void Dx11ShaderProgram::UploadVertexConstantBuffer() const
 {
 	if (!m_vs_constant_buffer)
 		return;
@@ -97,7 +82,7 @@ void Dx11ShaderProgram::UploadVertexConstantBuffer()
 	GetDx11DeviceContext()->VSSetConstantBuffers(m_vs_constant_buffer->reg, 1, m_vs_constant_buffer->buffer.GetAddressOf());
 }
 
-void Dx11ShaderProgram::UploadFragmentConstantBuffer()
+void Dx11ShaderProgram::UploadFragmentConstantBuffer() const
 {
 	if (!m_fs_constant_buffer)
 		return;

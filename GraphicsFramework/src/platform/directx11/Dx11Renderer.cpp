@@ -36,8 +36,7 @@ void Dx11Renderer::Draw()
 
 		material->Use();
 
-		VertexArray* va = VertexArray::Create(mesh->GetVertices(), mesh->GetVertexLayout());
-		va->Bind();
+		mesh->GetVertexArray()->Bind();
 		mesh->GetIndices()->Bind();
 
 		GetDx11DeviceContext()->DrawIndexed((unsigned int)mesh->GetIndices()->GetCount(), 0, 0);

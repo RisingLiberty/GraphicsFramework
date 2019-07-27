@@ -2,10 +2,17 @@
 
 #include "Dx11Context.h"
 #include "Dx11HelperMethods.h"
-#include "platform/win64/Win64Window.h"
+#include "graphics/Window.h"
 #include "platform/directx11/Dx11Renderer.h"
-#include "platform/directx11/dx11VertexShader.h"
-#include "platform/directx11/dx11FragmentShader.h"
+
+#include "Dx11ShaderProgram.h"
+#include "Dx11VertexShader.h"
+#include "Dx11FragmentShader.h"
+
+#include "Dx11IndexBuffer.h"
+#include "Dx11VertexLayout.h"
+#include "Dx11VertexArray.h"
+#include "Dx11VertexBuffer.h"
 
 Dx11Context::Dx11Context(Window* window)
 {
@@ -27,11 +34,8 @@ void Dx11Context::Initialize()
 
 void Dx11Context::InitD3D(Window* window)
 {
-	Win64Window* win64_window = static_cast<Win64Window*>(window);
-	assert(win64_window);
-
-	HWND handle = (HWND)win64_window->GetHandle();
-	Window::Properties properties = win64_window->GetPropeties();
+	HWND handle = (HWND)window->GetHandle();
+	Window::Properties properties = window->GetPropeties();
 
 	UINT creationFlags = 0; //D3D11_CREATE_DEVICE_BGRA_SUPPORT <-- not needed, but good to have on stand by
 #if defined(_DEBUG)
@@ -174,26 +178,82 @@ ID3D11DeviceContext* Dx11Context::GetDeviceContext() const
 	return m_resources.device_context.Get();
 }
 
+const Dx11VertexShader* Dx11Context::GetBoundVertexShader() const
+{
+	if (m_bound_shader_program)
+		return static_cast<Dx11VertexShader*>(m_bound_shader_program->GetVertexShader());
+
+	return nullptr;
+}
+
 void Dx11Context::BindVertexShader(Dx11VertexShader* vertexShader)
 {
 	m_resources.device_context->VSSetShader(vertexShader->GetShader(), NULL, 0);
 	m_bound_vertex_shader = vertexShader;
 }
-
 void Dx11Context::BindFragmentShader(Dx11FragmentShader* fragmentShader)
 {
 	m_resources.device_context->PSSetShader(fragmentShader->GetShader(), NULL, 0);
 	m_bound_fragment_shader = fragmentShader;
 }
 
-Dx11VertexShader* Dx11Context::GetBoundVertexShader()
+
+void Dx11Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	return m_bound_vertex_shader;
+	const Dx11IndexBuffer* dx_ib = static_cast<const Dx11IndexBuffer*>(indexBuffer);
+	const unsigned int offset = 0;
+
+	m_resources.device_context->IASetPrimitiveTopology(dx_ib->GetTopology().ToDirectX());
+	m_resources.device_context->IASetIndexBuffer(dx_ib->GetBuffer(), dx_ib->GetFormat().ToDirectX(), offset);
 }
 
-Dx11FragmentShader* Dx11Context::GetBoundFragmentShader()
+void Dx11Context::UnbindIndexBufferInternal(const IndexBuffer * indexBuffer)
 {
-	return m_bound_fragment_shader;
+	m_resources.device_context->IASetPrimitiveTopology(Topology(ETopology::UNDEFINED).ToDirectX());
+	m_resources.device_context->IASetIndexBuffer(nullptr, Format(EFormat::UNKNOWN).ToDirectX(), 0);
+}
+
+void Dx11Context::BindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	// Currently can only bind 1 vertex buffer at a time
+
+	const Dx11VertexLayout* dx_layout = static_cast<const Dx11VertexLayout*>(vertexArray->GetVertexLayout());
+	const Dx11VertexBuffer* dx_vb = static_cast<const Dx11VertexBuffer*>(vertexArray->GetVertexBuffer());
+
+	unsigned int offset = 0;
+	unsigned int stride = dx_layout->GetSize();
+
+	ID3D11Buffer* buffer = dx_vb->GetBuffer();
+
+	unsigned int input_slot = 0;
+
+	m_resources.device_context->IASetVertexBuffers(input_slot, 1, &buffer, &stride, &offset);
+	m_resources.device_context->IASetInputLayout(dx_layout->GetLayout());
+}
+
+void Dx11Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	const Dx11VertexLayout* dx_layout = static_cast<const Dx11VertexLayout*>(vertexArray->GetVertexLayout());
+
+	m_resources.device_context->IASetVertexBuffers(0, 1, nullptr, nullptr, nullptr);
+	m_resources.device_context->IASetInputLayout(dx_layout->GetLayout());
+}
+
+void Dx11Context::BindShaderProgramInternal(const ShaderProgram * shaderProgram)
+{
+	const Dx11ShaderProgram* dx_program = static_cast<const Dx11ShaderProgram*>(shaderProgram);
+
+	const Dx11VertexShader* dx_vs = static_cast<const Dx11VertexShader*>(shaderProgram->GetVertexShader());
+	const Dx11FragmentShader* dx_fs = static_cast<const Dx11FragmentShader*>(shaderProgram->GetFragmentShader());
+
+	m_resources.device_context->VSSetShader(dx_vs->GetShader(), NULL, 0);
+	m_resources.device_context->PSSetShader(dx_fs->GetShader(), NULL, 0);
+}
+
+void Dx11Context::UnbindShaderProgramInternal(const ShaderProgram * shaderProgram)
+{
+	m_resources.device_context->VSSetShader(nullptr, NULL, 0);
+	m_resources.device_context->PSSetShader(nullptr, NULL, 0);
 }
 
 void Dx11Context::SetRenderTargets(ID3D11RenderTargetView* target, ID3D11DepthStencilView* view)
