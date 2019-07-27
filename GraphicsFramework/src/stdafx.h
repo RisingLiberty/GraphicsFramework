@@ -44,6 +44,9 @@
 // vulkan header
 #include <vulkan/vulkan.h>
 
+// OpenGL header
+#include <GL/glew.h>
+
 // windows headers
 #include <Windows.h>
 #include <windowsx.h>
