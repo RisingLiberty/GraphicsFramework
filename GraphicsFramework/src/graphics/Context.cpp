@@ -9,8 +9,14 @@
 #include "platform/vulkan/VkContext.h"
 #include "platform/vulkan/VkTestContext.h"
 
+#include "IndexBuffer.h"
+#include "VertexArray.h"
+
 #include "controllers/ShaderController.h"
 #include "controllers/VertexArrayController.h"
+#include "controllers/VertexBufferController.h"
+#include "controllers/VertexLayoutController.h"
+#include "controllers/IndexBufferController.h"
 
 std::unique_ptr<Context> Context::s_current = nullptr;
 
@@ -18,6 +24,9 @@ Context::Context()
 {
 	m_shader_controller = std::make_unique<ShaderController>();
 	m_vertex_array_controller = std::make_unique<VertexArrayController>();
+	m_vertex_buffer_controller = std::make_unique<VertexBufferController>();
+	m_vertex_layout_controller = std::make_unique<VertexLayoutController>();
+	m_index_buffer_controller = std::make_unique<IndexBufferController>();
 }
 
 Context::~Context() = default;
@@ -48,6 +57,56 @@ void Context::PostInitialize()
 
 }
 
+void Context::BindIndexBuffer(const IndexBuffer* indexBuffer)
+{
+	if (!m_bound_index_buffer)
+	{
+		m_bound_index_buffer = indexBuffer;
+		this->BindIndexBufferInternal(indexBuffer);
+	}
+	else if (m_bound_index_buffer->GetResourceId() != indexBuffer->GetResourceId())
+	{
+		m_bound_index_buffer = indexBuffer;
+		this->BindIndexBufferInternal(indexBuffer);
+	}
+	else
+		spdlog::warn("Trying to bind the same index buffer twice!");
+}
+
+void Context::BindVertexArray(const VertexArray* vertexArray)
+{
+	if (!m_bound_vertex_array)
+	{
+		m_bound_index_buffer = nullptr; // reset index buffer
+		m_bound_vertex_array = vertexArray;
+		this->BindVertexArrayInternal(vertexArray);
+	}
+	else if (m_bound_vertex_array->GetResourceId() != vertexArray->GetResourceId())
+	{
+		m_bound_index_buffer = nullptr; // reset index buffer
+		m_bound_vertex_array = vertexArray;
+		this->BindVertexArrayInternal(vertexArray);
+	}
+	else
+		spdlog::warn("Trying to bind the same vertex array twice!");
+
+}
+
+void Context::UnbindIndexBuffer()
+{
+	m_bound_index_buffer = nullptr;
+}
+
+void Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
+{
+	ASSERT(false, "Not implemented yet!");
+}
+
+void Context::BindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	ASSERT(false, "Not implemented yet!");
+}
+
 Context* Context::GetCurrent()
 {
 	return s_current.get();
@@ -71,4 +130,19 @@ ShaderController* Context::GetShaderController() const
 VertexArrayController* Context::GetVertexArrayController() const
 {
 	return m_vertex_array_controller.get();
+}
+
+IndexBufferController* const Context::GetIndexBufferController() const
+{
+	return m_index_buffer_controller.get();
+}
+
+VertexBufferController* const Context::GetVertexBufferController() const
+{
+	return m_vertex_buffer_controller.get();
+}
+
+VertexLayoutController* const Context::GetVertexLayoutController() const
+{
+	return m_vertex_layout_controller.get();
 }

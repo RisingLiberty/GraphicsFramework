@@ -15,7 +15,8 @@ public:
 	API GetApiType() const;
 
 protected:
-
+	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
+	void BindVertexArrayInternal(const VertexArray* vertexArray) override;
 private:
 	// Handle to device context
 	HDC m_hdc;

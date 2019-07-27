@@ -8,6 +8,10 @@
 #include <GL/glew.h>
 
 #include "OpenGLRenderer.h"
+#include "OpenGLHelperMethods.h"
+
+#include "OpenGLIndexBuffer.h"
+#include "OpenGLVertexArray.h"
 
 using HandleGLRenderingContext = HGLRC;
 
@@ -48,4 +52,15 @@ void OpenGLContext::Present()
 OpenGLContext::API OpenGLContext::GetApiType() const
 {
 	return API::OPENGL;
+}
+
+void OpenGLContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
+{
+	const OpenGLIndexBuffer* ib = static_cast<const OpenGLIndexBuffer*>(indexBuffer);
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->GetId()));
+}
+
+void OpenGLContext::BindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	GLCALL(glBindVertexArray(static_cast<const OpenGLVertexArray*>(vertexArray)->GetId()));
 }

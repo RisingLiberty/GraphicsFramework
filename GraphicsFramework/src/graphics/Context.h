@@ -3,7 +3,12 @@
 class Renderer;
 class ShaderController;
 class VertexArrayController;
+class VertexBufferController;
+class VertexLayoutController;
+class IndexBufferController;
 class Window;
+class IndexBuffer;
+class VertexArray;
 
 class Context
 {
@@ -26,6 +31,10 @@ public:
 	virtual void Start() {};
 	virtual void Finish() {};
 
+	void BindVertexArray(const VertexArray* va);
+	void BindIndexBuffer(const IndexBuffer* indexBuffer);
+	void UnbindIndexBuffer();
+
 	static void Create(API api, Window* window);
 	static API GetApi();
 	static Context* GetCurrent();
@@ -33,16 +42,27 @@ public:
 	Renderer* GetRenderer() const;
 	ShaderController* GetShaderController() const;
 	VertexArrayController* GetVertexArrayController() const;
+	IndexBufferController* const GetIndexBufferController() const;
+	VertexBufferController* const GetVertexBufferController() const;
+	VertexLayoutController* const GetVertexLayoutController() const;
 
 	virtual void Present() = 0;
 	virtual API GetApiType() const = 0;
 
 protected:
+	virtual void BindIndexBufferInternal(const IndexBuffer* indexBuffer);
+	virtual void BindVertexArrayInternal(const VertexArray* vertexArray);
 
 protected:
 	std::unique_ptr<Renderer> m_renderer;
 	std::unique_ptr<ShaderController> m_shader_controller;
 	std::unique_ptr<VertexArrayController> m_vertex_array_controller;
+	std::unique_ptr<VertexBufferController> m_vertex_buffer_controller;
+	std::unique_ptr<VertexLayoutController> m_vertex_layout_controller;
+	std::unique_ptr<IndexBufferController> m_index_buffer_controller;
+
+	const IndexBuffer* m_bound_index_buffer;
+	const VertexArray* m_bound_vertex_array;
 
 	bool m_is_vsync;
 
