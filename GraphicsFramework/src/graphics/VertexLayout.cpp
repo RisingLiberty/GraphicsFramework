@@ -7,6 +7,8 @@
 #include "platform/directx12/Dx12VertexLayout.h"
 #include "platform/vulkan/VkVertexLayout.h"
 
+#include "controllers/VertexLayoutController.h"
+
 VertexLayout::VertexLayout()
 {
 
@@ -17,17 +19,27 @@ VertexLayout::~VertexLayout()
 
 }
 
-std::unique_ptr<VertexLayout> VertexLayout::Create()
+VertexLayout* VertexLayout::Create()
 {
+	VertexLayoutController* vertex_layout_controller = Context::GetCurrent()->GetVertexLayoutController();
+	VertexLayout* layout = nullptr;// = vertex_layout_controller->Get();
+
+	if (layout)
+		return layout;
+
+	std::unique_ptr<VertexLayout> unique_layout;
+
 	switch (Context::GetApi())
 	{
-	case Context::API::OPENGL: return std::make_unique<VertexLayout>();
-	case Context::API::DIRECTX11: return std::make_unique<Dx11VertexLayout>();
-	case Context::API::DIRECTX12: return std::make_unique<Dx12VertexLayout>();
-	case Context::API::VULKAN: return std::make_unique<VkVertexLayout>();
+	case Context::API::OPENGL:		unique_layout = std::make_unique<VertexLayout>(); break;
+	case Context::API::DIRECTX11:	unique_layout = std::make_unique<Dx11VertexLayout>(); break;
+	case Context::API::DIRECTX12:	unique_layout = std::make_unique<Dx12VertexLayout>(); break;
+	case Context::API::VULKAN:		unique_layout = std::make_unique<VkVertexLayout>(); break;
 	}
 
-	return nullptr;
+	layout = unique_layout.get();
+	vertex_layout_controller->Push(unique_layout);
+	return layout;
 }
 
 void VertexLayout::Clear()

@@ -81,7 +81,7 @@ public:
 
 	void Clear();
 
-	static std::unique_ptr<VertexLayout> Create();
+	static VertexLayout* Create();
 
 protected:
 	virtual void OnAfterPush() {};
