@@ -16,7 +16,11 @@ public:
 
 protected:
 	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
+	void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
 	void BindVertexArrayInternal(const VertexArray* vertexArray) override;
+	void UnbindVertexArrayInternal(const VertexArray* vertexArray) override;
+	void BindShaderProgramInternal(const ShaderProgram* shaderProgram) override;
+	void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram) override;
 private:
 	// Handle to device context
 	HDC m_hdc;

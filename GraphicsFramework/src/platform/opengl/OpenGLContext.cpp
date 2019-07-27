@@ -12,6 +12,8 @@
 
 #include "OpenGLIndexBuffer.h"
 #include "OpenGLVertexArray.h"
+#include "OpenGLVertexBuffer.h"
+#include "OpenGLShaderProgram.h"
 
 using HandleGLRenderingContext = HGLRC;
 
@@ -60,7 +62,28 @@ void OpenGLContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->GetId()));
 }
 
+void OpenGLContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
+{
+	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+}
+
 void OpenGLContext::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
+	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, static_cast<const OpenGLVertexBuffer*>(vertexArray->GetVertexBuffer())->GetId()));
 	GLCALL(glBindVertexArray(static_cast<const OpenGLVertexArray*>(vertexArray)->GetId()));
+}
+
+void OpenGLContext::UnbindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	GLCALL(glBindVertexArray(0));
+}
+
+void OpenGLContext::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
+{
+	GLCALL(glUseProgram(static_cast<const OpenGLShaderProgram*>(shaderProgram)->GetId()));
+}
+
+void OpenGLContext::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram)
+{
+	GLCALL(glUseProgram(0));
 }

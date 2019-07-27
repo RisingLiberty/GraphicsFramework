@@ -24,7 +24,7 @@ namespace
 }
 
 OpenGLIndexBuffer::OpenGLIndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, void* data):
-	IndexBuffer(count, usage, format, topology)
+	IndexBuffer(count, format, topology, usage)
 {
 	GLCALL(glGenBuffers(1, &m_id));
 
@@ -41,16 +41,6 @@ void OpenGLIndexBuffer::SetData(const void* data)
 {
 	this->Bind();
 	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->GetSize(), data, CustomBufferUsageToGLUsage(m_usage)));
-}
-
-void OpenGLIndexBuffer::Bind() const
-{
-	Context::GetCurrent()->BindIndexBuffer(this);
-}
-
-void OpenGLIndexBuffer::Unbind() const
-{
-	Context::GetCurrent()->UnbindIndexBuffer();
 }
 
 unsigned int OpenGLIndexBuffer::GetId() const

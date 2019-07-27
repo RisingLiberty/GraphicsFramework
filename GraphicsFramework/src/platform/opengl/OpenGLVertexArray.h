@@ -9,9 +9,6 @@ public:
 	OpenGLVertexArray(const VertexBuffer* vb, const VertexLayout* layout);
 	virtual ~OpenGLVertexArray();
 
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
-
 	unsigned int GetId() const;
 
 private:

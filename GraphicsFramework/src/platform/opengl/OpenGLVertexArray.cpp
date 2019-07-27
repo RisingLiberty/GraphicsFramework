@@ -21,17 +21,6 @@ OpenGLVertexArray::~OpenGLVertexArray()
 	GLCALL(glDeleteVertexArrays(1, &m_id));
 }
 
-void OpenGLVertexArray::Bind() const
-{
-	GetOpenGLContext()->BindVertexArray(this);
-	//GLCALL(glBindVertexArray(m_id));
-}
-
-void OpenGLVertexArray::Unbind() const
-{
-	GLCALL(glBindVertexArray(0));
-}
-
 unsigned int OpenGLVertexArray::GetId() const
 {
 	return m_id;

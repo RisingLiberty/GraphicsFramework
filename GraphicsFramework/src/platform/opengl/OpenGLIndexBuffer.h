@@ -9,8 +9,6 @@ public:
 	virtual ~OpenGLIndexBuffer();
 
 	virtual void SetData(const void* data) override;
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
 
 	unsigned int GetId() const;
 

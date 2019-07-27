@@ -37,16 +37,21 @@ OpenGLVertexBuffer::~OpenGLVertexBuffer()
 
 void OpenGLVertexBuffer::SetData(const void* data)
 {
-	this->Bind();
+	this->ForceBind();
 	GLCALL(glBufferData(GL_ARRAY_BUFFER, m_size, data, CustomBufferUsageToGLUsage(m_usage)));
 }
 
-void OpenGLVertexBuffer::Bind() const
+void OpenGLVertexBuffer::ForceBind() const
 {
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_id));
 }
 
-void OpenGLVertexBuffer::Unbind() const
+void OpenGLVertexBuffer::ForceUnbind() const
 {
 	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
+}
+
+unsigned int OpenGLVertexBuffer::GetId() const
+{
+	return m_id;
 }

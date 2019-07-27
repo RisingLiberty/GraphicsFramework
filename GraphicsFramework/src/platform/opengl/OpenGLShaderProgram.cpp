@@ -90,17 +90,7 @@ void OpenGLShaderProgram::Create(const std::vector<unsigned int>& shaderIDs)
 	}
 }
 
-void OpenGLShaderProgram::Bind() const
-{
-	GLCALL(glUseProgram(m_id));
-}
-
-void OpenGLShaderProgram::Unbind() const
-{
-	GLCALL(glUseProgram(0));
-}
-
-void OpenGLShaderProgram::UploadVariables()
+void OpenGLShaderProgram::UploadVariables() const
 {
 	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
 	{
@@ -118,67 +108,67 @@ void OpenGLShaderProgram::UploadVariables()
 	}
 }
 
-void OpenGLShaderProgram::UploadBoolUniform(const std::string& name, bool uniform)
+void OpenGLShaderProgram::UploadBoolUniform(const std::string& name, bool uniform) const
 {
 	GLCALL(glUniform1i(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::UploadUShortUniform(const std::string& name, unsigned short & uniform)
+void OpenGLShaderProgram::UploadUShortUniform(const std::string& name, unsigned short & uniform) const
 {
 	GLCALL(glUniform1ui(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::UploadShortUniform(const std::string& name, short uniform)
+void OpenGLShaderProgram::UploadShortUniform(const std::string& name, short uniform) const
 {
 	GLCALL(glUniform1i(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::UploadIntUniform(const std::string& name, int uniform)
+void OpenGLShaderProgram::UploadIntUniform(const std::string& name, int uniform) const
 {
 	GLCALL(glUniform1i(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::UploadUIntUniform(const std::string& name, unsigned int & uniform)
+void OpenGLShaderProgram::UploadUIntUniform(const std::string& name, unsigned int & uniform) const
 {
 	GLCALL(glUniform1ui(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::UploadFloatUniform(const std::string& name, float uniform)
+void OpenGLShaderProgram::UploadFloatUniform(const std::string& name, float uniform) const
 {
 	GLCALL(glUniform1f(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::UploadDoubleUniform(const std::string& name, double uniform)
+void OpenGLShaderProgram::UploadDoubleUniform(const std::string& name, double uniform) const
 {
 	GLCALL(glUniform1d(GetUniformLocation(name), uniform));
 }
 
-void OpenGLShaderProgram::UploadVec2Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadVec2Uniform(const std::string& name, float* values) const
 {
 	GLCALL(glUniform2f(GetUniformLocation(name), values[0], values[1]));
 }
 
-void OpenGLShaderProgram::UploadVec3Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadVec3Uniform(const std::string& name, float* values) const
 {
 	GLCALL(glUniform3f(GetUniformLocation(name), values[0], values[1], values[2]));
 }
 
-void OpenGLShaderProgram::UploadVec4Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadVec4Uniform(const std::string& name, float* values) const
 {
 	GLCALL(glUniform4f(GetUniformLocation(name), values[0], values[1], values[2], values[3]));
 }
 
-void OpenGLShaderProgram::UploadMat3Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadMat3Uniform(const std::string& name, float* values) const
 {
 	GLCALL(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, values));
 }
 
-void OpenGLShaderProgram::UploadMat4Uniform(const std::string& name, float* values)
+void OpenGLShaderProgram::UploadMat4Uniform(const std::string& name, float* values) const
 {
 	GLCALL(glUniformMatrix3fv(GetUniformLocation(name), 1, GL_FALSE, values));
 }
 
-int OpenGLShaderProgram::GetUniformLocation(const std::string& name)
+int OpenGLShaderProgram::GetUniformLocation(const std::string& name) const
 {
 	if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end())
 		return m_uniform_location_cache[name];
