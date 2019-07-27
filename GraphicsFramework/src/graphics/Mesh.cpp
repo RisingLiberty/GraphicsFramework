@@ -13,13 +13,13 @@
 #include "IndexBuffer.h"
 #include "VertexArray.h"
 
-Mesh::Mesh(std::unique_ptr<VertexBuffer>& vb, std::unique_ptr<VertexLayout>& layout, std::unique_ptr<IndexBuffer>& ib):
-	m_vertices(std::move(vb)),
-	m_vertex_layout(std::move(layout)),
-	m_indices(std::move(ib))
+Mesh::Mesh(VertexBuffer* vb, VertexLayout* layout, IndexBuffer* ib):
+	m_indices(ib)
 {
-	VertexArray::Create(m_vertices.get(), m_vertex_layout.get());
+	m_vertex_array = VertexArray::Create(vb, layout);
 }
+
+// Constructor with mesh path
 
 //Mesh::Mesh(const std::string& path)
 //{
@@ -101,17 +101,22 @@ Mesh::~Mesh()
 
 }
 
-VertexBuffer* Mesh::GetVertices() const
+const VertexArray* Mesh::GetVertexArray() const
 {
-	return m_vertices.get();
+	return m_vertex_array;
 }
 
-VertexLayout* Mesh::GetVertexLayout() const
+const VertexBuffer* Mesh::GetVertices() const
 {
-	return m_vertex_layout.get();
+	return m_vertex_array->GetVertexBuffer();
 }
 
-IndexBuffer* Mesh::GetIndices() const
+const VertexLayout* Mesh::GetVertexLayout() const
 {
-	return m_indices.get();
+	return m_vertex_array->GetVertexLayout();
+}
+
+const IndexBuffer* Mesh::GetIndices() const
+{
+	return m_indices;
 }

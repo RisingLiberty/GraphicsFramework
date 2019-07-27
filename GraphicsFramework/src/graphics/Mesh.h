@@ -1,5 +1,6 @@
 #pragma once
 
+class VertexArray;
 class VertexBuffer;
 class VertexLayout;
 class IndexBuffer;
@@ -7,16 +8,17 @@ class IndexBuffer;
 class Mesh
 {
 public:
-	Mesh(std::unique_ptr<VertexBuffer>& vb, std::unique_ptr<VertexLayout>& layout, std::unique_ptr<IndexBuffer>& ib);
+	Mesh(VertexBuffer* vb, VertexLayout* layout, IndexBuffer* ib);
 	//Mesh(const std::string& path);
 	~Mesh();
 
-	VertexBuffer* GetVertices() const;
-	VertexLayout* GetVertexLayout() const;
-	IndexBuffer* GetIndices() const;
+	const VertexArray* GetVertexArray() const;
+	const VertexBuffer* GetVertices() const;
+	const VertexLayout* GetVertexLayout() const;
+	const IndexBuffer* GetIndices() const;
 
 private:
-	std::unique_ptr<VertexBuffer> m_vertices;
-	std::unique_ptr<VertexLayout> m_vertex_layout;
-	std::unique_ptr<IndexBuffer> m_indices;
+	
+	VertexArray* m_vertex_array;
+	IndexBuffer* m_indices;
 };
