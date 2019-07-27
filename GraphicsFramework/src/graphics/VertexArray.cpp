@@ -20,6 +20,14 @@ VertexArray::VertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 
 }
 
+VertexArray::VertexArray(const unsigned int vbResourceId, const unsigned int ibResourceId, const unsigned int layoutResourceId) :
+	m_vertex_buffer_resource_id(vbResourceId),
+	m_index_buffer_resource_id(ibResourceId),
+	m_vertex_layout_resource_id(layoutResourceId)
+{
+
+}
+
 VertexArray::~VertexArray() = default;
 
 VertexArray* VertexArray::Create(const VertexBuffer* vb, const VertexLayout* layout)
@@ -66,4 +74,19 @@ const VertexBuffer* VertexArray::GetVertexBuffer() const
 const VertexLayout* VertexArray::GetVertexLayout() const
 {
 	return m_vertex_layout;
+}
+
+const VertexBuffer* VertexArray::GetVertexBufferObject() const
+{
+	return nullptr;
+}
+
+const IndexBuffer* VertexArray::GetIndexBufferObject() const
+{
+	return nullptr;
+}
+
+const VertexLayout* VertexArray::GetVertexLayoutObject() const
+{
+	return nullptr;
 }
