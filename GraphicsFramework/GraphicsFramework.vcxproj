@@ -155,6 +155,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\controllers\IndexBufferController.cpp" />
+    <ClCompile Include="src\controllers\VertexBufferController.cpp" />
+    <ClCompile Include="src\controllers\VertexLayoutController.cpp" />
+    <ClCompile Include="src\graphics\BufferHelpers.cpp" />
     <ClCompile Include="src\graphics\GraphicsResource.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
@@ -285,6 +289,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\controllers\IndexBufferController.h" />
+    <ClInclude Include="src\controllers\VertexBufferController.h" />
+    <ClInclude Include="src\controllers\VertexLayoutController.h" />
+    <ClInclude Include="src\graphics\BufferHelpers.h" />
     <ClInclude Include="src\graphics\BufferUsage.h" />
     <ClInclude Include="src\graphics\GraphicsResource.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h" />
