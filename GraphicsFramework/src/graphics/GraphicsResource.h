@@ -11,10 +11,20 @@ public:
 
 	virtual ~GraphicsResource()
 	{
-		--m_resource_id;
+		//--m_resource_id;
 	}
 
 	unsigned int GetResourceId() const
+	{
+		return this->GetCurrentResourceId();
+	}
+
+	static unsigned int GetCurrentResourceId()
+	{
+		return m_resource_id;
+	}
+
+	static unsigned int GetNextResourceId()
 	{
 		return m_resource_id;
 	}
