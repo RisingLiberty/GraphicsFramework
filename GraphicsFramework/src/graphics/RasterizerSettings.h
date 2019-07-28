@@ -14,6 +14,7 @@ class CullMode
 public:
 	CullMode(ECullMode enumValue = ECullMode::UNDEFINED);
 
+	unsigned int ToOpenGL() const;
 	D3D11_CULL_MODE ToDirectX11() const;
 	D3D12_CULL_MODE ToDirectX12() const;
 	VkCullModeFlagBits ToVulkan() const;
@@ -37,6 +38,7 @@ class PolygonMode
 public:
 	PolygonMode(EPolygonMode enumValue = EPolygonMode::UNDEFINED);
 
+	unsigned int ToOpenGL() const;
 	D3D11_FILL_MODE ToDirectX11() const;
 	D3D12_FILL_MODE ToDirectX12() const;
 	VkPolygonMode ToVulkan() const;
@@ -59,6 +61,7 @@ class FrontFaceOrientation
 public:
 	FrontFaceOrientation(EFrontFaceOrientation enumValue = EFrontFaceOrientation::UNDEFINED);
 
+	unsigned int ToOpenGL() const;
 	bool ToDirectX11() const;
 	bool ToDirectX12() const;
 	VkFrontFace ToVulkan() const;
@@ -80,7 +83,7 @@ public:
 
 public:
 	bool enable_depth_clamp;
-	bool enable_discard;
+	bool is_discarded;
 	PolygonMode polygon_mode;
 	float line_width;
 	CullMode cull_mode;

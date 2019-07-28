@@ -8,6 +8,20 @@ CullMode::CullMode(ECullMode enumValue) :
 
 }
 
+unsigned int CullMode::ToOpenGL() const
+{
+	switch (enum_value)
+	{
+	case ECullMode::UNDEFINED:			return -1;
+	case ECullMode::NONE:				return -1;
+	case ECullMode::FRONT:				return GL_FRONT;
+	case ECullMode::BACK:				return GL_BACK;
+	case ECullMode::FRONT_AND_BACK:		return GL_FRONT_AND_BACK;
+	}
+
+	return -1;
+}
+
 D3D11_CULL_MODE CullMode::ToDirectX11() const
 {
 	switch (enum_value)
@@ -61,6 +75,19 @@ PolygonMode::PolygonMode(EPolygonMode enumValue) :
 
 }
 
+unsigned int PolygonMode::ToOpenGL() const
+{
+	switch (enum_value)
+	{
+	case EPolygonMode::UNDEFINED:		return -1;
+	case EPolygonMode::FILL:			return GL_FILL;
+	case EPolygonMode::WIREFRAME:		return GL_LINE;
+	case EPolygonMode::VERTEX:			return GL_POINT;
+	}
+
+	return -1;
+}
+
 D3D11_FILL_MODE PolygonMode::ToDirectX11() const
 {
 	switch (enum_value)
@@ -111,6 +138,11 @@ FrontFaceOrientation::FrontFaceOrientation(EFrontFaceOrientation enumValue) :
 
 }
 
+unsigned int FrontFaceOrientation::ToOpenGL() const
+{
+	return enum_value == EFrontFaceOrientation::COUNTER_CLOCK_WISE ? GL_CCW : GL_CW;
+}
+
 bool FrontFaceOrientation::ToDirectX11() const
 {
 	return enum_value == EFrontFaceOrientation::COUNTER_CLOCK_WISE ? true : false;
@@ -141,7 +173,7 @@ FrontFaceOrientation::operator EFrontFaceOrientation() const
 void RasterizerSettings::InitializeAsDefault()
 {
 	enable_depth_bias = false;
-	enable_discard = false;
+	is_discarded = false;
 	polygon_mode = EPolygonMode::FILL;
 	line_width = 1.0f;
 	cull_mode = ECullMode::NONE;
@@ -199,7 +231,7 @@ VkPipelineRasterizationStateCreateInfo RasterizerSettings::ToVulkan() const
 	VkPipelineRasterizationStateCreateInfo settings = {};
 	settings.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	settings.depthClampEnable = enable_depth_clamp;
-	settings.rasterizerDiscardEnable = enable_discard;
+	settings.rasterizerDiscardEnable = is_discarded;
 	settings.polygonMode = polygon_mode.ToVulkan();
 	settings.lineWidth = 1.0f;
 	settings.cullMode = cull_mode.ToVulkan();

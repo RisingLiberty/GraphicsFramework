@@ -14,6 +14,8 @@ public:
 	virtual void Present() override;
 	API GetApiType() const;
 
+	void InitializeRasterizer();
+
 protected:
 	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
 	void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
