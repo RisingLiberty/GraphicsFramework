@@ -2,7 +2,6 @@
 
 #include "MainLayer.h"
 
-#include <graphics/Context.h>
 #include <graphics/MeshFactory.h>
 #include <graphics/Mesh.h>
 #include <graphics/Renderer.h>
