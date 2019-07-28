@@ -7,7 +7,6 @@
 #include "platform/directx11/Dx11Context.h"
 #include "platform/directx12/Dx12Context.h"
 #include "platform/vulkan/VkContext.h"
-#include "platform/vulkan/VkTestContext.h"
 
 #include "IndexBuffer.h"
 #include "VertexArray.h"
@@ -94,14 +93,22 @@ void Context::BindVertexArray(const VertexArray* vertexArray)
 {
 	if (!m_bound_vertex_array)
 	{
-		m_bound_index_buffer = nullptr; // reset index buffer
+		const IndexBuffer* ib = m_bound_index_buffer;
+		this->UnbindIndexBuffer(m_bound_index_buffer);
+		//m_bound_index_buffer = nullptr; // reset index buffer
 		m_bound_vertex_array = vertexArray;
+		if (ib)
+			this->BindIndexBuffer(ib);
 		this->BindVertexArrayInternal(vertexArray);
 	}
 	else if (m_bound_vertex_array->GetResourceId() != vertexArray->GetResourceId())
 	{
-		m_bound_index_buffer = nullptr; // reset index buffer
+		const IndexBuffer* ib = m_bound_index_buffer;
+		this->UnbindIndexBuffer(m_bound_index_buffer);
+		//m_bound_index_buffer = nullptr; // reset index buffer
 		m_bound_vertex_array = vertexArray;
+		if (ib)
+			this->BindIndexBuffer(ib);
 		this->BindVertexArrayInternal(vertexArray);
 	}
 	else
@@ -146,36 +153,6 @@ void Context::UnbindShaderProgram(const ShaderProgram* shaderProgram)
 	}
 	else
 		spdlog::warn("Tring to unbind shader program that's currently not bound!");
-}
-
-void Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
-{
-	ASSERT(false, "Not implemented yet!");
-}
-
-void Context::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
-{
-	ASSERT(false, "Not implemented yet!");
-}
-
-void Context::BindVertexArrayInternal(const VertexArray* vertexArray)
-{
-	ASSERT(false, "Not implemented yet!");
-}
-
-void Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
-{
-	ASSERT(false, "Not implemented yet!");
-}
-
-void Context::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
-{
-	ASSERT(false, "Not implemented yet!");
-}
-
-void Context::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram)
-{
-	ASSERT(false, "Not implemented yet!");
 }
 
 Context* Context::GetCurrent()

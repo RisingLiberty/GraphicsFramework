@@ -60,14 +60,14 @@ public:
 	virtual API GetApiType() const = 0;
 
 protected:
-	virtual void BindIndexBufferInternal(const IndexBuffer* indexBuffer);
-	virtual void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer);
+	virtual void BindIndexBufferInternal(const IndexBuffer* indexBuffer) = 0;
+	virtual void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer) = 0;
 
-	virtual void BindVertexArrayInternal(const VertexArray* vertexArray);
-	virtual void UnbindVertexArrayInternal(const VertexArray* vertexArray);
+	virtual void BindVertexArrayInternal(const VertexArray* vertexArray) = 0;
+	virtual void UnbindVertexArrayInternal(const VertexArray* vertexArray) = 0;
 
-	virtual void BindShaderProgramInternal(const ShaderProgram* shaderProgram);
-	virtual void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram);
+	virtual void BindShaderProgramInternal(const ShaderProgram* shaderProgram) = 0;
+	virtual void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram) = 0;
 
 protected:
 	std::unique_ptr<Renderer> m_renderer;
