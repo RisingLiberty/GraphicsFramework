@@ -7,8 +7,11 @@ class VertexBufferController;
 class VertexLayoutController;
 class IndexBufferController;
 class Window;
+
 class IndexBuffer;
 class VertexArray;
+class ShaderProgram;
+
 
 class Context
 {
@@ -28,12 +31,19 @@ public:
 	virtual void Initialize() = 0;
 	virtual void PostInitialize();
 
-	virtual void Start() {};
-	virtual void Finish() {};
+	virtual void Begin() {};
+	virtual void End() {};
+
+	void Clear();
 
 	void BindVertexArray(const VertexArray* va);
+	void UnbindVertexArray(const VertexArray* va);
+	
 	void BindIndexBuffer(const IndexBuffer* indexBuffer);
-	void UnbindIndexBuffer();
+	void UnbindIndexBuffer(const IndexBuffer* indexBuffer);
+
+	void BindShaderProgram(const ShaderProgram* shaderProgram);
+	void UnbindShaderProgram(const ShaderProgram* shaderProgram);
 
 	static void Create(API api, Window* window);
 	static API GetApi();
@@ -51,7 +61,13 @@ public:
 
 protected:
 	virtual void BindIndexBufferInternal(const IndexBuffer* indexBuffer);
+	virtual void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer);
+
 	virtual void BindVertexArrayInternal(const VertexArray* vertexArray);
+	virtual void UnbindVertexArrayInternal(const VertexArray* vertexArray);
+
+	virtual void BindShaderProgramInternal(const ShaderProgram* shaderProgram);
+	virtual void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram);
 
 protected:
 	std::unique_ptr<Renderer> m_renderer;
@@ -63,6 +79,7 @@ protected:
 
 	const IndexBuffer* m_bound_index_buffer;
 	const VertexArray* m_bound_vertex_array;
+	const ShaderProgram* m_bound_shader_program;
 
 	bool m_is_vsync;
 

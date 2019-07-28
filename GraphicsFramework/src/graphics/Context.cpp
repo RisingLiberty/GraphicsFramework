@@ -54,7 +54,13 @@ void Context::PreInitialize()
 
 void Context::PostInitialize()
 {
+}
 
+void Context::Clear()
+{
+	m_bound_index_buffer = nullptr;
+	m_bound_shader_program = nullptr;
+	m_bound_vertex_array = nullptr;
 }
 
 void Context::BindIndexBuffer(const IndexBuffer* indexBuffer)
@@ -70,7 +76,18 @@ void Context::BindIndexBuffer(const IndexBuffer* indexBuffer)
 		this->BindIndexBufferInternal(indexBuffer);
 	}
 	else
-		spdlog::warn("Trying to bind the same index buffer twice!");
+		spdlog::warn("Trying to bind the same index buffer again!");
+}
+
+void Context::UnbindVertexArray(const VertexArray* vertexArray)
+{
+	if (m_bound_vertex_array == vertexArray)
+	{
+		m_bound_vertex_array = nullptr;
+		this->UnbindVertexArrayInternal(vertexArray);
+	}
+	else
+		spdlog::warn("Trying to unbind vertex array that's currently not bound!");
 }
 
 void Context::BindVertexArray(const VertexArray* vertexArray)
@@ -88,13 +105,47 @@ void Context::BindVertexArray(const VertexArray* vertexArray)
 		this->BindVertexArrayInternal(vertexArray);
 	}
 	else
-		spdlog::warn("Trying to bind the same vertex array twice!");
+		spdlog::warn("Trying to bind the same vertex array again!");
+
+	}
+
+void Context::UnbindIndexBuffer(const IndexBuffer* indexBuffer)
+{
+	if (m_bound_index_buffer == indexBuffer)
+	{
+		m_bound_index_buffer = nullptr;
+		this->UnbindIndexBufferInternal(indexBuffer);
+	}
+	else
+		spdlog::warn("Trying to unbind index buffer that's currently not bound!");
+}
+
+void Context::BindShaderProgram(const ShaderProgram* shaderProgram)
+{
+	if (!m_bound_shader_program)
+	{
+		m_bound_shader_program = shaderProgram;
+		this->BindShaderProgramInternal(shaderProgram);
+	}
+	else if (m_bound_shader_program != shaderProgram)
+	{
+		m_bound_shader_program = shaderProgram;
+		this->BindShaderProgramInternal(shaderProgram);
+	}
+	else 
+		spdlog::warn("Trying to bind the same shader program again!");
 
 }
 
-void Context::UnbindIndexBuffer()
+void Context::UnbindShaderProgram(const ShaderProgram* shaderProgram)
 {
-	m_bound_index_buffer = nullptr;
+	if (m_bound_shader_program == shaderProgram)
+	{
+		m_bound_shader_program = nullptr;
+		this->UnbindShaderProgramInternal(shaderProgram);
+	}
+	else
+		spdlog::warn("Tring to unbind shader program that's currently not bound!");
 }
 
 void Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
@@ -102,7 +153,27 @@ void Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 	ASSERT(false, "Not implemented yet!");
 }
 
+void Context::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
+{
+	ASSERT(false, "Not implemented yet!");
+}
+
 void Context::BindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	ASSERT(false, "Not implemented yet!");
+}
+
+void Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	ASSERT(false, "Not implemented yet!");
+}
+
+void Context::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
+{
+	ASSERT(false, "Not implemented yet!");
+}
+
+void Context::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
 	ASSERT(false, "Not implemented yet!");
 }
