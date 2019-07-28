@@ -159,6 +159,10 @@
     <ClCompile Include="src\controllers\VertexBufferController.cpp" />
     <ClCompile Include="src\controllers\VertexLayoutController.cpp" />
     <ClCompile Include="src\graphics\BufferHelpers.cpp" />
+    <ClCompile Include="src\graphics\CullMode.cpp" />
+    <ClCompile Include="src\graphics\DownloadBuffer.cpp" />
+    <ClCompile Include="src\graphics\FillMode.cpp" />
+    <ClCompile Include="src\graphics\FrontFaceOrientation.cpp" />
     <ClCompile Include="src\graphics\GraphicsResource.cpp" />
     <ClCompile Include="src\graphics\RasterizerSettings.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
@@ -222,6 +226,7 @@
     <ClCompile Include="src\platform\directx12\Dx12VertexBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexLayout.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexShader.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLDownloadBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLHelperMethods.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLContext.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLFragmentShader.cpp" />
@@ -295,6 +300,10 @@
     <ClInclude Include="src\controllers\VertexLayoutController.h" />
     <ClInclude Include="src\graphics\BufferHelpers.h" />
     <ClInclude Include="src\graphics\BufferUsage.h" />
+    <ClInclude Include="src\graphics\CullMode.h" />
+    <ClInclude Include="src\graphics\DownloadBuffer.h" />
+    <ClInclude Include="src\graphics\FillMode.h" />
+    <ClInclude Include="src\graphics\FrontFaceOrientation.h" />
     <ClInclude Include="src\graphics\GraphicsResource.h" />
     <ClInclude Include="src\graphics\RasterizerSettings.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h" />
@@ -360,6 +369,7 @@
     <ClInclude Include="src\platform\directx12\Dx12VertexBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexLayout.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexShader.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLDownloadBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLHelperMethods.h" />
     <ClInclude Include="src\platform\opengl\OpenGLContext.h" />
     <ClInclude Include="src\platform\opengl\OpenGLFragmentShader.h" />
