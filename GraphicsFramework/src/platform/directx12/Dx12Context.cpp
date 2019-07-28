@@ -436,9 +436,8 @@ void Dx12Context::BuildPSO()
 		reinterpret_cast<BYTE*>(dx_fs->GetCompiledCode()->GetBufferPointer()),
 		dx_fs->GetCompiledCode()->GetBufferSize()
 	};
-	psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-	psoDesc.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-	psoDesc.RasterizerState.FrontCounterClockwise = true;
+
+	psoDesc.RasterizerState = m_rasterizer_settings.ToDirectX12();
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	psoDesc.SampleMask = UINT_MAX;

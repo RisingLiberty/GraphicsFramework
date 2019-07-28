@@ -729,8 +729,6 @@ void VkContext::CreateGraphicsPipeline()
 	viewport_state.scissorCount = 1;
 	viewport_state.pScissors = &scissor;
 
-	rasterizer = m_rasterizer_settings.ToVulkan();
-
 	VkPipelineMultisampleStateCreateInfo multi_sampling = {};
 	multi_sampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	multi_sampling.sampleShadingEnable = VK_TRUE;
@@ -802,7 +800,7 @@ void VkContext::CreateGraphicsPipeline()
 	pipeline_info.pVertexInputState = &vk_layout->GetCreateInfo();
 	pipeline_info.pInputAssemblyState = &input_assembly;
 	pipeline_info.pViewportState = &viewport_state;
-	pipeline_info.pRasterizationState = &rasterizer;
+	pipeline_info.pRasterizationState = &m_rasterizer_settings.ToVulkan();
 	pipeline_info.pMultisampleState = &multi_sampling;
 	pipeline_info.pDepthStencilState = &depth_stencil;
 	pipeline_info.pColorBlendState = &color_blending;
