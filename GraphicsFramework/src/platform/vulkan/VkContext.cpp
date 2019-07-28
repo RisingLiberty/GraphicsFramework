@@ -707,7 +707,7 @@ void VkContext::CreateGraphicsPipeline()
 
 	VkPipelineInputAssemblyStateCreateInfo input_assembly = {};
 	input_assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-	input_assembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	input_assembly.topology = m_bound_index_buffer->GetTopology().ToVulkan();
 	input_assembly.primitiveRestartEnable = VK_FALSE;
 
 	VkViewport viewport = {};
@@ -1749,7 +1749,7 @@ void VkContext::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 
 void VkContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	vkCmdBindIndexBuffer(m_command_buffers[m_current_frame], static_cast<const VkIndexBuffer*>(m_bound_index_buffer)->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
+	vkCmdBindIndexBuffer(m_command_buffers[m_current_frame], static_cast<const VkIndexBuffer*>(m_bound_index_buffer)->GetGpuBuffer(), 0, m_bound_index_buffer->GetFormat().ToVulkanIndexType());
 }
 
 void VkContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)

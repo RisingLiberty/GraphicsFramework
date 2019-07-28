@@ -442,7 +442,7 @@ void Dx12Context::BuildPSO()
 	psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 	psoDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
 	psoDesc.SampleMask = UINT_MAX;
-	psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	psoDesc.PrimitiveTopologyType = m_bound_index_buffer->GetTopology().ToDirectX12();
 	psoDesc.NumRenderTargets = 1;
 	psoDesc.RTVFormats[0] = m_back_buffer_format;
 	psoDesc.SampleDesc.Count = 1;
