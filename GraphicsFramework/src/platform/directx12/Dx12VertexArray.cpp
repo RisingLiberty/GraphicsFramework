@@ -6,19 +6,6 @@
 #include "Dx12Context.h"
 #include "graphics/VertexLayout.h"
 
-namespace
-{
-	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const Dx12VertexBuffer* vb, const VertexLayout* layout)
-	{
-		D3D12_VERTEX_BUFFER_VIEW vb_view;
-		vb_view.BufferLocation = vb->GetBufferGpu()->GetGPUVirtualAddress();
-		vb_view.StrideInBytes = layout->GetSize();
-		vb_view.SizeInBytes = (unsigned int)vb->GetSize();
-
-		return vb_view;
-	}
-}
-
 Dx12VertexArray::Dx12VertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	VertexArray(vb, layout)
 {

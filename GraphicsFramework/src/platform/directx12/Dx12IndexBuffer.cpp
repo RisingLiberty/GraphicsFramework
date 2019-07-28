@@ -9,11 +9,7 @@ Dx12IndexBuffer::Dx12IndexBuffer(unsigned int  count, Format format, Topology to
 	IndexBuffer(count, format, topology, usage)
 {
 	if (data)
-	{
-		DXCALL(D3DCreateBlob(sizeof(unsigned int) * count, m_buffer_cpu.ReleaseAndGetAddressOf()));
-		memcpy(m_buffer_cpu->GetBufferPointer(), data, sizeof(unsigned int) * count);
-		m_buffer_gpu = CreateDefaultBuffer(data, sizeof(unsigned int)*(unsigned int)count, m_upload_buffer);
-	}
+		this->SetData(data);
 }
 
 Dx12IndexBuffer::~Dx12IndexBuffer()
