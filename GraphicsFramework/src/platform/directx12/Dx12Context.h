@@ -37,9 +37,6 @@ public:
 	ID3D12Device* GetDevice() const;
 	ID3D12GraphicsCommandList* GetCommandList() const;
 
-	void BindVertexArray(VertexArray* va);
-	void BindShaderProgram(ShaderProgram* shaderProgram);
-	void BindIndexBuffer(IndexBuffer* ib);
 	void BindResourcesToPipeline();
 	void BindImgui();
 
@@ -52,6 +49,16 @@ public:
 	ID3D12DescriptorHeap* GetSrvDescriptorHeap() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const;
+
+protected:
+	virtual void BindIndexBufferInternal(const IndexBuffer* indexBuffer);
+	virtual void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer);
+
+	virtual void BindVertexArrayInternal(const VertexArray* vertexArray);
+	virtual void UnbindVertexArrayInternal(const VertexArray* vertexArray);
+
+	virtual void BindShaderProgramInternal(const ShaderProgram* shaderProgram);
+	virtual void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram);
 
 private:
 	void InitD3D(Window* window);
@@ -107,8 +114,4 @@ private:
 	DXGI_FORMAT m_depth_stencil_format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	ComPtr<ID3D12PipelineState> m_pipeline_state = nullptr;
-
-	IndexBuffer* m_bound_ib;
-	VertexArray* m_bound_vertex_array;
-	ShaderProgram* m_bound_shader_program;
 };

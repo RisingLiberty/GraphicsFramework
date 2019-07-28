@@ -15,7 +15,7 @@ public:
 	virtual void ClearDepthBuffer() override;
 	virtual void ClearStencilBuffer() override;
 
-	virtual void Begin() override;
-	virtual void End() override;
+	//virtual void Begin() override;
+	//virtual void End() override;
 	virtual void RenderImgui() override;
 };

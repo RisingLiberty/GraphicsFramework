@@ -6,7 +6,6 @@
 #include "Dx12Context.h"
 #include "graphics/VertexLayout.h"
 
-
 namespace
 {
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView(const Dx12VertexBuffer* vb, const VertexLayout* layout)
@@ -23,7 +22,6 @@ namespace
 Dx12VertexArray::Dx12VertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	VertexArray(vb, layout)
 {
-	GetDx12Context()->BindVertexArray(static_cast<Dx12VertexArray*>(this));
 }
 
 Dx12VertexArray::~Dx12VertexArray()
@@ -31,13 +29,24 @@ Dx12VertexArray::~Dx12VertexArray()
 
 }
 
-void Dx12VertexArray::Bind() const
+D3D12_VERTEX_BUFFER_VIEW Dx12VertexArray::GetVertexBufferView() const
 {
 	const Dx12VertexBuffer* dx_vb = static_cast<const Dx12VertexBuffer*>(m_vertex_buffer);
-	D3D12_VERTEX_BUFFER_VIEW vbv = GetVertexBufferView(dx_vb, m_vertex_layout);
-	GetDx12CommandList()->IASetVertexBuffers(0, 1, &vbv);
+
+	D3D12_VERTEX_BUFFER_VIEW vb_view;
+	vb_view.BufferLocation = dx_vb->GetBufferGpu()->GetGPUVirtualAddress();
+	vb_view.StrideInBytes = m_vertex_layout->GetSize();
+	vb_view.SizeInBytes = (unsigned int)dx_vb->GetSize();
+
+	return vb_view;
+}
+
+void Dx12VertexArray::Bind() const
+{
+	GetDx12Context()->BindVertexArray(this);
 }
 
 void Dx12VertexArray::Unbind() const
 {
+	GetDx12Context()->UnbindVertexArray(this);
 }

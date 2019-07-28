@@ -12,8 +12,6 @@
 Dx12ShaderProgram::Dx12ShaderProgram(VertexShader* vs, FragmentShader* fs):
 	ShaderProgram(vs, fs)
 {
-	GetDx12Context()->BindShaderProgram(this);
-
 	Dx12ShaderParser parser;
 
 	Dx12VertexShader* dx_vs = GetDxVertexShader();
@@ -40,13 +38,15 @@ Dx12ShaderProgram::~Dx12ShaderProgram()
 
 void Dx12ShaderProgram::Bind() const
 {
+	GetDx12Context()->BindShaderProgram(this);
 }
 
 void Dx12ShaderProgram::Unbind() const
 {
+	GetDx12Context()->UnbindShaderProgram(this);
 }
 
-void Dx12ShaderProgram::UploadVariables()
+void Dx12ShaderProgram::UploadVariables() const
 {
 	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
 	{

@@ -15,7 +15,7 @@ public:
 
 	virtual void Bind() const override;
 	virtual void Unbind() const override;
-	virtual void UploadVariables() override;
+	virtual void UploadVariables() const override;
 
 	Dx12UploadBuffer* GetUploadBuffer() const;
 	ID3D12RootSignature* GetRootSignature() const;

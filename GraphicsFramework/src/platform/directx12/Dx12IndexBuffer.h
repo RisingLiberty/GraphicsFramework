@@ -5,12 +5,12 @@
 class Dx12IndexBuffer : public IndexBuffer
 {
 public:
-	Dx12IndexBuffer(size_t count, BufferUsage usage, const void* data = nullptr);
+	Dx12IndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, const void* data = nullptr);
 	virtual ~Dx12IndexBuffer();
 
 	virtual void SetData(const void* data) override;
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
+
+	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
 private:
 	ComPtr<ID3DBlob> m_buffer_cpu;

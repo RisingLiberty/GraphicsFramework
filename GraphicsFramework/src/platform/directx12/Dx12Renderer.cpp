@@ -39,6 +39,9 @@ void Dx12Renderer::Draw()
 
 		material->Use();
 
+		mesh->GetVertexArray()->Bind();
+		mesh->GetIndices()->Bind();
+
 		GetDx12Context()->BindResourcesToPipeline();
 		GetDx12CommandList()->DrawIndexedInstanced((unsigned int)mesh->GetIndices()->GetCount(), 1, 0, 0, 0);
 	}
@@ -72,15 +75,15 @@ void Dx12Renderer::ClearStencilBuffer()
 	GetDx12CommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 }
 
-void Dx12Renderer::Begin()
-{
-	GetDx12Context()->Begin();
-}
-
-void Dx12Renderer::End()
-{
-	GetDx12Context()->End();
-}
+//void Dx12Renderer::Begin()
+//{
+//	GetDx12Context()->Begin();
+//}
+//
+//void Dx12Renderer::End()
+//{
+//	GetDx12Context()->End();
+//}
 
 void Dx12Renderer::RenderImgui()
 {

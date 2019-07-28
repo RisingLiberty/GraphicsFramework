@@ -400,14 +400,14 @@ void Dx12Context::BuildDescriptorHeaps()
 
 void Dx12Context::BuildPSO()
 {
-	if (!m_bound_shader_program)
+	if (!m_bound_shader_program || m_pipeline_state)
 		return;
 
 	auto dx_vs = static_cast<Dx12VertexShader*>(m_bound_shader_program->GetVertexShader());
 	auto dx_fs = static_cast<Dx12FragmentShader*>(m_bound_shader_program->GetFragmentShader());
 
 	const Dx12VertexLayout* dx_vertex_layout = static_cast<const Dx12VertexLayout*>(m_bound_vertex_array->GetVertexLayout());
-	Dx12ShaderProgram* dx_shader_program = static_cast<Dx12ShaderProgram*>(m_bound_shader_program);
+	const Dx12ShaderProgram* dx_shader_program = static_cast<const Dx12ShaderProgram*>(m_bound_shader_program);
 
 	Dx12UploadBuffer* upload_buffer = dx_shader_program->GetUploadBuffer();
 	
@@ -466,37 +466,12 @@ ID3D12GraphicsCommandList* Dx12Context::GetCommandList() const
 	return m_command_list.Get();
 }
 
-void Dx12Context::BindVertexArray(VertexArray* va)
-{
-	m_bound_vertex_array = va;
-	if (m_bound_shader_program && m_bound_ib)
-		this->BuildPSO();
-}
-
-void Dx12Context::BindShaderProgram(ShaderProgram* shaderProgram)
-{
-	m_bound_shader_program = shaderProgram;
-	if (m_bound_vertex_array && m_bound_ib)
-		this->BuildPSO();
-}
-
-void Dx12Context::BindIndexBuffer(IndexBuffer* ib)
-{
-	m_bound_ib = ib;
-	if (m_bound_vertex_array && m_bound_shader_program)
-		this->BuildPSO();
-}
-
 void Dx12Context::BindResourcesToPipeline()
 {
 	ID3D12DescriptorHeap* descriptorHeaps[] = { m_cbv_heap.Get() };
 	m_command_list->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-	m_command_list->SetGraphicsRootSignature(static_cast<Dx12ShaderProgram*>(m_bound_shader_program)->GetRootSignature());
+	m_command_list->SetGraphicsRootSignature(static_cast<const Dx12ShaderProgram*>(m_bound_shader_program)->GetRootSignature());
 
-	static_cast<Dx12VertexArray*>(m_bound_vertex_array)->Bind();
-	static_cast<Dx12IndexBuffer*>(m_bound_ib)->Bind();
-
-	m_command_list->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	m_command_list->SetGraphicsRootDescriptorTable(0, m_cbv_heap->GetGPUDescriptorHandleForHeapStart());
 }
 
@@ -588,6 +563,47 @@ D3D12_CPU_DESCRIPTOR_HANDLE Dx12Context::GetCurrentBackBufferView() const
 D3D12_CPU_DESCRIPTOR_HANDLE Dx12Context::GetDepthStencilView() const
 {
 	return m_dsv_heap->GetCPUDescriptorHandleForHeapStart();
+}
+
+void Dx12Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
+{
+	D3D12_INDEX_BUFFER_VIEW ib_view = static_cast<const Dx12IndexBuffer*>(m_bound_index_buffer)->GetIndexBufferView();
+	m_command_list->IASetIndexBuffer(&ib_view);
+	m_command_list->IASetPrimitiveTopology(m_bound_index_buffer->GetTopology().ToDirectX());
+
+	if (m_bound_vertex_array && m_bound_shader_program)
+		this->BuildPSO();
+}
+
+void Dx12Context::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
+{
+	m_command_list->IASetIndexBuffer(nullptr);
+	m_command_list->IASetPrimitiveTopology(Topology(ETopology::UNDEFINED).ToDirectX());
+}
+
+void Dx12Context::BindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	const Dx12VertexArray* dx_va = static_cast<const Dx12VertexArray*>(m_bound_vertex_array);
+	D3D12_VERTEX_BUFFER_VIEW vb_view = dx_va->GetVertexBufferView();
+	m_command_list->IASetVertexBuffers(0, 1, &vb_view);
+
+	if (m_bound_shader_program && m_bound_index_buffer)
+		this->BuildPSO();
+}
+
+void Dx12Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
+{
+	m_command_list->IASetVertexBuffers(0, 0, nullptr);
+}
+
+void Dx12Context::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
+{
+	if (m_bound_vertex_array && m_bound_index_buffer)
+		this->BuildPSO();
+}
+
+void Dx12Context::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram)
+{
 }
 
 ID3D12Resource* Dx12Context::GetCurrentBackBuffer() const

@@ -56,18 +56,12 @@ Dx12Context* GetDx12Context()
 
 ID3D12Device* GetDx12Device()
 {
-	if (Context::GetApi() == Context::API::DIRECTX12)
-		return GetDx12Context()->GetDevice();
-	else
-		return GetDx12Context()->GetDevice();
+	return GetDx12Context()->GetDevice();
 }
 
 ID3D12GraphicsCommandList* GetDx12CommandList()
 {
-	if (Context::GetApi() == Context::API::DIRECTX12)
-		return GetDx12Context()->GetCommandList();
-	else
-		return GetDx12Context()->GetCommandList();
+	return GetDx12Context()->GetCommandList();
 }
 
 ComPtr<ID3D12Resource> CreateDefaultBuffer(const void* data, unsigned int size, ComPtr<ID3D12Resource>& uploadBuffer)
