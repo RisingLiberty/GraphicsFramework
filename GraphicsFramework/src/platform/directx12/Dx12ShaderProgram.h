@@ -13,8 +13,6 @@ public:
 	Dx12ShaderProgram(VertexShader* vs, FragmentShader* fs);
 	virtual ~Dx12ShaderProgram();
 
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
 	virtual void UploadVariables() const override;
 
 	Dx12UploadBuffer* GetUploadBuffer() const;

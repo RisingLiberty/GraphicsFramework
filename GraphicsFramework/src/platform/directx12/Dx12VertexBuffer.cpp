@@ -25,14 +25,6 @@ void Dx12VertexBuffer::SetData(const void* data)
 	m_buffer_gpu = CreateDefaultBuffer(data, (unsigned int)m_size, m_upload_buffer);
 }
 
-void Dx12VertexBuffer::Bind() const
-{
-}
-
-void Dx12VertexBuffer::Unbind() const
-{
-}
-
 ID3D12Resource* Dx12VertexBuffer::GetBufferGpu() const
 {
 	return m_buffer_gpu.Get();

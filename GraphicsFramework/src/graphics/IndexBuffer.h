@@ -6,23 +6,23 @@
 class IndexBuffer : public GraphicsResource<IndexBuffer>
 {
 public:
-	IndexBuffer(size_t count, BufferUsage usage, Format format = EFormat::R32_UINT, Topology topology = ETopology::TRIANGLELIST);
+	IndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage);
 	virtual ~IndexBuffer();
 
 	virtual void SetData(const void* data) = 0;
-	virtual void Bind() const = 0;
-	virtual void Unbind() const = 0;
+	void Bind() const;
+	void Unbind() const;
 
-	size_t GetCount() const;
-	size_t GetSize() const;
+	unsigned int GetCount() const;
+	unsigned int GetSize() const;
 	Format GetFormat() const;
 	Topology GetTopology() const;
 
-	static IndexBuffer* Create(size_t count, Format format, Topology topology, BufferUsage usage = BufferUsage::STATIC, void* data = nullptr);
+	static IndexBuffer* Create(unsigned int count, Format format, Topology topology, BufferUsage usage = BufferUsage::STATIC, void* data = nullptr);
 
 protected:
-	size_t m_count;
-	BufferUsage m_usage;
+	unsigned int m_count;
 	Format m_format;
 	Topology m_topology;
+	BufferUsage m_usage;
 };

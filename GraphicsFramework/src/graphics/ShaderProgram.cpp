@@ -64,7 +64,7 @@ ShaderProgram::~ShaderProgram()
 
 }
 
-void ShaderProgram::SetUniform(const std::string& name, void* data, unsigned int size)
+void ShaderProgram::SetUniform(const std::string& name, void* data, unsigned int size) const
 {
 	for (std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
 	{
@@ -76,6 +76,16 @@ void ShaderProgram::SetUniform(const std::string& name, void* data, unsigned int
 
 	}
 	ASSERT(false, "uniform not found in buffer");
+}
+
+void ShaderProgram::Bind() const
+{
+	Context::GetCurrent()->BindShaderProgram(this);
+}
+
+void ShaderProgram::Unbind() const
+{
+	Context::GetCurrent()->BindShaderProgram(this);
 }
 
 VertexShader* ShaderProgram::GetVertexShader() const

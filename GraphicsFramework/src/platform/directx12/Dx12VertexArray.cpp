@@ -41,12 +41,3 @@ D3D12_VERTEX_BUFFER_VIEW Dx12VertexArray::GetVertexBufferView() const
 	return vb_view;
 }
 
-void Dx12VertexArray::Bind() const
-{
-	GetDx12Context()->BindVertexArray(this);
-}
-
-void Dx12VertexArray::Unbind() const
-{
-	GetDx12Context()->UnbindVertexArray(this);
-}

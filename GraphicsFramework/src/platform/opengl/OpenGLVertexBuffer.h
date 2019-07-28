@@ -11,10 +11,8 @@ public:
 	virtual void SetData(const void* data) override;
 	unsigned int GetId() const;
 
-private:
-	virtual void ForceBind() const;
-	virtual void ForceUnbind() const;
-	
+	virtual void Bind() const;
+	virtual void Unbind() const;
 private:
 	unsigned int m_id;
 

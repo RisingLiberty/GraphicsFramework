@@ -12,11 +12,11 @@ public:
 	ShaderProgram(VertexShader* vertexShader, FragmentShader* fragmentShader);
 	virtual ~ShaderProgram();
 
-	void SetUniform(const std::string& name, void* data, unsigned int size);
+	void SetUniform(const std::string& name, void* data, unsigned int size) const;
 
-	virtual void Bind() const = 0;
-	virtual void Unbind() const = 0;
-	virtual void UploadVariables() = 0;
+	void Bind() const;
+	void Unbind() const;
+	virtual void UploadVariables() const = 0;
 
 	VertexShader* GetVertexShader() const;
 	FragmentShader* GetFragmentShader() const;
@@ -28,6 +28,6 @@ public:
 protected:
 	VertexShader* m_vertex_shader;
 	FragmentShader* m_fragment_shader;
-	std::vector<std::unique_ptr<ShaderUniform>> m_uniforms;
+	mutable std::vector<std::unique_ptr<ShaderUniform>> m_uniforms;
 };
 

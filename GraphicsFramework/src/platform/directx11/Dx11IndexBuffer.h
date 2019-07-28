@@ -5,7 +5,7 @@
 class Dx11IndexBuffer : public IndexBuffer
 {
 public:
-	Dx11IndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, void* data);
+	Dx11IndexBuffer(unsigned int  count, Format format, Topology topology, BufferUsage usage, void* data);
 	virtual ~Dx11IndexBuffer();
 
 	virtual void SetData(const void* data) override;

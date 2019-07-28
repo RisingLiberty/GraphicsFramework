@@ -19,7 +19,7 @@ namespace
 	}
 }
 
-Dx11IndexBuffer::Dx11IndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, void* data):
+Dx11IndexBuffer::Dx11IndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, void* data):
 	IndexBuffer(count, format, topology, usage)
 {
 	D3D11_BUFFER_DESC desc;

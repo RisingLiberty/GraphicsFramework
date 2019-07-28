@@ -11,8 +11,6 @@ public:
 	virtual ~VertexBuffer();
 
 	virtual void SetData(const void* data) = 0;
-	virtual void Bind() const = 0;
-	virtual void Unbind() const = 0;
 
 	BufferUsage GetUsage() const;
 	virtual size_t GetSize() const;

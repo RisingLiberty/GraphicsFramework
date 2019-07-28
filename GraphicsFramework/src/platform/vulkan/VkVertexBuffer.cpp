@@ -37,13 +37,3 @@ VkBuffer VkVertexBuffer::GetGpuBuffer() const
 {
 	return m_buffer_gpu;
 }
-
-void VkVertexBuffer::Bind() const
-{
-
-}
-
-void VkVertexBuffer::Unbind() const
-{
-
-}

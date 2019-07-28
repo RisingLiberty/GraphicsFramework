@@ -9,8 +9,6 @@ public:
 	virtual ~Dx11VertexBuffer();
 
 	virtual void SetData(const void* data) override;
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
 
 	ID3D11Buffer* GetBuffer() const;
 

@@ -11,8 +11,8 @@ class VertexArray : public GraphicsResource<VertexArray>
 public:
 	virtual ~VertexArray();
 
-	virtual void Bind() const = 0;
-	virtual void Unbind() const = 0;
+	void Bind() const;
+	void Unbind() const;
 
 	const VertexBuffer* GetVertexBuffer() const;
 	const VertexLayout* GetVertexLayout() const;

@@ -10,6 +10,4 @@ public:
 
 	D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
 
-	void Bind() const override;
-	void Unbind() const override;
 };

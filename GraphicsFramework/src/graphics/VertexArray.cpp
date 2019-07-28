@@ -66,6 +66,16 @@ VertexArray* VertexArray::Create(const VertexBuffer* vb, const VertexLayout* lay
 	return vertex_array;
 }
 
+void VertexArray::Bind() const
+{
+	Context::GetCurrent()->BindVertexArray(this);
+}
+
+void VertexArray::Unbind() const
+{
+	Context::GetCurrent()->UnbindVertexArray(this);
+}
+
 const VertexBuffer* VertexArray::GetVertexBuffer() const
 {
 	return m_vertex_buffer;

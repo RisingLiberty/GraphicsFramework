@@ -5,7 +5,7 @@
 
 #include "VkContext.h"
 
-VkIndexBuffer::VkIndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, const void* data):
+VkIndexBuffer::VkIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, const void* data):
 	IndexBuffer(count, format, topology, usage)
 {
 	if (data)

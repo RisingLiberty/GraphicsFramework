@@ -11,7 +11,7 @@
 
 #include "Context.h"
 
-IndexBuffer* IndexBuffer::Create(size_t count, Format format, Topology topology, BufferUsage usage, void* data)
+IndexBuffer* IndexBuffer::Create(unsigned int count, Format format, Topology topology, BufferUsage usage, void* data)
 {
 	IndexBufferController* index_buffer_controller = Context::GetCurrent()->GetIndexBufferController();
 	IndexBuffer* ib = nullptr;// = index_buffer_controller->Get(count, usage);
@@ -24,9 +24,9 @@ IndexBuffer* IndexBuffer::Create(size_t count, Format format, Topology topology,
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case Context::API::OPENGL:		unique_ib = std::make_unique<OpenGLIndexBuffer>(count, format, topology, usage, data); break;
-	case Context::API::DIRECTX11:	unique_ib = std::make_unique<Dx11IndexBuffer>(count, usage, data); break;
-	case Context::API::DIRECTX12:	unique_ib = std::make_unique<Dx12IndexBuffer>(count, usage, data); break;
-	case Context::API::VULKAN:		unique_ib = std::make_unique<VkIndexBuffer>(count, usage, data); break;
+	case Context::API::DIRECTX11:	unique_ib = std::make_unique<Dx11IndexBuffer>(count, format, topology, usage, data); break;
+	case Context::API::DIRECTX12:	unique_ib = std::make_unique<Dx12IndexBuffer>(count, format, topology, usage, data); break;
+	case Context::API::VULKAN:		unique_ib = std::make_unique<VkIndexBuffer>(count, format, topology, usage, data); break;
 	}
 
 	ib = unique_ib.get();
@@ -35,11 +35,11 @@ IndexBuffer* IndexBuffer::Create(size_t count, Format format, Topology topology,
 
 }
 
-IndexBuffer::IndexBuffer(size_t count, BufferUsage usage, Format format, Topology topology):
+IndexBuffer::IndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage):
 	m_count(count),
-	m_usage(usage),
 	m_format(format),
-	m_topology(topology)
+	m_topology(topology),
+	m_usage(usage)
 {
 
 }
@@ -49,12 +49,22 @@ IndexBuffer::~IndexBuffer()
 
 }
 
-size_t IndexBuffer::GetCount() const
+void IndexBuffer::Bind() const
+{
+	Context::GetCurrent()->BindIndexBuffer(this);
+}
+
+void IndexBuffer::Unbind() const
+{
+	Context::GetCurrent()->UnbindIndexBuffer(this);
+}
+
+unsigned int IndexBuffer::GetCount() const
 {
 	return m_count;	
 }
 
-size_t IndexBuffer::GetSize() const
+unsigned int IndexBuffer::GetSize() const
 {
 	unsigned int size = 0;
 	switch (m_format.enum_value)

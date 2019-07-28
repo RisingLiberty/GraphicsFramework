@@ -23,7 +23,7 @@ namespace
 	}
 }
 
-OpenGLIndexBuffer::OpenGLIndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, void* data):
+OpenGLIndexBuffer::OpenGLIndexBuffer(unsigned int  count, Format format, Topology topology, BufferUsage usage, void* data):
 	IndexBuffer(count, format, topology, usage)
 {
 	GLCALL(glGenBuffers(1, &m_id));

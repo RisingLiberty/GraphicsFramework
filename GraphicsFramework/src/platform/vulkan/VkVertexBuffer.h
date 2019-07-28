@@ -9,8 +9,6 @@ public:
 	virtual ~VkVertexBuffer();
 
 	virtual void SetData(const void* vertices) override;
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
 
 	VkBuffer GetGpuBuffer() const;
 

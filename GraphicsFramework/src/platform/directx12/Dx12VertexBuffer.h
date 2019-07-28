@@ -10,9 +10,6 @@ public:
 
 	void SetData(const void* data);
 	
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
-
 	ID3D12Resource* GetBufferGpu() const;
 
 private:

@@ -5,7 +5,7 @@
 class VkIndexBuffer : public IndexBuffer
 {
 public:
-	VkIndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, const void* data);
+	VkIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, const void* data);
 	virtual ~VkIndexBuffer();
 
 	virtual void SetData(const void* indices) override;

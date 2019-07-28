@@ -63,15 +63,6 @@ void Dx11VertexBuffer::SetData(const void* data)
 	context->GetDeviceContext()->Unmap(m_buffer.Get(), 0);
 }
 
-void Dx11VertexBuffer::Bind() const
-{
-}
-
-void Dx11VertexBuffer::Unbind() const
-{
-
-}
-
 ID3D11Buffer* Dx11VertexBuffer::GetBuffer() const
 {
 	return m_buffer.Get();

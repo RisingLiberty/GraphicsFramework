@@ -29,7 +29,7 @@ unsigned int OpenGLVertexArray::GetId() const
 void OpenGLVertexArray::EnableAttributes() const
 {
 	this->Bind();
-	m_vertex_buffer->Bind();
+	static_cast<const OpenGLVertexBuffer*>(m_vertex_buffer)->Bind();
 
 	const std::vector<VertexAttribute>& attributes = m_vertex_layout->GetAttributes();
 	size_t offset = 0;
