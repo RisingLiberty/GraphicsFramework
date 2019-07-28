@@ -16,7 +16,7 @@ void Renderer::SubmitObject(SceneObject* mesh)
 
 void Renderer::Begin()
 {
-
+	this->ClearAllBuffers();
 }
 
 void Renderer::End()
