@@ -41,7 +41,15 @@ IndexBuffer::IndexBuffer(unsigned int count, Format format, Topology topology, B
 	m_topology(topology),
 	m_usage(usage)
 {
+	if (m_format == EFormat::R8_UINT)
+	{
+		// calling spdlog::warn 3 times to display message
+		// below on another.
+		spdlog::warn("Index buffer has unsigned byte format");
+		spdlog::warn("This is only available on with OpenGL api");
+		spdlog::warn("Using this format can cause undefined behaviour or crashes.");
 
+	}
 }
 
 IndexBuffer::~IndexBuffer()
