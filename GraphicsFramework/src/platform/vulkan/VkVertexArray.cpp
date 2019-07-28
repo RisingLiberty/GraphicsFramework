@@ -7,20 +7,10 @@
 VkVertexArray::VkVertexArray(const VertexBuffer* vb, const VertexLayout* layout) :
 	VertexArray(vb, layout)
 {
-	GetVkContext()->BindVertexArray(this);
+	this->Bind();
 }
 
 VkVertexArray::~VkVertexArray()
-{
-
-}
-
-void VkVertexArray::Bind() const
-{
-
-}
-
-void VkVertexArray::Unbind() const
 {
 
 }

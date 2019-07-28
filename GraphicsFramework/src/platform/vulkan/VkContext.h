@@ -148,9 +148,9 @@ public:
 	virtual ~VkContext();
 
 	virtual void Initialize();
-	virtual void Start() override;
+	virtual void Begin() override;
 	virtual void Present();
-	virtual void Finish() override;
+	virtual void End() override;
 	virtual API GetApiType() const;
 
 	void BindResourcesToPipeline();
@@ -163,9 +163,15 @@ public:
 	VkCommandBuffer BeginSingleTimeCommands();
 	void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
 
-	void BindVertexArray(VkVertexArray* vertexArray);
-	void BindIndexBuffer(VkIndexBuffer* indexBuffer);
-	void BindShaderProgram(VkShaderProgram* shaderProgram);
+protected:
+	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
+	void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
+
+	void BindVertexArrayInternal(const VertexArray* vertexArray) override;
+	void UnbindVertexArrayInternal(const VertexArray* vertexArray) override;
+
+	void BindShaderProgramInternal(const ShaderProgram* shaderProgram) override;
+	void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram) override;
 
 private:
 	void CreateInstance(Window* window);
@@ -244,7 +250,7 @@ private:
 	std::vector<VkSemaphore> m_image_available_semaphores;
 	std::vector<VkSemaphore> m_render_finished_semaphores;
 	std::vector<VkFence> m_in_flight_fences;
-	size_t m_current_frame = 0;
+	uint32_t m_current_frame = 0;
 	bool m_is_frame_buffer_resized = false;
 	VkDescriptorSetLayout m_descriptor_set_layout;
 	//std::vector<VkBuffer> m_uniform_buffers;
@@ -269,9 +275,5 @@ private:
 	const std::string MODEL_PATH = "data/meshes/chalet.obj";
 	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
 
-	const VkVertexBuffer* m_bound_vertex_buffer;
-	const VkVertexArray* m_bound_vertex_array;
-	const VkVertexLayout* m_bound_vertex_layout;
-	const VkIndexBuffer* m_bound_index_buffer;
-	VkShaderProgram* m_bound_shader_program;
+	//VkShaderProgram* m_bound_shader_program;
 };

@@ -7,7 +7,8 @@
 #include "scenegraph/SceneObject.h"
 #include "graphics/Material.h"
 #include "graphics/Mesh.h"
-#include "graphics/IndexBuffer.h"
+#include "VkVertexArray.h"
+#include "VkIndexBuffer.h"
 
 VkRenderer::VkRenderer()
 {
@@ -29,7 +30,11 @@ void VkRenderer::Draw()
 		material->Use();
 
 		VkCommandBuffer command_buffer = GetVkCurrentCommandBuffer();
+
+		mesh->GetVertexArray()->Bind();
+		mesh->GetIndices()->Bind();
 		GetVkContext()->BindResourcesToPipeline();
+
 		vkCmdDrawIndexed(command_buffer, static_cast<uint32_t>(mesh->GetIndices()->GetCount()), 1, 0, 0, 0);
 	}
 
@@ -53,14 +58,6 @@ void VkRenderer::ClearDepthBuffer()
 }
 
 void VkRenderer::ClearStencilBuffer()
-{
-}
-
-void VkRenderer::Begin()
-{
-}
-
-void VkRenderer::End()
 {
 }
 

@@ -13,9 +13,7 @@ public:
 	VkBuffer GetUniformBuffer() const;
 	VkDeviceMemory GetUniformBufferMemory() const;
 
-	virtual void Bind() const override;
-	virtual void Unbind() const override;
-	virtual void UploadVariables() override;
+	virtual void UploadVariables() const override;
 
 private:
 	VkBuffer m_uniform_buffer;

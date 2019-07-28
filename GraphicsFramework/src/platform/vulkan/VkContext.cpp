@@ -227,15 +227,11 @@ void VkContext::CleanupSwapchain()
 
 void VkContext::BindResourcesToPipeline()
 {
-	VkBuffer vertex_buffers[] = { m_bound_vertex_buffer->GetGpuBuffer() };
-	VkDeviceSize offsets[] = { 0 };
-
-	vkCmdBindVertexBuffers(m_command_buffers[m_current_frame], 0, 1, vertex_buffers, offsets);
-	vkCmdBindIndexBuffer(m_command_buffers[m_current_frame], m_bound_index_buffer->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
+//	this->BindVertexArrayInternal(m_bound_vertex_array);
 	vkCmdBindDescriptorSets(m_command_buffers[m_current_frame], VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline_layout, 0, 1, &m_descriptor_sets[m_current_frame], 0, nullptr);
 }
 
-void VkContext::Start()
+void VkContext::Begin()
 {
 	this->CreateGraphicsPipeline();
 	this->CreateDescriptorSets();
@@ -273,7 +269,7 @@ void VkContext::Present()
 {
 }
 
-void VkContext::Finish()
+void VkContext::End()
 {
 	VkResult result = VK_SUCCESS;
 
@@ -709,11 +705,6 @@ void VkContext::CreateGraphicsPipeline()
 	if (m_graphics_pipeline)
 		return;
 
-	//std::unique_ptr<VkVertexShader> vs = std::make_unique<VkVertexShader>("data/shaders/vulkan/bin/vertexshader.spv");
-	//std::unique_ptr<VkFragmentShader> fs = std::make_unique<VkFragmentShader>("data/shaders/vulkan/bin/fragmentshader.spv");
-
-	//m_shader_program = std::make_unique<VkShaderProgram>(vs.get(), fs.get());
-
 	VkPipelineInputAssemblyStateCreateInfo input_assembly = {};
 	input_assembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
 	input_assembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
@@ -816,8 +807,10 @@ void VkContext::CreateGraphicsPipeline()
 	VkGraphicsPipelineCreateInfo pipeline_info = {};
 	pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
 	pipeline_info.stageCount = 2;
-	pipeline_info.pStages = m_bound_shader_program->GetPipelineShaderStageCreateInfos().data();
-	pipeline_info.pVertexInputState = &m_bound_vertex_layout->GetCreateInfo();
+	pipeline_info.pStages = static_cast<const VkShaderProgram*>(m_bound_shader_program)->GetPipelineShaderStageCreateInfos().data();
+
+	const VkVertexLayout* vk_layout = static_cast<const VkVertexLayout*>(m_bound_vertex_array->GetVertexLayout());
+	pipeline_info.pVertexInputState = &vk_layout->GetCreateInfo();
 	pipeline_info.pInputAssemblyState = &input_assembly;
 	pipeline_info.pViewportState = &viewport_state;
 	pipeline_info.pRasterizationState = &rasterizer;
@@ -1086,7 +1079,7 @@ void VkContext::CreateDescriptorSets()
 	for (size_t i = 0; i < m_swapchain_images.size(); ++i)
 	{
 		VkDescriptorBufferInfo buffer_info = {};
-		buffer_info.buffer = m_bound_shader_program->GetUniformBuffer();
+		buffer_info.buffer = static_cast<const VkShaderProgram*>(m_bound_shader_program)->GetUniformBuffer();
 		buffer_info.offset = 0;
 		buffer_info.range = sizeof(UniformBufferObject);
 
@@ -1754,21 +1747,35 @@ void VkContext::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 	vkFreeCommandBuffers(m_device, m_command_pool, 1, &commandBuffer);
 }
 
-void VkContext::BindVertexArray(VkVertexArray* vertexArray)
+void VkContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	m_bound_vertex_array = vertexArray;
-	m_bound_vertex_buffer = static_cast<const VkVertexBuffer*>(m_bound_vertex_array->GetVertexBuffer());
-	m_bound_vertex_layout = static_cast<const VkVertexLayout*>(m_bound_vertex_array->GetVertexLayout());
+	vkCmdBindIndexBuffer(m_command_buffers[m_current_frame], static_cast<const VkIndexBuffer*>(m_bound_index_buffer)->GetGpuBuffer(), 0, VK_INDEX_TYPE_UINT32);
 }
 
-void VkContext::BindIndexBuffer(VkIndexBuffer* indexBuffer)
+void VkContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	m_bound_index_buffer = indexBuffer;
 }
 
-void VkContext::BindShaderProgram(VkShaderProgram* shaderProgram)
+void VkContext::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	m_bound_shader_program = shaderProgram;
+	const VkVertexBuffer* vk_vb = static_cast<const VkVertexBuffer*>(vertexArray->GetVertexBuffer());
+
+	VkBuffer vertex_buffers[] = { vk_vb->GetGpuBuffer() };
+	VkDeviceSize offsets[] = { 0 };
+
+	vkCmdBindVertexBuffers(m_command_buffers[m_current_frame], 0, 1, vertex_buffers, offsets);
+}
+
+void VkContext::UnbindVertexArrayInternal(const VertexArray* vertexArray)
+{
+}
+
+void VkContext::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
+{
+}
+
+void VkContext::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram)
+{
 }
 
 void VkContext::RecreateSwapchain()
@@ -1789,3 +1796,4 @@ void VkContext::UpdateUniformBuffer(uint32_t imageIndex)
 {
 	m_bound_shader_program->UploadVariables();
 }
+

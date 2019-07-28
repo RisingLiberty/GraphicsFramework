@@ -33,15 +33,7 @@ std::array<VkPipelineShaderStageCreateInfo, 2> VkShaderProgram::GetPipelineShade
 	};
 }
 
-void VkShaderProgram::Bind() const
-{
-}
-
-void VkShaderProgram::Unbind() const
-{
-}
-
-void VkShaderProgram::UploadVariables()
+void VkShaderProgram::UploadVariables() const
 {
 	unsigned int offset = 0;
 	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)

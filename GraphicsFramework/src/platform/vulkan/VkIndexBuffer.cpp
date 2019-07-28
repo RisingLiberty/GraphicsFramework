@@ -5,11 +5,9 @@
 
 #include "VkContext.h"
 
-VkIndexBuffer::VkIndexBuffer(size_t count, BufferUsage usage, const void* data):
-	IndexBuffer(count, usage)
+VkIndexBuffer::VkIndexBuffer(size_t count, Format format, Topology topology, BufferUsage usage, const void* data):
+	IndexBuffer(count, format, topology, usage)
 {
-	GetVkContext()->BindIndexBuffer(this);
-
 	if (data)
 		this->SetData(data);
 }
@@ -36,16 +34,6 @@ void VkIndexBuffer::SetData(const void* indices)
 	CopyBuffer(m_upload_buffer, m_buffer_gpu, size);
 	vkDestroyBuffer(GetVkDevice(), m_upload_buffer, nullptr);
 	vkFreeMemory(GetVkDevice(), m_upload_buffer_memory, nullptr);
-}
-
-void VkIndexBuffer::Bind() const
-{
-
-}
-
-void VkIndexBuffer::Unbind() const
-{
-
 }
 
 VkBuffer VkIndexBuffer::GetGpuBuffer() const
