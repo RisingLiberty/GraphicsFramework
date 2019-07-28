@@ -318,6 +318,18 @@ VkFormat Format::ToVulkan() const
 	return VK_FORMAT_UNDEFINED;
 }
 
+VkIndexType Format::ToVulkanIndexType() const
+{
+	switch (enum_value)
+	{
+	case EFormat::R32_UINT: return VkIndexType::VK_INDEX_TYPE_UINT32;
+	case EFormat::R16_UINT: return VkIndexType::VK_INDEX_TYPE_UINT16;
+	default:				return VkIndexType::VK_INDEX_TYPE_NONE_NV;
+	}
+}
+
+
+
 Format::operator EFormat() const
 {
 	return enum_value;
@@ -346,6 +358,25 @@ D3D_PRIMITIVE_TOPOLOGY Topology::ToDirectX() const
 	}
 
 	return D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+}
+
+D3D12_PRIMITIVE_TOPOLOGY_TYPE Topology::ToDirectX12() const
+{
+	switch (enum_value)
+	{
+	case ETopology::UNDEFINED:				return D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED;
+	case ETopology::POINTLIST:				return D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+	case ETopology::LINELIST:				return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	case ETopology::LINESTRIP:				return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	case ETopology::TRIANGLELIST:			return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	case ETopology::TRIANGLESTRIP:			return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	case ETopology::LINELIST_ADJ:			return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	case ETopology::LINESTRIP_ADJ:			return D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+	case ETopology::TRIANGLELIST_ADJ:		return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	case ETopology::TRIANGLESTRIP_ADJ:		return D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	}
+
+	return D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED;
 }
 
 unsigned int Topology::ToOpenGL() const

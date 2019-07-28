@@ -114,7 +114,7 @@ struct Format
 	DXGI_FORMAT ToDirectX() const;
 	unsigned int ToOpenGL() const;
 	VkFormat ToVulkan() const;
-
+	VkIndexType ToVulkanIndexType() const;
 	operator EFormat() const;
 
 	EFormat enum_value;
@@ -139,6 +139,7 @@ struct Topology
 	Topology(ETopology enumValue = ETopology::UNDEFINED);
 
 	D3D_PRIMITIVE_TOPOLOGY ToDirectX() const;
+	D3D12_PRIMITIVE_TOPOLOGY_TYPE ToDirectX12() const;
 	unsigned int ToOpenGL() const;
 	VkPrimitiveTopology ToVulkan() const;
 
