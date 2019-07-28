@@ -14,6 +14,7 @@ class CullMode
 public:
 	CullMode(ECullMode enumValue = ECullMode::UNDEFINED);
 
+	D3D11_CULL_MODE ToDirectX11() const;
 	D3D12_CULL_MODE ToDirectX12() const;
 	VkCullModeFlagBits ToVulkan() const;
 
@@ -36,6 +37,7 @@ class PolygonMode
 public:
 	PolygonMode(EPolygonMode enumValue = EPolygonMode::UNDEFINED);
 
+	D3D11_FILL_MODE ToDirectX11() const;
 	D3D12_FILL_MODE ToDirectX12() const;
 	VkPolygonMode ToVulkan() const;
 
@@ -57,6 +59,7 @@ class FrontFaceOrientation
 public:
 	FrontFaceOrientation(EFrontFaceOrientation enumValue = EFrontFaceOrientation::UNDEFINED);
 
+	bool ToDirectX11() const;
 	bool ToDirectX12() const;
 	VkFrontFace ToVulkan() const;
 
@@ -71,6 +74,7 @@ struct RasterizerSettings
 public:
 	void InitializeAsDefault();
 
+	D3D11_RASTERIZER_DESC ToDirectX11() const;
 	D3D12_RASTERIZER_DESC ToDirectX12() const;
 	VkPipelineRasterizationStateCreateInfo ToVulkan() const;
 
@@ -88,4 +92,5 @@ public:
 	bool enable_multi_sample;
 	bool enable_antialiased_line;
 	unsigned int forced_sample_count;
+	bool enable_scissor;
 };

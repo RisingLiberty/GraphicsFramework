@@ -8,6 +8,20 @@ CullMode::CullMode(ECullMode enumValue) :
 
 }
 
+D3D11_CULL_MODE CullMode::ToDirectX11() const
+{
+	switch (enum_value)
+	{
+	case ECullMode::UNDEFINED:			return D3D11_CULL_NONE;
+	case ECullMode::NONE:				return D3D11_CULL_NONE;
+	case ECullMode::FRONT:				return D3D11_CULL_FRONT;
+	case ECullMode::BACK:				return D3D11_CULL_BACK;
+	case ECullMode::FRONT_AND_BACK:		ASSERT(false, "Invalid cull mode!") return D3D11_CULL_FRONT;
+	}
+
+	ASSERT(false, "Invalid cull mode!") return D3D11_CULL_FRONT;
+}
+
 D3D12_CULL_MODE CullMode::ToDirectX12() const
 {
 	switch (enum_value)
@@ -47,6 +61,19 @@ PolygonMode::PolygonMode(EPolygonMode enumValue) :
 
 }
 
+D3D11_FILL_MODE PolygonMode::ToDirectX11() const
+{
+	switch (enum_value)
+	{
+	case EPolygonMode::UNDEFINED:	ASSERT(false, "Invalid polygon mode!"); return D3D11_FILL_SOLID;
+	case EPolygonMode::FILL:		return D3D11_FILL_SOLID;
+	case EPolygonMode::WIREFRAME:	return D3D11_FILL_WIREFRAME;
+	case EPolygonMode::VERTEX:		ASSERT(false, "Invalid polygon mode!"); return D3D11_FILL_SOLID;
+	}
+
+	ASSERT(false, "Invalid polygon mode!"); return D3D11_FILL_SOLID;
+}
+
 D3D12_FILL_MODE PolygonMode::ToDirectX12() const
 {
 	switch (enum_value)
@@ -82,6 +109,11 @@ FrontFaceOrientation::FrontFaceOrientation(EFrontFaceOrientation enumValue) :
 	enum_value(enumValue)
 {
 
+}
+
+bool FrontFaceOrientation::ToDirectX11() const
+{
+	return enum_value == EFrontFaceOrientation::COUNTER_CLOCK_WISE ? true : false;
 }
 
 bool FrontFaceOrientation::ToDirectX12() const
@@ -121,6 +153,26 @@ void RasterizerSettings::InitializeAsDefault()
 	enable_multi_sample = false;
 	enable_antialiased_line = false;
 	forced_sample_count = 0;
+	enable_scissor = false;
+}
+
+D3D11_RASTERIZER_DESC RasterizerSettings::ToDirectX11() const
+{
+	D3D11_RASTERIZER_DESC settings;
+
+	settings.DepthClipEnable = enable_depth_clamp;
+	settings.FillMode = polygon_mode.ToDirectX11();
+	settings.CullMode = cull_mode.ToDirectX11();
+	settings.FrontCounterClockwise = front_face_orientation.ToDirectX11();
+	settings.DepthBias = (unsigned int)depth_bias_constant_factor;
+	settings.DepthBiasClamp = depth_bias_clamp;
+	settings.SlopeScaledDepthBias = depth_bias_slope_factor;
+	settings.ScissorEnable = enable_scissor;
+	settings.MultisampleEnable = enable_multi_sample;
+	settings.AntialiasedLineEnable = enable_antialiased_line;
+
+	return settings;
+
 }
 
 D3D12_RASTERIZER_DESC RasterizerSettings::ToDirectX12() const

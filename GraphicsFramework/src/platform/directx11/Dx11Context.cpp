@@ -136,20 +136,8 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 	m_viewport.MaxDepth = 1.0f;
 	m_resources.device_context->RSSetViewports(1, &m_viewport);
 
-	D3D11_RASTERIZER_DESC rasterizer_desc;
-	rasterizer_desc.AntialiasedLineEnable = false;
-	rasterizer_desc.CullMode = D3D11_CULL_NONE;
-	rasterizer_desc.DepthBias = 0;
-	rasterizer_desc.DepthBiasClamp = 0.0f;
-	rasterizer_desc.DepthClipEnable = true;
-	rasterizer_desc.FillMode = D3D11_FILL_SOLID;
-	rasterizer_desc.FrontCounterClockwise = true;
-	rasterizer_desc.MultisampleEnable = false;
-	rasterizer_desc.ScissorEnable = false;
-	rasterizer_desc.SlopeScaledDepthBias = 0.0f;
-
 	ComPtr<ID3D11RasterizerState> rasterizer_state;
-	DXCALL(m_resources.device->CreateRasterizerState(&rasterizer_desc, rasterizer_state.GetAddressOf()));
+	DXCALL(m_resources.device->CreateRasterizerState(&m_rasterizer_settings.ToDirectX11(), rasterizer_state.GetAddressOf()));
 	m_resources.device_context->RSSetState(rasterizer_state.Get());
 }
 
