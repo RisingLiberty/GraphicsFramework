@@ -9,7 +9,10 @@ VkIndexBuffer::VkIndexBuffer(unsigned int count, Format format, Topology topolog
 	IndexBuffer(count, format, topology, usage)
 {
 	if (data)
+	{
 		this->SetData(data);
+		this->Bind();
+	}
 }
 
 VkIndexBuffer::~VkIndexBuffer()
