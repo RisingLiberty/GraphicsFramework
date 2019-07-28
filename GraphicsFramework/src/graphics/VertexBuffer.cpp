@@ -11,7 +11,7 @@
 
 #include "Context.h"
 
-VertexBuffer* VertexBuffer::Create(size_t size, BufferUsage usage, void* data)
+VertexBuffer* VertexBuffer::Create(unsigned int size, BufferUsage usage, void* data)
 {
 	VertexBufferController* vertex_buffer_controller = Context::GetCurrent()->GetVertexBufferController();
 	VertexBuffer* vb = vertex_buffer_controller->Get(size, usage);
@@ -34,7 +34,7 @@ VertexBuffer* VertexBuffer::Create(size_t size, BufferUsage usage, void* data)
 	return vb;
 }
 
-VertexBuffer::VertexBuffer(size_t size, BufferUsage usage):
+VertexBuffer::VertexBuffer(unsigned int size, BufferUsage usage):
 	m_size(size),
 	m_usage(usage)
 {

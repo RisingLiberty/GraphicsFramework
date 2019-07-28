@@ -19,7 +19,7 @@ namespace
 	}
 }
 
-Dx11VertexBuffer::Dx11VertexBuffer(size_t size, BufferUsage usage, void* data):
+Dx11VertexBuffer::Dx11VertexBuffer(unsigned int size, BufferUsage usage, void* data):
 	VertexBuffer(size, usage)
 {
 	D3D11_BUFFER_DESC desc;

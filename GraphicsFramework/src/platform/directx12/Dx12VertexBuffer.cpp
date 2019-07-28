@@ -3,7 +3,7 @@
 #include "Dx12VertexBuffer.h"
 #include "Dx12HelperMethods.h"
 
-Dx12VertexBuffer::Dx12VertexBuffer(size_t size, BufferUsage usage, const void* data):
+Dx12VertexBuffer::Dx12VertexBuffer(unsigned int size, BufferUsage usage, const void* data):
 	VertexBuffer(size, usage)
 {
 	if (data)

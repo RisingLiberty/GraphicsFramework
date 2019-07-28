@@ -8,7 +8,7 @@ public:
 	VkVertexBuffer(size_t size, BufferUsage usage, const void* data);
 	virtual ~VkVertexBuffer();
 
-	virtual void SetData(const void* vertices) override;
+	void SetData(const void* vertices) override;
 
 	VkBuffer GetGpuBuffer() const;
 

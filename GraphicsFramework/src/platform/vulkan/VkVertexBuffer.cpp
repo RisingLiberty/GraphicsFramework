@@ -3,7 +3,7 @@
 #include "VkVertexBuffer.h"
 #include "VkHelperMethods.h"
 
-VkVertexBuffer::VkVertexBuffer(size_t size, BufferUsage usage, const void* data) :
+VkVertexBuffer::VkVertexBuffer(unsigned int size, BufferUsage usage, const void* data) :
 	VertexBuffer(size, usage)
 {
 	if (data)

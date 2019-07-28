@@ -63,7 +63,7 @@ void OpenGLContext::InitializeRasterizer()
 	m_rasterizer_settings.enable_depth_clamp ? glEnable(GL_DEPTH_CLAMP) : glDisable(GL_DEPTH_CLAMP);
 	m_rasterizer_settings.is_discarded ? glEnable(GL_RASTERIZER_DISCARD) : glDisable(GL_RASTERIZER_DISCARD);
 	
-	PolygonMode polygon_mode = m_rasterizer_settings.polygon_mode;
+	FillMode polygon_mode = m_rasterizer_settings.polygon_mode;
 	CullMode cull_mode = m_rasterizer_settings.cull_mode;
 
 	glPolygonMode(cull_mode.ToOpenGL(), polygon_mode.ToOpenGL());
@@ -74,10 +74,10 @@ void OpenGLContext::InitializeRasterizer()
 	{
 		switch (m_rasterizer_settings.polygon_mode)
 		{
-		case EPolygonMode::UNDEFINED:	glEnable(-1);
-		case EPolygonMode::FILL:		glEnable(GL_POLYGON_OFFSET_FILL);
-		case EPolygonMode::WIREFRAME:	glEnable(GL_POLYGON_OFFSET_LINE);
-		case EPolygonMode::VERTEX:		glEnable(GL_POLYGON_OFFSET_POINT);
+		case EFillMode::UNDEFINED:	glEnable(-1);
+		case EFillMode::FILL:		glEnable(GL_POLYGON_OFFSET_FILL);
+		case EFillMode::WIREFRAME:	glEnable(GL_POLYGON_OFFSET_LINE);
+		case EFillMode::VERTEX:		glEnable(GL_POLYGON_OFFSET_POINT);
 		}
 		glPolygonOffset(m_rasterizer_settings.depth_bias_constant_factor, m_rasterizer_settings.depth_bias_slope_factor);
 	}
