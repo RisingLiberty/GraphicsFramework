@@ -369,6 +369,15 @@
     <ClCompile Include="src\platform\opengl\OpenGLDownloadBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\platform\directx11\Dx11DownloadBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\directx12\Dx12DownloadBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\vulkan\VkDownloadBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -738,6 +747,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\opengl\OpenGLDownloadBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\directx11\Dx11DownloadBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\directx12\Dx12DownloadBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\vulkan\VkDownloadBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

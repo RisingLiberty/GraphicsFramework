@@ -165,6 +165,7 @@
     <ClCompile Include="src\graphics\FrontFaceOrientation.cpp" />
     <ClCompile Include="src\graphics\GraphicsResource.cpp" />
     <ClCompile Include="src\graphics\RasterizerSettings.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11DownloadBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11IndexBuffer.cpp" />
@@ -208,6 +209,7 @@
     <ClCompile Include="src\platform\directx11\Dx11Context.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11Renderer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11HelperMethods.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12DownloadBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12HelperMethods.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12IndexBuffer.cpp" />
@@ -238,6 +240,7 @@
     <ClCompile Include="src\platform\opengl\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexShader.cpp" />
     <ClCompile Include="src\platform\vulkan\VkContext.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkDownloadBuffer.cpp" />
     <ClCompile Include="src\platform\vulkan\VkFragmentShader.cpp" />
     <ClCompile Include="src\platform\vulkan\VkHelperMethods.cpp" />
     <ClCompile Include="src\platform\vulkan\VkIndexBuffer.cpp" />
@@ -306,6 +309,7 @@
     <ClInclude Include="src\graphics\FrontFaceOrientation.h" />
     <ClInclude Include="src\graphics\GraphicsResource.h" />
     <ClInclude Include="src\graphics\RasterizerSettings.h" />
+    <ClInclude Include="src\platform\directx11\Dx11DownloadBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11FragmentShader.h" />
     <ClInclude Include="src\platform\directx11\Dx11IndexBuffer.h" />
@@ -351,6 +355,7 @@
     <ClInclude Include="src\platform\directx11\Dx11Renderer.h" />
     <ClInclude Include="src\platform\directx11\Dx11HelperMethods.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderParser.h" />
+    <ClInclude Include="src\platform\directx12\Dx12DownloadBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderParser.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderSamplerState.h" />
@@ -381,6 +386,7 @@
     <ClInclude Include="src\platform\opengl\OpenGLVertexBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexShader.h" />
     <ClInclude Include="src\platform\vulkan\VkContext.h" />
+    <ClInclude Include="src\platform\vulkan\VkDownloadBuffer.h" />
     <ClInclude Include="src\platform\vulkan\VkFragmentShader.h" />
     <ClInclude Include="src\platform\vulkan\VkHelperMethods.h" />
     <ClInclude Include="src\platform\vulkan\VkIndexBuffer.h" />

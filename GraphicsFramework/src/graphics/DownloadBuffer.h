@@ -1,12 +1,14 @@
 #pragma once
 
+class VertexBuffer;
+
 class DownloadBuffer
 {
 public:
 	DownloadBuffer();
 	virtual ~DownloadBuffer();
 
-	virtual void Download(unsigned int size) = 0;
+	virtual void Download(const VertexBuffer* vb) = 0;
 
 	void* GetData() const;
 

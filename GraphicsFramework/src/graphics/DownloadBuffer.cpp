@@ -4,7 +4,7 @@
 
 DownloadBuffer::DownloadBuffer()
 {
-
+	m_data = nullptr;
 }
 
 DownloadBuffer::~DownloadBuffer()

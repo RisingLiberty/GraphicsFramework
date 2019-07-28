@@ -3,6 +3,8 @@
 #include "BufferHelpers.h"
 #include "GraphicsResource.h"
 
+class DownloadBuffer;
+
 class VertexBuffer : public GraphicsResource<VertexBuffer>
 {
 public:
@@ -10,6 +12,7 @@ public:
 	VertexBuffer(unsigned int size, BufferUsage usage);
 	virtual ~VertexBuffer();
 
+	virtual std::unique_ptr<DownloadBuffer> DownloadDataToBuffer() const = 0;
 	virtual void SetData(const void* data) = 0;
 
 	BufferUsage GetUsage() const;

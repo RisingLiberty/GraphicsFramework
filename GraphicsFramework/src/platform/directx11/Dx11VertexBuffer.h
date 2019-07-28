@@ -8,6 +8,7 @@ public:
 	Dx11VertexBuffer(unsigned int size, BufferUsage usage, void* data);
 	virtual ~Dx11VertexBuffer();
 
+	std::unique_ptr<DownloadBuffer> DownloadDataToBuffer() const override;
 	void SetData(const void* data) override;
 
 	ID3D11Buffer* GetBuffer() const;
