@@ -160,6 +160,7 @@
     <ClCompile Include="src\controllers\VertexLayoutController.cpp" />
     <ClCompile Include="src\graphics\BufferHelpers.cpp" />
     <ClCompile Include="src\graphics\GraphicsResource.cpp" />
+    <ClCompile Include="src\graphics\RasterizerSettings.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11IndexBuffer.cpp" />
@@ -295,6 +296,7 @@
     <ClInclude Include="src\graphics\BufferHelpers.h" />
     <ClInclude Include="src\graphics\BufferUsage.h" />
     <ClInclude Include="src\graphics\GraphicsResource.h" />
+    <ClInclude Include="src\graphics\RasterizerSettings.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11FragmentShader.h" />
     <ClInclude Include="src\platform\directx11\Dx11IndexBuffer.h" />

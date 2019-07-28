@@ -26,6 +26,8 @@ Context::Context()
 	m_vertex_buffer_controller = std::make_unique<VertexBufferController>();
 	m_vertex_layout_controller = std::make_unique<VertexLayoutController>();
 	m_index_buffer_controller = std::make_unique<IndexBufferController>();
+
+	m_rasterizer_settings.InitializeAsDefault();
 }
 
 Context::~Context() = default;

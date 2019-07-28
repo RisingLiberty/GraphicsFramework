@@ -12,6 +12,7 @@ class IndexBuffer;
 class VertexArray;
 class ShaderProgram;
 
+#include "RasterizerSettings.h"
 
 class Context
 {
@@ -81,6 +82,7 @@ protected:
 	const VertexArray* m_bound_vertex_array;
 	const ShaderProgram* m_bound_shader_program;
 
+	RasterizerSettings m_rasterizer_settings;
 	bool m_is_vsync;
 
 private:

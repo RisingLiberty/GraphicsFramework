@@ -268,7 +268,7 @@ private:
 	const std::vector<const char*> m_validation_layers = { "VK_LAYER_LUNARG_standard_validation" };
 	const std::vector<const char*> m_device_extentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
 
-	const int MAX_FRAMES_IN_FLIGHT = 3;
+	const unsigned int MAX_FRAMES_IN_FLIGHT = 3;
 
 	bool m_enable_validation_layers = true;
 
