@@ -17,14 +17,14 @@ std::unique_ptr<Mesh> MeshFactory::CreateQuad()
 		-0.5f,  0.5f, 0.0f	//3
 	};
 
-	std::array<char, 6> indices = 
+	std::array<unsigned short, 6> indices = 
 	{
 		0,1,2,
 		2,3,0
 	};
 
 	VertexBuffer* vb = VertexBuffer::Create(sizeof(positions) , BufferUsage::STATIC, positions.data());
-	IndexBuffer* ib = IndexBuffer::Create(indices.size(), Format(EFormat::R8_UINT), Topology(ETopology::TRIANGLELIST), BufferUsage::STATIC, indices.data());
+	IndexBuffer* ib = IndexBuffer::Create((unsigned int )indices.size(), Format(EFormat::R16_UINT), Topology(ETopology::TRIANGLELIST), BufferUsage::STATIC, indices.data());
 	VertexLayout* layout = VertexLayout::Create();
 	layout->Push<float>(VertexAttributeType::POSITION, 3);
 
