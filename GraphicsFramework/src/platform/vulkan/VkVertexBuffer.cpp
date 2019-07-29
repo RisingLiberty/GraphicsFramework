@@ -2,6 +2,7 @@
 
 #include "VkVertexBuffer.h"
 #include "VkHelperMethods.h"
+#include "VkDownloadBuffer.h"
 
 VkVertexBuffer::VkVertexBuffer(unsigned int size, BufferUsage usage, const void* data) :
 	VertexBuffer(size, usage)
@@ -15,6 +16,13 @@ VkVertexBuffer::~VkVertexBuffer()
 	vkDestroyBuffer(GetVkDevice(), m_buffer_gpu, nullptr);
 	vkFreeMemory(GetVkDevice(), m_buffer_memory_gpu, nullptr);
 
+}
+
+std::unique_ptr<DownloadBuffer> VkVertexBuffer::DownloadDataToBuffer() const
+{
+	std::unique_ptr<DownloadBuffer> buffer = std::make_unique<VkDownloadBuffer>();
+	buffer->Download(this);
+	return std::move(buffer);
 }
 
 void VkVertexBuffer::SetData(const void* vertices)
@@ -31,7 +39,10 @@ void VkVertexBuffer::SetData(const void* vertices)
 	CopyBuffer(m_upload_buffer, m_buffer_gpu, m_size);
 	vkDestroyBuffer(GetVkDevice(), m_upload_buffer, nullptr);
 	vkFreeMemory(GetVkDevice(), m_upload_buffer_memory, nullptr);
+
+	this->DownloadDataToBuffer();
 }
+
 
 VkBuffer VkVertexBuffer::GetGpuBuffer() const
 {
