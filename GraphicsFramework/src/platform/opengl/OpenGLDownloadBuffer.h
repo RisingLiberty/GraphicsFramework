@@ -8,6 +8,6 @@ public:
 	OpenGLDownloadBuffer();
 	virtual ~OpenGLDownloadBuffer();
 
-	void Download(unsigned int size) override;
+	void Download(const VertexBuffer* vb) override;
 
 };

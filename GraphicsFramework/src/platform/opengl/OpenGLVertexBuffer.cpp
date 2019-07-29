@@ -11,13 +11,11 @@ namespace
 	{
 		switch (usage)
 		{
-		case BufferUsage::DYNAMIC:
-			return GL_STATIC_DRAW;
-		case BufferUsage::STATIC:
-			return GL_DYNAMIC_DRAW;
+		case BufferUsage::DYNAMIC:	return GL_DYNAMIC_DRAW;
+		case BufferUsage::STATIC:	return GL_STATIC_DRAW;
 		}
 
-		return 0;
+		return -1;
 	}
 }
 
@@ -35,11 +33,10 @@ OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	GLCALL(glDeleteBuffers(1, &m_id));
 }
 
-std::unique_ptr<DownloadBuffer> OpenGLVertexBuffer::GetData() const
+std::unique_ptr<DownloadBuffer> OpenGLVertexBuffer::DownloadDataToBuffer() const
 {
-	this->Bind();
 	std::unique_ptr<DownloadBuffer> buffer = std::make_unique<OpenGLDownloadBuffer>();
-	buffer->Download(m_size);
+	buffer->Download(this);
 	return std::move(buffer);
 }
 
@@ -54,8 +51,6 @@ void OpenGLVertexBuffer::SetData(const void* data)
 	{
 		GLCALL(glBufferStorage(GL_ARRAY_BUFFER, m_size, data, GL_MAP_READ_BIT));
 	}
-	std::unique_ptr<DownloadBuffer> buffer = this->GetData();
-	void* buffer_data = buffer->GetData();
 }
 
 void OpenGLVertexBuffer::Bind() const

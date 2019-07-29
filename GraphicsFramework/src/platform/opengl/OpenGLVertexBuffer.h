@@ -2,15 +2,13 @@
 
 #include "graphics/VertexBuffer.h"
 
-class DownloadBuffer;
-
 class OpenGLVertexBuffer : public VertexBuffer
 {
 public:
 	OpenGLVertexBuffer(unsigned int size, BufferUsage usage, void* data);
 	virtual ~OpenGLVertexBuffer();
 
-	std::unique_ptr<DownloadBuffer> GetData() const;
+	std::unique_ptr<DownloadBuffer> DownloadDataToBuffer() const override;
 	void SetData(const void* data) override;
 	unsigned int GetId() const;
 
