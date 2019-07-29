@@ -50,6 +50,8 @@ public:
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const;
 
+	void ExecuteCommandQueue();
+	void FlushCommandQueue();
 protected:
 	virtual void BindIndexBufferInternal(const IndexBuffer* indexBuffer);
 	virtual void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer);
@@ -68,7 +70,6 @@ private:
 	void CreateSwapChain(Window* window);
 	void CreateRtvAndDsvDescriptorHeaps();
 
-	void FlushCommandQueue();
 
 	void LogAdapters();
 	void LogAdapterOutputs(IDXGIAdapter* adapter);

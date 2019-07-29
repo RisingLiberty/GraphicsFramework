@@ -211,6 +211,12 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 	m_scissor_rect = { 0, 0, (LONG)width, (LONG)height};
 }
 
+void Dx12Context::ExecuteCommandQueue()
+{
+	ID3D12CommandList* cmdsLists[] = { m_command_list.Get() };
+	m_command_queue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+}
+
 void Dx12Context::CreateCommandObjects()
 {
 	D3D12_COMMAND_QUEUE_DESC queueDesc = {};

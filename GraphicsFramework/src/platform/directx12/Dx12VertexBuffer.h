@@ -5,9 +5,10 @@
 class Dx12VertexBuffer : public VertexBuffer
 {
 public:
-	Dx12VertexBuffer(size_t size, BufferUsage usage, const void* data = nullptr);
+	Dx12VertexBuffer(unsigned int size, BufferUsage usage, const void* data = nullptr);
 	virtual ~Dx12VertexBuffer();
 
+	std::unique_ptr<DownloadBuffer> DownloadDataToBuffer() const;
 	void SetData(const void* data);
 	
 	ID3D12Resource* GetBufferGpu() const;

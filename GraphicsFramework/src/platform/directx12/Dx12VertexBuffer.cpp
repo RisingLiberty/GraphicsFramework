@@ -2,6 +2,7 @@
 
 #include "Dx12VertexBuffer.h"
 #include "Dx12HelperMethods.h"
+#include "Dx12DownloadBuffer.h"
 
 Dx12VertexBuffer::Dx12VertexBuffer(unsigned int size, BufferUsage usage, const void* data):
 	VertexBuffer(size, usage)
@@ -12,11 +13,20 @@ Dx12VertexBuffer::Dx12VertexBuffer(unsigned int size, BufferUsage usage, const v
 		memcpy(m_buffer_cpu->GetBufferPointer(), data, size);
 		m_buffer_gpu = CreateDefaultBuffer(data, (unsigned int)size, m_upload_buffer);
 	}
+
+	this->DownloadDataToBuffer();
 }
 
 Dx12VertexBuffer::~Dx12VertexBuffer()
 {
 
+}
+
+std::unique_ptr<DownloadBuffer> Dx12VertexBuffer::DownloadDataToBuffer() const
+{
+	std::unique_ptr<DownloadBuffer> buffer = std::make_unique<Dx12DownloadBuffer>();
+	buffer->Download(this);
+	return std::move(buffer);
 }
 
 void Dx12VertexBuffer::SetData(const void* data)
