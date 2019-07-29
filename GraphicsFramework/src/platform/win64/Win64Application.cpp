@@ -30,7 +30,7 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped):
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	Context::Create(Context::API::DIRECTX11, m_window.get());
+	Context::Create(Context::API::VULKAN, m_window.get());
 }
 
 Win64Application::~Win64Application() = default;
