@@ -1,9 +1,62 @@
 #pragma once
 
-enum class BufferUsage
+enum class BufferType
+{
+	INDEX,
+	VERTEX
+};
+
+enum class EBufferStage
+{
+	UNDEFINED								= (1 << 0),
+	COPY_SRC								= (1 << 1),
+	COPY_DEST								= (1 << 2),
+	UNIFORM_TEXEL							= (1 << 3),
+	STORGAGE_TEXEL							= (1 << 4),
+	UNIFORM_BUFFER							= (1 << 5),
+	STORGAGE_BUFFER							= (1 << 6),
+	INDEX_BUFFER							= (1 << 7),
+	VERTEX_BUFFER							= (1 << 8),
+	INDIRECT_BUFFER							= (1 << 9),
+	TRANSFORM_FEEDBACK_BUFFER				= (1 << 10),
+	TRANSFORM_FEEDBACK_COUNTER_BUFFER		= (1 << 11),
+	CONDITIONAL_RENDERING					= (1 << 12),
+	RAY_TRACING								= (1 << 13),
+	SHADER_DEVICE_ADDRESS					= (1 << 14)
+};
+
+struct BufferStage
+{
+public:
+	BufferStage(EBufferStage enumValue = EBufferStage::UNDEFINED);
+
+	D3D12_RESOURCE_STATES ToDirectX12() const;
+	VkBufferUsageFlagBits ToVulkan() const;
+
+	operator EBufferStage() const;
+
+public:
+	EBufferStage enum_value;
+};
+
+enum class EBufferUsage
 {
 	DYNAMIC,
 	STATIC
+};
+
+struct BufferUsage
+{
+public:
+	BufferUsage(EBufferUsage enumValue);
+
+	unsigned int ToOpenGL() const;
+	D3D11_USAGE ToDirectX11() const;
+
+	operator EBufferUsage() const;
+
+public:
+	EBufferUsage enum_value;
 };
 
 // These are directly mapped to direct x

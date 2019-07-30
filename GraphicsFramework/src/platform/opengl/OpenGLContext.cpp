@@ -101,7 +101,7 @@ void OpenGLContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
 
 void OpenGLContext::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, static_cast<const OpenGLVertexBuffer*>(vertexArray->GetVertexBuffer())->GetId()));
+	static_cast<const OpenGLVertexBuffer*>(vertexArray->GetVertexBuffer())->GLBind();
 	GLCALL(glBindVertexArray(static_cast<const OpenGLVertexArray*>(vertexArray)->GetId()));
 }
 

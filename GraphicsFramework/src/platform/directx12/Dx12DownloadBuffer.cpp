@@ -5,7 +5,8 @@
 #include "Dx12VertexBuffer.h"
 #include "Dx12Context.h"
 
-Dx12DownloadBuffer::Dx12DownloadBuffer()
+Dx12DownloadBuffer::Dx12DownloadBuffer(unsigned int size):
+	DownloadBuffer(size)
 {
 
 }
@@ -15,14 +16,14 @@ Dx12DownloadBuffer::~Dx12DownloadBuffer()
 
 }
 
-void Dx12DownloadBuffer::Download(const VertexBuffer* vb)
+void Dx12DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 {
-	const Dx12VertexBuffer* dx_vb = static_cast<const Dx12VertexBuffer*>(vb);
+	const Dx12VertexBuffer* dx_vb = static_cast<const Dx12VertexBuffer*>(buffer);
 
 	DXCALL(GetDx12Device()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_READBACK),
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(vb->GetSize()),
+		&CD3DX12_RESOURCE_DESC::Buffer(m_size),
 		D3D12_RESOURCE_STATE_COPY_DEST,
 		nullptr,
 		IID_PPV_ARGS(m_buffer.GetAddressOf())));
@@ -41,7 +42,7 @@ void Dx12DownloadBuffer::Download(const VertexBuffer* vb)
 
 	// The code below assumes that the GPU wrote FLOATs to the buffer.
 
-	D3D12_RANGE readbackBufferRange{ 0, vb->GetSize() };
+	D3D12_RANGE readbackBufferRange{ 0, m_size };
 	FLOAT * pReadbackBufferData{};
 	DXCALL(
 		m_buffer->Map

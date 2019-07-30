@@ -7,24 +7,9 @@
 
 #include "OpenGLContext.h"
 
-namespace
-{
-	int CustomBufferUsageToGLUsage(BufferUsage usage)
-	{
-		switch (usage)
-		{
-		case BufferUsage::DYNAMIC:
-			return GL_STATIC_DRAW;
-		case BufferUsage::STATIC:
-			return GL_DYNAMIC_DRAW;
-		}
-
-		return 0;
-	}
-}
-
-OpenGLIndexBuffer::OpenGLIndexBuffer(unsigned int  count, Format format, Topology topology, BufferUsage usage, void* data):
-	IndexBuffer(count, format, topology, usage)
+OpenGLIndexBuffer::OpenGLIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, void* data):
+	IndexBuffer(count, format, topology),
+	OpenGLBufferWrapper(m_size, usage, BufferType::INDEX, data)
 {
 	GLCALL(glGenBuffers(1, &m_id));
 
@@ -37,10 +22,20 @@ OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	GLCALL(glDeleteBuffers(1, &m_id));
 }
 
+std::unique_ptr<byte> OpenGLIndexBuffer::GetData() const
+{
+	return this->GetDataInternal(m_size);
+}
+
 void OpenGLIndexBuffer::SetData(const void* data)
 {
 	this->Bind();
-	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->GetSize(), data, CustomBufferUsageToGLUsage(m_usage)));
+	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, this->GetSize(), data, m_usage.ToOpenGL()));
+}
+
+void OpenGLIndexBuffer::GLBind() const
+{
+	this->Bind();
 }
 
 unsigned int OpenGLIndexBuffer::GetId() const

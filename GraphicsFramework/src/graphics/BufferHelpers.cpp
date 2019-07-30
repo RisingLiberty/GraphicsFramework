@@ -2,6 +2,96 @@
 
 #include "BufferHelpers.h"
 
+BufferStage::BufferStage(EBufferStage enumValue):
+	enum_value(enumValue)
+{
+
+}
+
+D3D12_RESOURCE_STATES BufferStage::ToDirectX12() const
+{
+	return D3D12_RESOURCE_STATE_COMMON;
+
+	//switch (enum_value)
+	//{
+	//case EBufferStage::UNDEFINED:						return D3D12_RESOURCE_STATE_COMMON;
+	//case EBufferStage::COPY_SRC:						return D3D12_RESOURCE_STATE_COPY_SOURCE;
+	//case EBufferStage::COPY_DEST:						return D3D12_RESOURCE_STATE_COPY_DEST
+	//case EBufferStage::UNIFORM_TEXEL:
+	//case EBufferStage::STORGAGE_TEXEL:
+	//case EBufferStage::UNIFORM_BUFFER:
+	//case EBufferStage::STORGAGE_BUFFER:
+	//case EBufferStage::INDEX_BUFFER:					return D3D12_RESOURCE_STATE_INDEX_BUFFER;
+	//case EBufferStage::VERTEX_BUFFER:					return D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER;
+	//case EBufferStage::INDIRECT_BUFFER:					
+	//case EBufferStage::TRANSFORM_FEEDBACK_BUFFER:
+	//case EBufferStage::TRANSFORM_FEEDBACK_COUNTER_BUFFER:
+	//case EBufferStage::CONDITIONAL_RENDERING:
+	//case EBufferStage::SHADER_DEVICE_ADDRESS:
+	//}
+}
+
+VkBufferUsageFlagBits BufferStage::ToVulkan() const
+{
+	return VK_BUFFER_USAGE_CONDITIONAL_RENDERING_BIT_EXT;
+	//switch (enum_value)
+	//{
+	//case EBufferStage::UNDEFINED:
+	//case EBufferStage::COPY_SRC:
+	//case EBufferStage::COPY_DEST:
+	//case EBufferStage::UNIFORM_TEXEL:
+	//case EBufferStage::STORGAGE_TEXEL:
+	//case EBufferStage::UNIFORM_BUFFER:
+	//case EBufferStage::STORGAGE_BUFFER:
+	//case EBufferStage::INDEX_BUFFER:
+	//case EBufferStage::VERTEX_BUFFER:
+	//case EBufferStage::INDIRECT_BUFFER:
+	//case EBufferStage::TRANSFORM_FEEDBACK_BUFFER:
+	//case EBufferStage::TRANSFORM_FEEDBACK_COUNTER_BUFFER:
+	//case EBufferStage::CONDITIONAL_RENDERING:
+	//case EBufferStage::RAY_TRACING:
+	//case EBufferStage::SHADER_DEVICE_ADDRESS:
+	//}
+}
+
+BufferStage::operator EBufferStage() const
+{
+	return enum_value;
+}
+
+BufferUsage::BufferUsage(EBufferUsage enumValue) :
+	enum_value(enumValue)
+{
+
+}
+
+unsigned int BufferUsage::ToOpenGL() const
+{
+	switch (enum_value)
+	{
+	case EBufferUsage::DYNAMIC:		return GL_DYNAMIC_DRAW;
+	case EBufferUsage::STATIC:		return GL_STATIC_DRAW;
+	}
+
+	return -1;
+}
+
+D3D11_USAGE BufferUsage::ToDirectX11() const
+{
+	switch (enum_value)
+	{
+	case EBufferUsage::DYNAMIC:		return D3D11_USAGE_DYNAMIC;
+	case EBufferUsage::STATIC:		return D3D11_USAGE_IMMUTABLE;
+	}
+
+	return D3D11_USAGE_IMMUTABLE;
+}
+
+BufferUsage::operator EBufferUsage() const
+{
+	return enum_value;
+}
+
 Format::Format(EFormat enumValue) :
 	enum_value(enumValue)
 {

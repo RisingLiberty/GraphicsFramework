@@ -158,6 +158,8 @@
     <ClCompile Include="src\controllers\IndexBufferController.cpp" />
     <ClCompile Include="src\controllers\VertexBufferController.cpp" />
     <ClCompile Include="src\controllers\VertexLayoutController.cpp" />
+    <ClCompile Include="src\graphics\ApiBufferWrapper.cpp" />
+    <ClCompile Include="src\graphics\Buffer.cpp" />
     <ClCompile Include="src\graphics\BufferHelpers.cpp" />
     <ClCompile Include="src\graphics\CullMode.cpp" />
     <ClCompile Include="src\graphics\DownloadBuffer.cpp" />
@@ -165,6 +167,7 @@
     <ClCompile Include="src\graphics\FrontFaceOrientation.cpp" />
     <ClCompile Include="src\graphics\GraphicsResource.cpp" />
     <ClCompile Include="src\graphics\RasterizerSettings.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11BufferWrapper.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11DownloadBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
@@ -209,6 +212,7 @@
     <ClCompile Include="src\platform\directx11\Dx11Context.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11Renderer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11HelperMethods.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12BufferWrapper.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12DownloadBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12HelperMethods.cpp" />
@@ -228,6 +232,7 @@
     <ClCompile Include="src\platform\directx12\Dx12VertexBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexLayout.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexShader.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLBufferWrapper.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLDownloadBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLHelperMethods.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLContext.cpp" />
@@ -239,6 +244,7 @@
     <ClCompile Include="src\platform\opengl\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexShader.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkBufferWrapper.cpp" />
     <ClCompile Include="src\platform\vulkan\VkContext.cpp" />
     <ClCompile Include="src\platform\vulkan\VkDownloadBuffer.cpp" />
     <ClCompile Include="src\platform\vulkan\VkFragmentShader.cpp" />
@@ -301,6 +307,8 @@
     <ClInclude Include="src\controllers\IndexBufferController.h" />
     <ClInclude Include="src\controllers\VertexBufferController.h" />
     <ClInclude Include="src\controllers\VertexLayoutController.h" />
+    <ClInclude Include="src\graphics\ApiBufferWrapper.h" />
+    <ClInclude Include="src\graphics\Buffer.h" />
     <ClInclude Include="src\graphics\BufferHelpers.h" />
     <ClInclude Include="src\graphics\BufferUsage.h" />
     <ClInclude Include="src\graphics\CullMode.h" />
@@ -309,6 +317,7 @@
     <ClInclude Include="src\graphics\FrontFaceOrientation.h" />
     <ClInclude Include="src\graphics\GraphicsResource.h" />
     <ClInclude Include="src\graphics\RasterizerSettings.h" />
+    <ClInclude Include="src\platform\directx11\Dx11BufferWrapper.h" />
     <ClInclude Include="src\platform\directx11\Dx11DownloadBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11FragmentShader.h" />
@@ -355,6 +364,7 @@
     <ClInclude Include="src\platform\directx11\Dx11Renderer.h" />
     <ClInclude Include="src\platform\directx11\Dx11HelperMethods.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderParser.h" />
+    <ClInclude Include="src\platform\directx12\Dx12BufferWrapper.h" />
     <ClInclude Include="src\platform\directx12\Dx12DownloadBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderParser.h" />
@@ -374,6 +384,7 @@
     <ClInclude Include="src\platform\directx12\Dx12VertexBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexLayout.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexShader.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLBufferWrapper.h" />
     <ClInclude Include="src\platform\opengl\OpenGLDownloadBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLHelperMethods.h" />
     <ClInclude Include="src\platform\opengl\OpenGLContext.h" />
@@ -385,6 +396,7 @@
     <ClInclude Include="src\platform\opengl\OpenGLVertexArray.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexShader.h" />
+    <ClInclude Include="src\platform\vulkan\VkBufferWrapper.h" />
     <ClInclude Include="src\platform\vulkan\VkContext.h" />
     <ClInclude Include="src\platform\vulkan\VkDownloadBuffer.h" />
     <ClInclude Include="src\platform\vulkan\VkFragmentShader.h" />

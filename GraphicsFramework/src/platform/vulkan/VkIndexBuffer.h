@@ -1,20 +1,14 @@
 #pragma once
 
 #include "graphics/IndexBuffer.h"
+#include "VkBufferWrapper.h"
 
-class VkIndexBuffer : public IndexBuffer
+class VkIndexBuffer : public IndexBuffer, public VkBufferWrapper
 {
 public:
 	VkIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, const void* data);
 	virtual ~VkIndexBuffer();
 
-	virtual void SetData(const void* indices) override;
-
-	VkBuffer GetGpuBuffer() const;
-
-private:
-	VkBuffer m_buffer_gpu;
-	VkDeviceMemory m_buffer_memory_gpu;
-	VkBuffer m_upload_buffer;
-	VkDeviceMemory m_upload_buffer_memory;
+	std::unique_ptr<byte> GetData() const override;
+	virtual void SetData(const void* datas) override;
 };

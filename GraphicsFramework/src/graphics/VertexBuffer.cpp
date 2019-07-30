@@ -34,9 +34,8 @@ VertexBuffer* VertexBuffer::Create(unsigned int size, BufferUsage usage, void* d
 	return vb;
 }
 
-VertexBuffer::VertexBuffer(unsigned int size, BufferUsage usage):
-	m_size(size),
-	m_usage(usage)
+VertexBuffer::VertexBuffer(unsigned int size):
+	Buffer(size)
 {
 
 }
@@ -46,25 +45,12 @@ VertexBuffer::~VertexBuffer()
 
 }
 
-BufferUsage VertexBuffer::GetUsage() const
-{
-	return m_usage;
-}
-
-size_t VertexBuffer::GetSize() const
-{
-	return m_size;
-}
-
 bool VertexBuffer::operator==(const VertexBuffer* other) const
 {
 	if (m_resource_id != other->GetResourceId())
 		return false;
 
 	if (m_size != other->m_size)
-		return false;
-
-	if (m_usage != other->m_usage)
 		return false;
 
 	// check for same data/path

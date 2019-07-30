@@ -3,7 +3,8 @@
 #include "OpenGLDownloadBuffer.h"
 #include "OpenGLVertexBuffer.h"
 
-OpenGLDownloadBuffer::OpenGLDownloadBuffer()
+OpenGLDownloadBuffer::OpenGLDownloadBuffer(unsigned int size):
+	DownloadBuffer(size)
 {
 
 }
@@ -13,15 +14,14 @@ OpenGLDownloadBuffer::~OpenGLDownloadBuffer()
 
 }
 
-void OpenGLDownloadBuffer::Download(const VertexBuffer* vb)
+void OpenGLDownloadBuffer::Download(const ApiBufferWrapper* buffer)
 {
 	if (m_data)
 		return;
 
-	static_cast<const OpenGLVertexBuffer*>(vb)->Bind();
-	m_data = malloc(vb->GetSize());
+	m_data = malloc(m_size);
 	unsigned int offset = 0;
-	void* src_data = glMapBufferRange(GL_ARRAY_BUFFER, offset, vb->GetSize(), GL_MAP_READ_BIT);
-	memcpy(m_data, src_data, vb->GetSize());
+	void* src_data = glMapBufferRange(GL_ARRAY_BUFFER, offset, m_size, GL_MAP_READ_BIT);
+	memcpy(m_data, src_data, m_size);
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 }

@@ -1,20 +1,14 @@
 #pragma once
 
 #include "graphics/VertexBuffer.h"
+#include "Dx12BufferWrapper.h"
 
-class Dx12VertexBuffer : public VertexBuffer
+class Dx12VertexBuffer : public VertexBuffer, public Dx12BufferWrapper
 {
 public:
 	Dx12VertexBuffer(unsigned int size, BufferUsage usage, const void* data = nullptr);
 	virtual ~Dx12VertexBuffer();
 
-	std::unique_ptr<DownloadBuffer> DownloadDataToBuffer() const;
 	void SetData(const void* data);
-	
-	ID3D12Resource* GetBufferGpu() const;
-
-private:
-	ComPtr<ID3DBlob> m_buffer_cpu;
-	ComPtr<ID3D12Resource> m_buffer_gpu;
-	ComPtr<ID3D12Resource> m_upload_buffer;
+	std::unique_ptr<byte> GetData() const;
 };

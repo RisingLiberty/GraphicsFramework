@@ -5,65 +5,29 @@
 
 #include "OpenGLDownloadBuffer.h"
 
-namespace
+OpenGLVertexBuffer::OpenGLVertexBuffer(unsigned int size, BufferUsage usage, const void* data) :
+	VertexBuffer(size),
+	OpenGLBufferWrapper(size, usage, BufferType::VERTEX, data)
 {
-	int CustomBufferUsageToGLUsage(BufferUsage usage)
-	{
-		switch (usage)
-		{
-		case BufferUsage::DYNAMIC:	return GL_DYNAMIC_DRAW;
-		case BufferUsage::STATIC:	return GL_STATIC_DRAW;
-		}
-
-		return -1;
-	}
-}
-
-OpenGLVertexBuffer::OpenGLVertexBuffer(unsigned int size, BufferUsage usage, void* data):
-	VertexBuffer(size, usage)
-{
-	GLCALL(glGenBuffers(1, &m_id));
-
-	if (data != nullptr)
-		this->SetData(data);
 }
 
 OpenGLVertexBuffer::~OpenGLVertexBuffer()
 {
-	GLCALL(glDeleteBuffers(1, &m_id));
-}
-
-std::unique_ptr<DownloadBuffer> OpenGLVertexBuffer::DownloadDataToBuffer() const
-{
-	std::unique_ptr<DownloadBuffer> buffer = std::make_unique<OpenGLDownloadBuffer>();
-	buffer->Download(this);
-	return std::move(buffer);
 }
 
 void OpenGLVertexBuffer::SetData(const void* data)
 {
-	this->Bind();
-	if (m_usage == BufferUsage::DYNAMIC)
-	{
-		GLCALL(glBufferData(GL_ARRAY_BUFFER, m_size, data, CustomBufferUsageToGLUsage(m_usage)));
-	}
-	else
-	{
-		GLCALL(glBufferStorage(GL_ARRAY_BUFFER, m_size, data, GL_MAP_READ_BIT));
-	}
+	this->GLBind();
+	this->SetDataInternal(data, m_size);
 }
 
-void OpenGLVertexBuffer::Bind() const
+std::unique_ptr<byte> OpenGLVertexBuffer::GetData() const
 {
-	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_id));
+	this->GLBind();
+	return this->GetDataInternal(m_size);
 }
 
-void OpenGLVertexBuffer::Unbind() const
+void OpenGLVertexBuffer::GLBind() const
 {
-	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, 0));
-}
-
-unsigned int OpenGLVertexBuffer::GetId() const
-{
-	return m_id;
+	glBindBuffer(GL_ARRAY_BUFFER, m_id);
 }

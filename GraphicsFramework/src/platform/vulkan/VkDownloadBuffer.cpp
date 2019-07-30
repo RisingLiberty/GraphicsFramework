@@ -4,7 +4,8 @@
 #include "VkHelperMethods.h"
 #include "VkVertexBuffer.h"
 
-VkDownloadBuffer::VkDownloadBuffer()
+VkDownloadBuffer::VkDownloadBuffer(unsigned int size):
+	DownloadBuffer(size)
 {
 
 }
@@ -15,17 +16,17 @@ VkDownloadBuffer::~VkDownloadBuffer()
 	vkFreeMemory(GetVkDevice(), m_buffer_memory, nullptr);
 }
 
-void VkDownloadBuffer::Download(const VertexBuffer* vb)
+void VkDownloadBuffer::Download(const ApiBufferWrapper* buffer)
 {
-	const VkVertexBuffer* vk_vb = static_cast<const VkVertexBuffer*>(vb);
+	const VkVertexBuffer* vk_vb = static_cast<const VkVertexBuffer*>(buffer);
 
-	CreateBuffer(vb->GetSize(), VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_buffer, m_buffer_memory);
-	CopyBuffer(vk_vb->GetGpuBuffer(), m_buffer, vb->GetSize());
+	CreateBuffer(m_size, VK_BUFFER_USAGE_TRANSFER_DST_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_buffer, m_buffer_memory);
+	CopyBuffer(vk_vb->GetBufferGpu(), m_buffer, m_size);
 
-	m_data = malloc(vb->GetSize());
+	m_data = malloc(m_size);
 	void* data;
-	vkMapMemory(GetVkDevice(), m_buffer_memory, 0, vb->GetSize(), 0, &data);
-	memcpy(m_data, data, (size_t)vb->GetSize());
+	vkMapMemory(GetVkDevice(), m_buffer_memory, 0, m_size, 0, &data);
+	memcpy(m_data, data, (size_t)m_size);
 	vkUnmapMemory(GetVkDevice(), m_buffer_memory);
 
 

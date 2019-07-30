@@ -5,9 +5,9 @@
 class OpenGLDownloadBuffer : public DownloadBuffer
 {
 public:
-	OpenGLDownloadBuffer();
+	OpenGLDownloadBuffer(unsigned int size);
 	virtual ~OpenGLDownloadBuffer();
 
-	void Download(const VertexBuffer* vb) override;
+	void Download(const ApiBufferWrapper* buffer) override;
 
 };

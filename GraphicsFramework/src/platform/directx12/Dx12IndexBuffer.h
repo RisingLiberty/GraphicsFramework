@@ -1,19 +1,16 @@
 #pragma once
 
 #include "graphics/IndexBuffer.h"
+#include "Dx12BufferWrapper.h"
 
-class Dx12IndexBuffer : public IndexBuffer
+class Dx12IndexBuffer : public IndexBuffer, public Dx12BufferWrapper
 {
 public:
 	Dx12IndexBuffer(unsigned int  count, Format format, Topology topology, BufferUsage usage, const void* data = nullptr);
 	virtual ~Dx12IndexBuffer();
 
-	virtual void SetData(const void* data) override;
+	std::unique_ptr<byte> GetData() const override;
+	void SetData(const void* data) override;
 
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
-
-private:
-	ComPtr<ID3DBlob> m_buffer_cpu;
-	ComPtr<ID3D12Resource> m_buffer_gpu;
-	ComPtr<ID3D12Resource> m_upload_buffer;
 };

@@ -1737,7 +1737,7 @@ void VkContext::EndSingleTimeCommands(VkCommandBuffer commandBuffer)
 
 void VkContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	vkCmdBindIndexBuffer(m_command_buffers[m_current_frame], static_cast<const VkIndexBuffer*>(m_bound_index_buffer)->GetGpuBuffer(), 0, m_bound_index_buffer->GetFormat().ToVulkanIndexType());
+	vkCmdBindIndexBuffer(m_command_buffers[m_current_frame], static_cast<const VkIndexBuffer*>(m_bound_index_buffer)->GetBufferGpu(), 0, m_bound_index_buffer->GetFormat().ToVulkanIndexType());
 }
 
 void VkContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
@@ -1748,7 +1748,7 @@ void VkContext::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
 	const VkVertexBuffer* vk_vb = static_cast<const VkVertexBuffer*>(vertexArray->GetVertexBuffer());
 
-	VkBuffer vertex_buffers[] = { vk_vb->GetGpuBuffer() };
+	VkBuffer vertex_buffers[] = { vk_vb->GetBufferGpu() };
 	VkDeviceSize offsets[] = { 0 };
 
 	vkCmdBindVertexBuffers(m_command_buffers[m_current_frame], 0, 1, vertex_buffers, offsets);

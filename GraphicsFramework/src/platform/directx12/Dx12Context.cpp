@@ -176,7 +176,7 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
 		&depthStencilDesc,
-		D3D12_RESOURCE_STATE_COMMON,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&optClear,
 		IID_PPV_ARGS(m_depth_stencil_buffer.GetAddressOf())));
 

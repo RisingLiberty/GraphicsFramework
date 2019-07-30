@@ -11,6 +11,29 @@
 
 #include "Context.h"
 
+namespace
+{
+	unsigned int CalculateSize(unsigned int count, Format format)
+	{
+		unsigned int size = 0;
+		switch (format.enum_value)
+		{
+		case EFormat::R32_UINT:
+			size = sizeof(unsigned int);
+			break;
+		case EFormat::R16_UINT:
+			size = sizeof(unsigned short);
+			break;
+		case EFormat::R8_UINT:
+			size = sizeof(unsigned char);
+			break;
+		default:
+			ASSERT(false, "Invalid index buffer format");
+		}
+		return size * count;
+	}
+}
+
 IndexBuffer* IndexBuffer::Create(unsigned int count, Format format, Topology topology, BufferUsage usage, void* data)
 {
 	IndexBufferController* index_buffer_controller = Context::GetCurrent()->GetIndexBufferController();
@@ -35,11 +58,11 @@ IndexBuffer* IndexBuffer::Create(unsigned int count, Format format, Topology top
 
 }
 
-IndexBuffer::IndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage):
+IndexBuffer::IndexBuffer(unsigned int count, Format format, Topology topology):
+	Buffer(CalculateSize(count, format)),
 	m_count(count),
 	m_format(format),
-	m_topology(topology),
-	m_usage(usage)
+	m_topology(topology)
 {
 	if (m_format == EFormat::R8_UINT)
 	{
@@ -48,7 +71,6 @@ IndexBuffer::IndexBuffer(unsigned int count, Format format, Topology topology, B
 		spdlog::warn("Index buffer has unsigned byte format");
 		spdlog::warn("This is only available on with OpenGL api");
 		spdlog::warn("Using this format can cause undefined behaviour or crashes.");
-
 	}
 }
 
@@ -70,26 +92,6 @@ void IndexBuffer::Unbind() const
 unsigned int IndexBuffer::GetCount() const
 {
 	return m_count;	
-}
-
-unsigned int IndexBuffer::GetSize() const
-{
-	unsigned int size = 0;
-	switch (m_format.enum_value)
-	{
-	case EFormat::R32_UINT:
-		size = sizeof(unsigned int);
-		break;
-	case EFormat::R16_UINT:
-		size = sizeof(unsigned short);
-		break;
-	case EFormat::R8_UINT:
-		size = sizeof(unsigned char);
-		break;
-	default:
-		ASSERT(false, "Invalid index buffer format");
-	}
-	return size * m_count;
 }
 
 Format IndexBuffer::GetFormat() const

@@ -75,7 +75,7 @@ VertexBuffer* VertexBufferController::Get(size_t size, BufferUsage usage) const
 	auto it = std::find_if(m_vertex_buffers.cbegin(), m_vertex_buffers.cend(),
 		[&size, &usage](const std::unique_ptr<VertexBuffer>& uniqueVb)
 		{
-			return uniqueVb->GetSize() == size && uniqueVb->GetUsage() == usage;
+			return uniqueVb->GetSize() == size;
 		});
 
 	if (it != m_vertex_buffers.cend())

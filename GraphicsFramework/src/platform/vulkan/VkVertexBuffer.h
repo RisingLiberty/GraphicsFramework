@@ -1,21 +1,14 @@
 #pragma once
 
 #include "graphics/VertexBuffer.h"
+#include "VkBufferWrapper.h"
 
-class VkVertexBuffer : public VertexBuffer
+class VkVertexBuffer : public VertexBuffer, public VkBufferWrapper
 {
 public:
 	VkVertexBuffer(unsigned int size, BufferUsage usage, const void* data);
 	virtual ~VkVertexBuffer();
 
-	std::unique_ptr<DownloadBuffer> DownloadDataToBuffer() const;
-	void SetData(const void* vertices) override;
-
-	VkBuffer GetGpuBuffer() const;
-
-private:
-	VkBuffer m_buffer_gpu;
-	VkDeviceMemory m_buffer_memory_gpu;
-	VkBuffer m_upload_buffer;
-	VkDeviceMemory m_upload_buffer_memory;
+	std::unique_ptr<byte> GetData() const override;
+	void SetData(const void* data) override;
 };

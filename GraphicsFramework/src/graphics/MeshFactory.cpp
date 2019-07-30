@@ -23,8 +23,8 @@ std::unique_ptr<Mesh> MeshFactory::CreateQuad()
 		2,3,0
 	};
 
-	VertexBuffer* vb = VertexBuffer::Create(sizeof(positions) , BufferUsage::STATIC, positions.data());
-	IndexBuffer* ib = IndexBuffer::Create((unsigned int)indices.size(), Format(EFormat::R16_UINT), Topology(ETopology::TRIANGLELIST), BufferUsage::STATIC, indices.data());
+	VertexBuffer* vb = VertexBuffer::Create(sizeof(positions) , EBufferUsage::STATIC, positions.data());
+	IndexBuffer* ib = IndexBuffer::Create((unsigned int)indices.size(), Format(EFormat::R16_UINT), Topology(ETopology::TRIANGLELIST), EBufferUsage::STATIC, indices.data());
 	VertexLayout* layout = VertexLayout::Create();
 	layout->Push<float>(VertexAttributeType::POSITION, 3);
 

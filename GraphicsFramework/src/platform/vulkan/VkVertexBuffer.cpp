@@ -5,46 +5,21 @@
 #include "VkDownloadBuffer.h"
 
 VkVertexBuffer::VkVertexBuffer(unsigned int size, BufferUsage usage, const void* data) :
-	VertexBuffer(size, usage)
+	VertexBuffer(size),
+	VkBufferWrapper(size, usage, data)
 {
-	if (data)
-		this->SetData(data);
 }
 
 VkVertexBuffer::~VkVertexBuffer()
 {
-	vkDestroyBuffer(GetVkDevice(), m_buffer_gpu, nullptr);
-	vkFreeMemory(GetVkDevice(), m_buffer_memory_gpu, nullptr);
-
 }
 
-std::unique_ptr<DownloadBuffer> VkVertexBuffer::DownloadDataToBuffer() const
+void VkVertexBuffer::SetData(const void* data)
 {
-	std::unique_ptr<DownloadBuffer> buffer = std::make_unique<VkDownloadBuffer>();
-	buffer->Download(this);
-	return std::move(buffer);
+	this->SetDataInternal(data, m_size);
 }
 
-void VkVertexBuffer::SetData(const void* vertices)
+std::unique_ptr<byte> VkVertexBuffer::GetData() const
 {
-	CreateBuffer(m_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, m_upload_buffer, m_upload_buffer_memory);
-
-	void* data;
-	vkMapMemory(GetVkDevice(), m_upload_buffer_memory, 0, m_size, 0, &data);
-	memcpy(data, vertices, (size_t)m_size);
-	vkUnmapMemory(GetVkDevice(), m_upload_buffer_memory);
-
-	CreateBuffer(m_size, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
-		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_buffer_gpu, m_buffer_memory_gpu);
-	CopyBuffer(m_upload_buffer, m_buffer_gpu, m_size);
-	vkDestroyBuffer(GetVkDevice(), m_upload_buffer, nullptr);
-	vkFreeMemory(GetVkDevice(), m_upload_buffer_memory, nullptr);
-
-	this->DownloadDataToBuffer();
-}
-
-
-VkBuffer VkVertexBuffer::GetGpuBuffer() const
-{
-	return m_buffer_gpu;
+	return this->GetDataInternal(m_size);
 }

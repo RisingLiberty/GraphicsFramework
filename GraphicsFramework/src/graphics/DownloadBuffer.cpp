@@ -2,7 +2,8 @@
 
 #include "DownloadBuffer.h"
 
-DownloadBuffer::DownloadBuffer()
+DownloadBuffer::DownloadBuffer(unsigned int size):
+	m_size(size)
 {
 	m_data = nullptr;
 }
@@ -15,4 +16,9 @@ DownloadBuffer::~DownloadBuffer()
 void* DownloadBuffer::GetData() const
 {
 	return m_data;
+}
+
+unsigned int DownloadBuffer::GetSize() const
+{
+	return m_size;
 }

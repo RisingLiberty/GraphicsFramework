@@ -5,10 +5,10 @@
 class VkDownloadBuffer : public DownloadBuffer
 {
 public:
-	VkDownloadBuffer();
+	VkDownloadBuffer(unsigned int size);
 	virtual ~VkDownloadBuffer();
 
-	void Download(const VertexBuffer* vb);
+	void Download(const ApiBufferWrapper* vb);
 
 private:
 	VkBuffer m_buffer;
