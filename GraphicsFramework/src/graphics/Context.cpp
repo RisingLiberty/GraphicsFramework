@@ -27,6 +27,9 @@ Context::Context()
 	m_vertex_layout_controller = std::make_unique<VertexLayoutController>();
 	m_index_buffer_controller = std::make_unique<IndexBufferController>();
 
+	m_back_buffer_format = Format(EFormat::R8G8B8A8_UNORM);
+	m_depth_stencil_format = Format(EFormat::D24_UNORM_S8_UINT);
+
 	m_rasterizer_settings.InitializeAsDefault();
 }
 

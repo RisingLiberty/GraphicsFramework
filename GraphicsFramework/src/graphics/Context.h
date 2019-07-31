@@ -13,6 +13,7 @@ class VertexArray;
 class ShaderProgram;
 
 #include "RasterizerSettings.h"
+#include "BufferHelpers.h"
 
 class Context
 {
@@ -84,6 +85,9 @@ protected:
 
 	RasterizerSettings m_rasterizer_settings;
 	bool m_is_vsync;
+
+	Format m_back_buffer_format;
+	Format m_depth_stencil_format;
 
 private:
 	static std::unique_ptr<Context> s_current;
