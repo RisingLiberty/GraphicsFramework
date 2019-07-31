@@ -162,6 +162,7 @@
     <ClCompile Include="src\graphics\Buffer.cpp" />
     <ClCompile Include="src\graphics\BufferHelpers.cpp" />
     <ClCompile Include="src\graphics\CullMode.cpp" />
+    <ClCompile Include="src\graphics\DescriptorHeap.cpp" />
     <ClCompile Include="src\graphics\DownloadBuffer.cpp" />
     <ClCompile Include="src\graphics\FillMode.cpp" />
     <ClCompile Include="src\graphics\FrontFaceOrientation.cpp" />
@@ -213,11 +214,18 @@
     <ClCompile Include="src\platform\directx11\Dx11Renderer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11HelperMethods.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12BufferWrapper.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12CbvSrvUavDescriptorHeap.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12Command.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12CommandList.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12CommandQueue.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12DepthStencilViewDescriptorHeap.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12DescriptorHeap.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12DownloadBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12HelperMethods.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12IndexBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12Renderer.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12RenderTargetViewDescriptorHeap.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderParser.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderProgram.cpp" />
@@ -245,6 +253,9 @@
     <ClCompile Include="src\platform\opengl\OpenGLVertexBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLVertexShader.cpp" />
     <ClCompile Include="src\platform\vulkan\VkBufferWrapper.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkCommand.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkCommandList.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkCommandQueue.cpp" />
     <ClCompile Include="src\platform\vulkan\VkContext.cpp" />
     <ClCompile Include="src\platform\vulkan\VkDownloadBuffer.cpp" />
     <ClCompile Include="src\platform\vulkan\VkFragmentShader.cpp" />
@@ -312,6 +323,7 @@
     <ClInclude Include="src\graphics\BufferHelpers.h" />
     <ClInclude Include="src\graphics\BufferUsage.h" />
     <ClInclude Include="src\graphics\CullMode.h" />
+    <ClInclude Include="src\graphics\DescriptorHeap.h" />
     <ClInclude Include="src\graphics\DownloadBuffer.h" />
     <ClInclude Include="src\graphics\FillMode.h" />
     <ClInclude Include="src\graphics\FrontFaceOrientation.h" />
@@ -364,7 +376,13 @@
     <ClInclude Include="src\platform\directx11\Dx11Renderer.h" />
     <ClInclude Include="src\platform\directx11\Dx11HelperMethods.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderParser.h" />
+    <ClInclude Include="src\platform\directx12\Dx12Command.h" />
+    <ClInclude Include="src\platform\directx12\Dx12CommandList.h" />
+    <ClInclude Include="src\platform\directx12\Dx12CommandQueue.h" />
     <ClInclude Include="src\platform\directx12\Dx12BufferWrapper.h" />
+    <ClInclude Include="src\platform\directx12\Dx12CbvSrvUavDescriptorHeap.h" />
+    <ClInclude Include="src\platform\directx12\Dx12DepthStencilViewDescriptorHeap.h" />
+    <ClInclude Include="src\platform\directx12\Dx12DescriptorHeap.h" />
     <ClInclude Include="src\platform\directx12\Dx12DownloadBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderParser.h" />
@@ -384,6 +402,7 @@
     <ClInclude Include="src\platform\directx12\Dx12VertexBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexLayout.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexShader.h" />
+    <ClInclude Include="src\platform\directx12\Dx12RenderTargetViewDescriptorHeap.h" />
     <ClInclude Include="src\platform\opengl\OpenGLBufferWrapper.h" />
     <ClInclude Include="src\platform\opengl\OpenGLDownloadBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLHelperMethods.h" />
@@ -397,6 +416,9 @@
     <ClInclude Include="src\platform\opengl\OpenGLVertexBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexShader.h" />
     <ClInclude Include="src\platform\vulkan\VkBufferWrapper.h" />
+    <ClInclude Include="src\platform\vulkan\VkCommand.h" />
+    <ClInclude Include="src\platform\vulkan\VkCommandList.h" />
+    <ClInclude Include="src\platform\vulkan\VkCommandQueue.h" />
     <ClInclude Include="src\platform\vulkan\VkContext.h" />
     <ClInclude Include="src\platform\vulkan\VkDownloadBuffer.h" />
     <ClInclude Include="src\platform\vulkan\VkFragmentShader.h" />

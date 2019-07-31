@@ -17,12 +17,19 @@
 #include "graphics/Window.h"
 #include "Dx12Renderer.h"
 
-Dx12Context::Dx12Context(Window* window)
+#include "Dx12DepthStencilViewDescriptorHeap.h"
+#include "Dx12RenderTargetViewDescriptorHeap.h"
+#include "Dx12CbvSrvUavDescriptorHeap.h"
+
+#include "Dx12CommandQueue.h"
+#include "Dx12CommandList.h"
+
+Dx12Context::Dx12Context(Window* window):
+	m_window(window)
 {
 	spdlog::info("Using DirectX 12");
 
 	this->InitD3D(window);
-	this->OnResize(window->GetPropeties().width, window->GetPropeties().height);
 	m_is_vsync = window->GetPropeties().vsync;
 }
 
@@ -30,25 +37,33 @@ Dx12Context::~Dx12Context() = default;
 
 void Dx12Context::PreInitialize()
 {
+	CreateCommandObjects();
+	CreateSwapChain(m_window);
+
+	m_rtv_heap = std::make_unique<Dx12RenderTargetViewDescriptorHeap>(SWAPCHAIN_BUFFER_COUNT);
+	m_dsv_heap = std::make_unique<Dx12DepthStencilViewDescriptorHeap>(1);
+
+	this->OnResize(m_window->GetPropeties().width, m_window->GetPropeties().height);
+
 	// Reset the command list to prep for initialization commands.
-	DXCALL(m_command_list->Reset(m_direct_cmdlist_alloc.Get(), nullptr));
+	m_command_list->Reset();
 }
 
 void Dx12Context::Initialize()
 {
-	BuildDescriptorHeaps();
+	m_cbv_heap = std::make_unique<Dx12CbvSrvUavDescriptorHeap>(1, true);
+	m_cbv_imgui_heap = std::make_unique<Dx12CbvSrvUavDescriptorHeap>(1, true);
+
 	m_renderer = std::make_unique<Dx12Renderer>();
 }
 
 void Dx12Context::PostInitialize()
 {
 	// Execute the initialization commands.
-	DXCALL(m_command_list->Close());
-	ID3D12CommandList* cmdsLists[] = { m_command_list.Get() };
-	m_command_queue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
+	m_command_queue->Execute();
 
 	// Wait until initialization is complete.
-	FlushCommandQueue();
+	m_command_queue->Flush();
 }
 
 void Dx12Context::InitD3D(Window* window)
@@ -82,9 +97,6 @@ void Dx12Context::InitD3D(Window* window)
 			IID_PPV_ARGS(&m_device)));
 	}
 
-	DXCALL(m_device->CreateFence(0, D3D12_FENCE_FLAG_NONE,
-		IID_PPV_ARGS(&m_fence)));
-
 	m_rtv_descriptor_size = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	m_dsv_descriptor_size = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 	m_cb_srv_uav_descriptor_size = m_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
@@ -94,7 +106,7 @@ void Dx12Context::InitD3D(Window* window)
 	// target formats, so we only need to check quality support.
 
 	D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
-	msQualityLevels.Format = m_back_buffer_format;
+	msQualityLevels.Format = m_back_buffer_format.ToDirectX();
 	msQualityLevels.SampleCount = 4;
 	msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
 	msQualityLevels.NumQualityLevels = 0;
@@ -109,21 +121,14 @@ void Dx12Context::InitD3D(Window* window)
 	LogAdapters();
 #endif
 
-	CreateCommandObjects();
-	CreateSwapChain(window);
-	CreateRtvAndDsvDescriptorHeaps();
 }
 
 void Dx12Context::OnResize(unsigned int width, unsigned int height)
 {
 	assert(m_device);
 	assert(m_swapchain);
-	assert(m_direct_cmdlist_alloc);
 
-	// Flush before changing any resources.
-	FlushCommandQueue();
-
-	DXCALL(m_command_list->Reset(m_direct_cmdlist_alloc.Get(), nullptr));
+	m_command_list->Reset();
 
 	// Release the previous resources we will be recreating.
 	for (int i = 0; i < SWAPCHAIN_BUFFER_COUNT; ++i)
@@ -134,12 +139,12 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 	DXCALL(m_swapchain->ResizeBuffers(
 		SWAPCHAIN_BUFFER_COUNT,
 		width, height,
-		m_back_buffer_format,
+		m_back_buffer_format.ToDirectX(),
 		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
 	m_current_back_buffer_index = 0;
 
-	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_rtv_heap->GetCPUDescriptorHandleForHeapStart());
+	CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHeapHandle(m_rtv_heap->GetCpuView());
 	for (UINT i = 0; i < SWAPCHAIN_BUFFER_COUNT; i++)
 	{
 		DXCALL(m_swapchain->GetBuffer(i, IID_PPV_ARGS(&m_swapchain_buffers[i])));
@@ -169,14 +174,14 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 	depthStencilDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
 	D3D12_CLEAR_VALUE optClear;
-	optClear.Format = m_depth_stencil_format;
+	optClear.Format = m_depth_stencil_format.ToDirectX();
 	optClear.DepthStencil.Depth = 1.0f;
 	optClear.DepthStencil.Stencil = 0;
 	DXCALL(m_device->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE,
 		&depthStencilDesc,
-		D3D12_RESOURCE_STATE_COMMON,
+		D3D12_RESOURCE_STATE_DEPTH_WRITE,
 		&optClear,
 		IID_PPV_ARGS(m_depth_stencil_buffer.GetAddressOf())));
 
@@ -184,21 +189,12 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
 	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	dsvDesc.Format = m_depth_stencil_format;
+	dsvDesc.Format = m_depth_stencil_format.ToDirectX();
 	dsvDesc.Texture2D.MipSlice = 0;
 	m_device->CreateDepthStencilView(m_depth_stencil_buffer.Get(), &dsvDesc, this->GetDepthStencilView());
 
-	// Transition the resource from its initial state to be used as a depth buffer.
-	m_command_list->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_depth_stencil_buffer.Get(),
-		D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE));
-
 	// Execute the resize commands.
-	DXCALL(m_command_list->Close());
-	ID3D12CommandList* cmdsLists[] = { m_command_list.Get() };
-	m_command_queue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-	// Wait until resize is complete.
-	FlushCommandQueue();
+	m_command_queue->Execute();
 
 	// Update the viewport transform to cover the client area.
 	m_viewport.TopLeftX = 0;
@@ -211,33 +207,10 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 	m_scissor_rect = { 0, 0, (LONG)width, (LONG)height};
 }
 
-void Dx12Context::ExecuteCommandQueue()
-{
-	ID3D12CommandList* cmdsLists[] = { m_command_list.Get() };
-	m_command_queue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-}
-
 void Dx12Context::CreateCommandObjects()
 {
-	D3D12_COMMAND_QUEUE_DESC queueDesc = {};
-	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	DXCALL(m_device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&m_command_queue)));
-
-	DXCALL(m_device->CreateCommandAllocator(
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		IID_PPV_ARGS(m_direct_cmdlist_alloc.GetAddressOf())));
-
-	DXCALL(m_device->CreateCommandList(
-		0,
-		D3D12_COMMAND_LIST_TYPE_DIRECT,
-		m_direct_cmdlist_alloc.Get(), // Associated command allocator
-		nullptr,                   // Initial PipelineStateObject
-		IID_PPV_ARGS(m_command_list.GetAddressOf())));
-
-	// Start off in a closed state.  This is because the first time we refer 
-	// to the command list we will Reset it, and it needs to be closed before
-	// calling Reset.
+	m_command_queue = std::make_unique<Dx12CommandQueue>();
+	m_command_list = m_command_queue->GetApiCommandList();
 	m_command_list->Close();
 }
 
@@ -251,7 +224,7 @@ void Dx12Context::CreateSwapChain(Window* window)
 	sd.BufferDesc.Height = window->GetPropeties().height;
 	sd.BufferDesc.RefreshRate.Numerator = 60;
 	sd.BufferDesc.RefreshRate.Denominator = 1;
-	sd.BufferDesc.Format = m_back_buffer_format;
+	sd.BufferDesc.Format = m_back_buffer_format.ToDirectX();
 	sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
 	sd.SampleDesc.Count = 1;
@@ -265,53 +238,19 @@ void Dx12Context::CreateSwapChain(Window* window)
 
 	// Note: Swap chain uses queue to perform flush.
 	DXCALL(m_dxgi_factory->CreateSwapChain(
-		m_command_queue.Get(),
+		m_command_queue->GetApiQueue(),
 		&sd,
 		m_swapchain.GetAddressOf()));
 }
 
-void Dx12Context::CreateRtvAndDsvDescriptorHeaps()
+void Dx12Context::CreateRtvDescriptorHeaps()
 {
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc;
-	rtvHeapDesc.NumDescriptors = SWAPCHAIN_BUFFER_COUNT;
-	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	rtvHeapDesc.NodeMask = 0;
-	DXCALL(m_device->CreateDescriptorHeap(
-		&rtvHeapDesc, IID_PPV_ARGS(m_rtv_heap.GetAddressOf())));
-
-
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc;
-	dsvHeapDesc.NumDescriptors = 1;
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-	dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	dsvHeapDesc.NodeMask = 0;
-	DXCALL(m_device->CreateDescriptorHeap(
-		&dsvHeapDesc, IID_PPV_ARGS(m_dsv_heap.GetAddressOf())));
+	m_rtv_heap = std::make_unique<Dx12RenderTargetViewDescriptorHeap>(SWAPCHAIN_BUFFER_COUNT);
 }
 
-void Dx12Context::FlushCommandQueue()
+void Dx12Context::CreateDsvDescriptorHeap()
 {
-	// Advance the fence value to mark commands up to this fence point.
-	m_current_fence_value++;
-
-	// Add an instruction to the command queue to set a new fence point.  Because we 
-	// are on the GPU timeline, the new fence point won't be set until the GPU finishes
-	// processing all the commands prior to this Signal().
-	DXCALL(m_command_queue->Signal(m_fence.Get(), m_current_fence_value));
-
-	// Wait until the GPU has completed commands up to this fence point.
-	if (m_fence->GetCompletedValue() < m_current_fence_value)
-	{
-		HANDLE eventHandle = CreateEventEx(nullptr, false, false, EVENT_ALL_ACCESS);
-
-		// Fire event when GPU hits current fence.  
-		DXCALL(m_fence->SetEventOnCompletion(m_current_fence_value, eventHandle));
-
-		// Wait until the GPU hits current fence event is fired.
-		WaitForSingleObject(eventHandle, INFINITE);
-		CloseHandle(eventHandle);
-	}
+	m_dsv_heap = std::make_unique<Dx12DepthStencilViewDescriptorHeap>(1);
 }
 
 void Dx12Context::LogAdapters()
@@ -354,7 +293,7 @@ void Dx12Context::LogAdapterOutputs(IDXGIAdapter * adapter)
 		std::string string_8bit(text.begin(), text.end());
 		spdlog::info(string_8bit);
 
-		LogOutputDisplayModes(output.Get(), m_back_buffer_format);
+		LogOutputDisplayModes(output.Get(), m_back_buffer_format.ToDirectX());
 
 		++i;
 	}
@@ -385,25 +324,6 @@ void Dx12Context::LogOutputDisplayModes(IDXGIOutput * output, DXGI_FORMAT format
 	}
 }
 
-void Dx12Context::BuildDescriptorHeaps()
-{
-	D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc;
-	cbvHeapDesc.NumDescriptors = 1;
-	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	cbvHeapDesc.NodeMask = 0;
-	DXCALL(m_device->CreateDescriptorHeap(&cbvHeapDesc,
-		IID_PPV_ARGS(&m_cbv_heap)));
-
-	cbvHeapDesc.NumDescriptors = 1;
-	cbvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	cbvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	cbvHeapDesc.NodeMask = 0;
-	DXCALL(m_device->CreateDescriptorHeap(&cbvHeapDesc,
-		IID_PPV_ARGS(&m_cbv_imgui_heap)));
-
-}
-
 void Dx12Context::BuildPSO()
 {
 	if (!m_bound_shader_program || m_pipeline_state)
@@ -422,7 +342,7 @@ void Dx12Context::BuildPSO()
 	cbv_desc.BufferLocation = cb_address;
 	cbv_desc.SizeInBytes = upload_buffer->GetSize();
 
-	m_device->CreateConstantBufferView(&cbv_desc, m_cbv_heap->GetCPUDescriptorHandleForHeapStart());
+	m_device->CreateConstantBufferView(&cbv_desc, m_cbv_heap->GetCpuView());
 
 	float color[] = { 1.0f, 0.3f, 0.8f, 1.0f };
 	m_bound_shader_program->SetUniform("u_Color", color, sizeof(float) * 4);
@@ -449,10 +369,10 @@ void Dx12Context::BuildPSO()
 	psoDesc.SampleMask = UINT_MAX;
 	psoDesc.PrimitiveTopologyType = m_bound_index_buffer->GetTopology().ToDirectX12();
 	psoDesc.NumRenderTargets = 1;
-	psoDesc.RTVFormats[0] = m_back_buffer_format;
+	psoDesc.RTVFormats[0] = m_back_buffer_format.ToDirectX();
 	psoDesc.SampleDesc.Count = 1;
 	psoDesc.SampleDesc.Quality = 0;
-	psoDesc.DSVFormat = m_depth_stencil_format;
+	psoDesc.DSVFormat = m_depth_stencil_format.ToDirectX();
 	DXCALL(m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(m_pipeline_state.ReleaseAndGetAddressOf())));
 }
 
@@ -468,46 +388,33 @@ ID3D12Device* Dx12Context::GetDevice() const
 
 ID3D12GraphicsCommandList* Dx12Context::GetCommandList() const
 {
-	return m_command_list.Get();
+	return m_command_queue->GetApiCommandList()->GetApiCommandList();
 }
 
 void Dx12Context::BindResourcesToPipeline()
 {
-	ID3D12DescriptorHeap* descriptorHeaps[] = { m_cbv_heap.Get() };
-	m_command_list->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	m_command_list->SetDescriptorHeaps(m_cbv_heap->GetHeap());
 	m_command_list->SetGraphicsRootSignature(static_cast<const Dx12ShaderProgram*>(m_bound_shader_program)->GetRootSignature());
-
-	m_command_list->SetGraphicsRootDescriptorTable(0, m_cbv_heap->GetGPUDescriptorHandleForHeapStart());
+	m_command_list->SetGraphicsRootDescriptorTable(m_cbv_heap->GetGpuView());
 }
 
 void Dx12Context::BindImgui()
 {
-	ID3D12DescriptorHeap* descriptorHeaps[] = { m_cbv_imgui_heap.Get() };
-	m_command_list->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
+	m_command_list->SetDescriptorHeaps(m_cbv_imgui_heap->GetHeap());
 }
 
 void Dx12Context::Begin()
 {
-	// Reuse the memory associated with command recording.
-	// We can only reset when the associated command lists have finished execution on the GPU.
-	DXCALL(m_direct_cmdlist_alloc->Reset());
+	m_command_list->ResetAlloc();
+	m_command_list->Reset();
 
-	// A command list can be reset after it has been added to the command queue via ExecuteCommandList.
-	// Reusing the command list reuses memory.
-	DXCALL(m_command_list->Reset(m_direct_cmdlist_alloc.Get(), m_pipeline_state.Get()));
-
-	// Indicate a state transition on the resource usage.
-	m_command_list->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->GetCurrentBackBuffer(),
-		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-	m_command_list->RSSetViewports(1, &m_viewport);
-	m_command_list->RSSetScissorRects(1, &m_scissor_rect);
-	
-	// Specify the buffers we are going to render to.
-	m_command_list->OMSetRenderTargets(1, &this->GetCurrentBackBufferView(), true, &this->GetDepthStencilView());
-	ID3D12DescriptorHeap* descriptorHeaps[] = { m_cbv_heap.Get() };
-	m_command_list->SetDescriptorHeaps(_countof(descriptorHeaps), descriptorHeaps);
-
+	if (m_pipeline_state)
+		m_command_list->SetPipelineState(m_pipeline_state);
+	m_command_list->SwitchResourceToRenderTarget(this->GetCurrentBackBuffer());
+	m_command_list->SetViewport(m_viewport);
+	m_command_list->SetScissorRects(m_scissor_rect);
+	m_command_list->SetRenderTargets(this->GetCurrentBackBufferView(), this->GetDepthStencilView());
+	m_command_list->SetDescriptorHeaps(m_cbv_heap->GetHeap());
 }
 
 void Dx12Context::Present()
@@ -519,22 +426,12 @@ void Dx12Context::Present()
 void Dx12Context::End()
 {
 	// Indicate a state transition on the resource usage.
-	m_command_list->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->GetCurrentBackBuffer(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	m_command_list->SwitchResourceToPresent(this->GetCurrentBackBuffer());
 
 	m_current_back_buffer_index = (m_current_back_buffer_index + 1) % SWAPCHAIN_BUFFER_COUNT;
 
-	// Done recording commands.
-	DXCALL(m_command_list->Close());
-
-	// Add the command list to the queue for execution.
-	ID3D12CommandList* cmdsLists[] = { m_command_list.Get() };
-	m_command_queue->ExecuteCommandLists(_countof(cmdsLists), cmdsLists);
-
-	// Wait until frame commands are complete.  This waiting is inefficient and is
-	// done for simplicity.  Later we will show how to organize our rendering code
-	// so we do not have to wait per frame.
-	this->FlushCommandQueue();
+	m_command_queue->Execute();
+	m_command_queue->Flush();
 }
 
 unsigned int Dx12Context::GetNrOfFrameResources() const
@@ -544,37 +441,35 @@ unsigned int Dx12Context::GetNrOfFrameResources() const
 
 DXGI_FORMAT Dx12Context::GetBackBufferFormat() const
 {
-	return m_back_buffer_format;
-}
-
-ID3D12DescriptorHeap * Dx12Context::GetRtvDescriptorHeap() const
-{
-	return m_rtv_heap.Get();
+	return m_back_buffer_format.ToDirectX();
 }
 
 ID3D12DescriptorHeap * Dx12Context::GetSrvDescriptorHeap() const
 {
-	return m_cbv_imgui_heap.Get();
+	return m_cbv_imgui_heap->GetHeap();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Dx12Context::GetCurrentBackBufferView() const
 {
 	return CD3DX12_CPU_DESCRIPTOR_HANDLE(
-		m_rtv_heap->GetCPUDescriptorHandleForHeapStart(),
+		m_rtv_heap->GetCpuView(),
 		m_current_back_buffer_index,
 		m_rtv_descriptor_size);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE Dx12Context::GetDepthStencilView() const
 {
-	return m_dsv_heap->GetCPUDescriptorHandleForHeapStart();
+	return m_dsv_heap->GetCpuView();
 }
 
 void Dx12Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
 	D3D12_INDEX_BUFFER_VIEW ib_view = static_cast<const Dx12IndexBuffer*>(m_bound_index_buffer)->GetIndexBufferView();
-	m_command_list->IASetIndexBuffer(&ib_view);
-	m_command_list->IASetPrimitiveTopology(m_bound_index_buffer->GetTopology().ToDirectX());
+	m_command_list->SetIndexBuffer(ib_view);
+	m_command_list->SetPrimitiveTopology(m_bound_index_buffer->GetTopology().ToDirectX());
+
+	//m_command_list->IASetIndexBuffer(&ib_view);
+	//m_command_list->IASetPrimitiveTopology(m_bound_index_buffer->GetTopology().ToDirectX());
 
 	if (m_bound_vertex_array && m_bound_shader_program)
 		this->BuildPSO();
@@ -582,15 +477,17 @@ void Dx12Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 
 void Dx12Context::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	m_command_list->IASetIndexBuffer(nullptr);
-	m_command_list->IASetPrimitiveTopology(Topology(ETopology::UNDEFINED).ToDirectX());
+	//m_command_list->IASetIndexBuffer(nullptr);
+	//m_command_list->IASetPrimitiveTopology(Topology(ETopology::UNDEFINED).ToDirectX());
 }
 
 void Dx12Context::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
 	const Dx12VertexArray* dx_va = static_cast<const Dx12VertexArray*>(m_bound_vertex_array);
 	D3D12_VERTEX_BUFFER_VIEW vb_view = dx_va->GetVertexBufferView();
-	m_command_list->IASetVertexBuffers(0, 1, &vb_view);
+	m_command_list->SetVertexBuffer(vb_view);
+
+	//m_command_list->IASetVertexBuffers(0, 1, &vb_view);
 
 	if (m_bound_shader_program && m_bound_index_buffer)
 		this->BuildPSO();
@@ -598,7 +495,7 @@ void Dx12Context::BindVertexArrayInternal(const VertexArray* vertexArray)
 
 void Dx12Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	m_command_list->IASetVertexBuffers(0, 0, nullptr);
+	//m_command_list->IASetVertexBuffers(0, 0, nullptr);
 }
 
 void Dx12Context::BindShaderProgramInternal(const ShaderProgram* shaderProgram)

@@ -21,6 +21,10 @@ class Dx12IndexBuffer;
 class Dx12VertexArray;
 class Dx12VertexLayout;
 
+class Dx12DescriptorHeap;
+class Dx12CommandQueue;
+class Dx12CommandList;
+
 class Dx12Context : public Context
 {
 public:
@@ -45,13 +49,10 @@ public:
 
 	unsigned int GetNrOfFrameResources() const;
 	DXGI_FORMAT GetBackBufferFormat() const;
-	ID3D12DescriptorHeap* GetRtvDescriptorHeap() const;
 	ID3D12DescriptorHeap* GetSrvDescriptorHeap() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentBackBufferView() const;
 	D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView() const;
 
-	void ExecuteCommandQueue();
-	void FlushCommandQueue();
 protected:
 	virtual void BindIndexBufferInternal(const IndexBuffer* indexBuffer);
 	virtual void UnbindIndexBufferInternal(const IndexBuffer* indexBuffer);
@@ -68,14 +69,13 @@ private:
 
 	void CreateCommandObjects();
 	void CreateSwapChain(Window* window);
-	void CreateRtvAndDsvDescriptorHeaps();
-
+	void CreateRtvDescriptorHeaps();
+	void CreateDsvDescriptorHeap();
 
 	void LogAdapters();
 	void LogAdapterOutputs(IDXGIAdapter* adapter);
 	void LogOutputDisplayModes(IDXGIOutput* output, DXGI_FORMAT format);
 
-	void BuildDescriptorHeaps();
 	void BuildPSO();
 
 	ID3D12Resource* GetCurrentBackBuffer() const;
@@ -91,18 +91,6 @@ private:
 	ComPtr<ID3D12Resource> m_swapchain_buffers[SWAPCHAIN_BUFFER_COUNT];
 	ComPtr<ID3D12Resource> m_depth_stencil_buffer;
 
-	ComPtr<ID3D12Fence> m_fence;
-	UINT64 m_current_fence_value = 0;
-
-	ComPtr<ID3D12CommandQueue> m_command_queue;
-	ComPtr<ID3D12CommandAllocator> m_direct_cmdlist_alloc;
-	ComPtr<ID3D12GraphicsCommandList> m_command_list;
-
-	ComPtr<ID3D12DescriptorHeap> m_rtv_heap;
-	ComPtr<ID3D12DescriptorHeap> m_dsv_heap;
-	ComPtr<ID3D12DescriptorHeap> m_cbv_heap = nullptr;
-	ComPtr<ID3D12DescriptorHeap> m_cbv_imgui_heap = nullptr;
-
 	UINT m_rtv_descriptor_size = 0;
 	UINT m_dsv_descriptor_size = 0;
 	UINT m_cb_srv_uav_descriptor_size = 0;
@@ -111,8 +99,16 @@ private:
 	D3D12_RECT m_scissor_rect;
 
 	D3D_DRIVER_TYPE m_driver_type = D3D_DRIVER_TYPE_HARDWARE;
-	DXGI_FORMAT m_back_buffer_format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	DXGI_FORMAT m_depth_stencil_format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	ComPtr<ID3D12PipelineState> m_pipeline_state = nullptr;
+
+	std::unique_ptr<Dx12DescriptorHeap> m_dsv_heap;
+	std::unique_ptr<Dx12DescriptorHeap> m_rtv_heap;
+	std::unique_ptr<Dx12DescriptorHeap> m_cbv_heap;
+	std::unique_ptr<Dx12DescriptorHeap> m_cbv_imgui_heap;
+
+	std::unique_ptr<Dx12CommandQueue> m_command_queue;
+	Dx12CommandList* m_command_list;
+
+	Window* m_window;
 };
