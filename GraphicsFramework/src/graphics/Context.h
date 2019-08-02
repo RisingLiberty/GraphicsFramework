@@ -28,6 +28,7 @@ public:
 
 	Context();
 	virtual ~Context();
+	
 
 	virtual void PreInitialize();
 	virtual void Initialize() = 0;
@@ -47,7 +48,7 @@ public:
 	void BindShaderProgram(const ShaderProgram* shaderProgram);
 	void UnbindShaderProgram(const ShaderProgram* shaderProgram);
 
-	static void Create(API api, Window* window);
+	static Context* Create(API api, Window* window);
 	static API GetApi();
 	static Context* GetCurrent();
 
@@ -71,6 +72,8 @@ protected:
 	virtual void BindShaderProgramInternal(const ShaderProgram* shaderProgram) = 0;
 	virtual void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram) = 0;
 
+	virtual void CleanUp();
+
 protected:
 	std::unique_ptr<Renderer> m_renderer;
 	std::unique_ptr<ShaderController> m_shader_controller;
@@ -90,6 +93,6 @@ protected:
 	Format m_depth_stencil_format;
 
 private:
-	static std::unique_ptr<Context> s_current;
+	static Context* s_current;
 
 };

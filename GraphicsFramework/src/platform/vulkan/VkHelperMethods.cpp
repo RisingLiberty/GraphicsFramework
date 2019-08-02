@@ -4,6 +4,8 @@
 
 #include "VkContext.h"
 
+#include "VkCommandList.h"
+
 VkContext* GetVkContext()
 {
 	return static_cast<VkContext*>(Context::GetCurrent());
@@ -63,14 +65,14 @@ void CreateBuffer(size_t size, VkBufferUsageFlags usage, VkMemoryPropertyFlags p
 
 void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
-	VkCommandBuffer command_buffer = GetVkContext()->BeginSingleTimeCommands();
+	auto command_buffer = GetVkContext()->BeginSingleTimeCommands();
 
 	VkBufferCopy copy_region = {};
 	copy_region.srcOffset = 0;
 	copy_region.dstOffset = 0;
 	copy_region.size = size;
 
-	vkCmdCopyBuffer(command_buffer, srcBuffer, dstBuffer, 1, &copy_region);
+	vkCmdCopyBuffer(command_buffer->GetApiBuffer(), srcBuffer, dstBuffer, 1, &copy_region);
 
 	GetVkContext()->EndSingleTimeCommands(command_buffer);
 }

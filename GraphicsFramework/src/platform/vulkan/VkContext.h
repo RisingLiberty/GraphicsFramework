@@ -21,6 +21,9 @@ class VkVertexLayout;
 class VertexArray;
 class VkVertexArray;
 
+class VkCommandQueue;
+class VkCommandList;
+
 struct Vertex
 {
 	glm::vec3 Position;
@@ -160,8 +163,8 @@ public:
 	VkPhysicalDevice GetSelectedGpu() const;
 	VkCommandBuffer GetCurrentCommandBuffer() const;
 
-	VkCommandBuffer BeginSingleTimeCommands();
-	void EndSingleTimeCommands(VkCommandBuffer commandBuffer);
+	std::unique_ptr<VkCommandList> BeginSingleTimeCommands();
+	void EndSingleTimeCommands(std::unique_ptr<VkCommandList>& commandBuffer);
 
 protected:
 	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
@@ -185,7 +188,6 @@ private:
 	void CreateRenderPass();
 	void CreateDescriptorSetLayout();
 	void CreateGraphicsPipeline();
-	void CreateCommandPool();
 	void CreateColorResources();
 	void CreateDepthResources();
 	void CreateFrameBuffers();
@@ -196,8 +198,6 @@ private:
 	void CreateUniformBuffer();
 	void CreateDescriptorPool();
 	void CreateDescriptorSets();
-	void CreateCommandBuffers();
-	void CreateSyncObjects();
 
 	void Cleanup();
 	void CleanupSwapchain();
@@ -219,8 +219,8 @@ private:
 	VkFormat FindDepthFormat();
 	//void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
 	void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
-	void GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
-	void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+	//void GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
+	//void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 	//void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
@@ -233,8 +233,6 @@ private:
 	VkPhysicalDevice m_physical_device = VK_NULL_HANDLE;
 	VkSurfaceKHR m_surface;
 	VkDevice m_device;
-	VkQueue m_graphics_queue;
-	VkQueue m_present_queue;
 	VkSwapchainKHR m_swapchain;
 	std::vector<VkImage> m_swapchain_images;
 	VkFormat m_swapchain_image_format;
@@ -245,11 +243,10 @@ private:
 	VkPipelineLayout m_pipeline_layout = {};
 	VkPipeline m_graphics_pipeline;
 	std::vector<VkFramebuffer> m_swapchain_frame_buffers;
-	VkCommandPool m_command_pool;
-	std::vector<VkCommandBuffer> m_command_buffers;
-	std::vector<VkSemaphore> m_image_available_semaphores;
-	std::vector<VkSemaphore> m_render_finished_semaphores;
-	std::vector<VkFence> m_in_flight_fences;
+	//VkCommandPool m_command_pool;
+	//std::vector<VkSemaphore> m_image_available_semaphores;
+	//std::vector<VkSemaphore> m_render_finished_semaphores;
+	//std::vector<VkFence> m_in_flight_fences;
 	uint32_t m_current_frame = 0;
 	bool m_is_frame_buffer_resized = false;
 	VkDescriptorSetLayout m_descriptor_set_layout;
@@ -275,5 +272,6 @@ private:
 	const std::string MODEL_PATH = "data/meshes/chalet.obj";
 	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
 
-	//VkShaderProgram* m_bound_shader_program;
+	std::unique_ptr<VkCommandQueue> m_command_queue;
+	VkCommandList* m_command_list;
 };

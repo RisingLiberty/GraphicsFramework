@@ -17,7 +17,7 @@
 #include "controllers/VertexLayoutController.h"
 #include "controllers/IndexBufferController.h"
 
-std::unique_ptr<Context> Context::s_current = nullptr;
+Context* Context::s_current = nullptr;
 
 Context::Context()
 {
@@ -35,20 +35,32 @@ Context::Context()
 
 Context::~Context() = default;
 
-void Context::Create(API api, Window* window)
+void Context::CleanUp()
+{
+	m_renderer.reset();
+	m_shader_controller.reset();
+	m_vertex_array_controller.reset();
+	m_vertex_buffer_controller.reset();
+	m_vertex_layout_controller.reset();
+	m_index_buffer_controller.reset();
+}
+
+Context* Context::Create(API api, Window* window)
 {
 	assert(!s_current);
 
 	switch (api)
 	{
-	case Context::API::DIRECTX11: s_current = std::make_unique<Dx11Context>(window); break;
-	case Context::API::DIRECTX12: s_current = std::make_unique<Dx12Context>(window); break;
-	case Context::API::OPENGL: s_current = std::make_unique<OpenGLContext>(window); break;
-	case Context::API::VULKAN: s_current = std::make_unique<VkContext>(window); break;
+	case Context::API::DIRECTX11: s_current = new Dx11Context(window); break;
+	case Context::API::DIRECTX12: s_current = new Dx12Context(window); break;
+	case Context::API::OPENGL: s_current = new OpenGLContext(window); break;
+	case Context::API::VULKAN: s_current = new VkContext(window); break;
 	}
 
 	s_current->PreInitialize();
 	s_current->Initialize();
+
+	return s_current;
 }
 
 void Context::PreInitialize()
@@ -162,7 +174,7 @@ void Context::UnbindShaderProgram(const ShaderProgram* shaderProgram)
 
 Context* Context::GetCurrent()
 {
-	return s_current.get();
+	return s_current;
 }
 
 Context::API Context::GetApi()

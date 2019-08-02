@@ -30,10 +30,13 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped):
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	Context::Create(Context::API::DIRECTX12, m_window.get());
+	m_context.reset(Context::Create(Context::API::VULKAN, m_window.get()));
 }
 
-Win64Application::~Win64Application() = default;
+Win64Application::~Win64Application()
+{
+
+};
 
 void Win64Application::Run()
 {
@@ -87,7 +90,6 @@ void Win64Application::Run()
 		m_window->Present();
 
 		//fix so draw updates are synced with display refresh rate
-
 	}
 }
 
