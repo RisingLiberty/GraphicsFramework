@@ -257,8 +257,10 @@
     <ClCompile Include="src\platform\vulkan\VkCommandList.cpp" />
     <ClCompile Include="src\platform\vulkan\VkCommandQueue.cpp" />
     <ClCompile Include="src\platform\vulkan\VkContext.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkDefaultDevice.cpp" />
     <ClCompile Include="src\platform\vulkan\VkDownloadBuffer.cpp" />
     <ClCompile Include="src\platform\vulkan\VkFragmentShader.cpp" />
+    <ClCompile Include="src\platform\vulkan\VkGpu.cpp" />
     <ClCompile Include="src\platform\vulkan\VkHelperMethods.cpp" />
     <ClCompile Include="src\platform\vulkan\VkIndexBuffer.cpp" />
     <ClCompile Include="src\platform\vulkan\VkRenderer.cpp" />
@@ -415,6 +417,8 @@
     <ClInclude Include="src\platform\opengl\OpenGLVertexArray.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLVertexShader.h" />
+    <ClInclude Include="src\platform\vulkan\VkDefaultDevice.h" />
+    <ClInclude Include="src\platform\vulkan\VkGpu.h" />
     <ClInclude Include="src\platform\vulkan\VkBufferWrapper.h" />
     <ClInclude Include="src\platform\vulkan\VkCommand.h" />
     <ClInclude Include="src\platform\vulkan\VkCommandList.h" />

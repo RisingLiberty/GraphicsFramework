@@ -429,6 +429,12 @@
     <ClCompile Include="src\platform\vulkan\VkCommandQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\platform\vulkan\VkGpu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\vulkan\VkDefaultDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.h">
@@ -858,6 +864,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\vulkan\VkCommandQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\vulkan\VkGpu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\vulkan\VkDefaultDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

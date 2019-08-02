@@ -23,6 +23,8 @@ class VkVertexArray;
 
 class VkCommandQueue;
 class VkCommandList;
+class VkGpu;
+class VkDefaultDevice;
 
 struct Vertex
 {
@@ -131,18 +133,10 @@ struct QueueFamilyIndices
 	bool IsComplete() { return graphics_familiy >= 0 && present_family >= 0; }
 };
 
-struct SwapChainSupportDetails
-{
-	VkSurfaceCapabilitiesKHR capabilities;
-	std::vector<VkSurfaceFormatKHR> formats;
-	std::vector<VkPresentModeKHR> present_modes;
-};
-
 struct UniformBufferObject
 {
 	glm::vec4 color;
 };
-
 
 class VkContext : public Context
 {
@@ -207,10 +201,6 @@ private:
 
 private:
 	void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
-	bool IsGpuSuitable(const VkPhysicalDevice& gpu);
-	QueueFamilyIndices FindQueueFamilies(VkPhysicalDevice gpu);
-	int RateDeviceSuitability(VkPhysicalDevice gpu);
-	SwapChainSupportDetails QuerySwapchainSupport(VkPhysicalDevice device);
 	VkSurfaceFormatKHR ChooseSwapchainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR ChooseSwapchainPresentMode(const std::vector<VkPresentModeKHR> availablePresentModes);
 	VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
@@ -222,7 +212,7 @@ private:
 	//void GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 	//void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
 	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-	bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
+	//bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
 	//void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
 	VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	void RecreateSwapchain();
@@ -230,9 +220,7 @@ private:
 private:
 	VkInstance m_instance = nullptr;
 	VkDebugUtilsMessengerEXT m_debug_callback;
-	VkPhysicalDevice m_physical_device = VK_NULL_HANDLE;
 	VkSurfaceKHR m_surface;
-	VkDevice m_device;
 	VkSwapchainKHR m_swapchain;
 	std::vector<VkImage> m_swapchain_images;
 	VkFormat m_swapchain_image_format;
@@ -243,10 +231,6 @@ private:
 	VkPipelineLayout m_pipeline_layout = {};
 	VkPipeline m_graphics_pipeline;
 	std::vector<VkFramebuffer> m_swapchain_frame_buffers;
-	//VkCommandPool m_command_pool;
-	//std::vector<VkSemaphore> m_image_available_semaphores;
-	//std::vector<VkSemaphore> m_render_finished_semaphores;
-	//std::vector<VkFence> m_in_flight_fences;
 	uint32_t m_current_frame = 0;
 	bool m_is_frame_buffer_resized = false;
 	VkDescriptorSetLayout m_descriptor_set_layout;
@@ -272,6 +256,8 @@ private:
 	const std::string MODEL_PATH = "data/meshes/chalet.obj";
 	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
 
+	std::unique_ptr<VkDefaultDevice> m_device;
 	std::unique_ptr<VkCommandQueue> m_command_queue;
 	VkCommandList* m_command_list;
+	std::unique_ptr<VkGpu> m_gpu;
 };
