@@ -144,9 +144,9 @@ public:
 	VkPhysicalDevice GetSelectedGpu() const;
 	VkCommandList* GetCurrentCommandList() const;
 	VkCommandBuffer GetCurrentCommandBuffer() const;
+	static VkAllocationCallbacks* GetAllocationCallbacks();
 
-	std::unique_ptr<VkCommandList> BeginSingleTimeCommands();
-	void EndSingleTimeCommands(std::unique_ptr<VkCommandList>& commandBuffer);
+	std::unique_ptr<VkCommandList> CreateDirectCommandList() const;
 
 protected:
 	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;
@@ -165,6 +165,7 @@ private:
 	void CreateDescriptorSets();
 
 	void Cleanup();
+	void InitializeImGui() const;
 
 private:
 	//void CreateColorResources();
@@ -184,10 +185,11 @@ private:
 	uint32_t m_current_frame = 0;
 	bool m_is_frame_buffer_resized = false;
 
+
 	std::unique_ptr<VkInstanceWrapper> m_instance;
 	std::unique_ptr<VkDefaultDevice> m_device;
 
-	std::vector<std::unique_ptr<VkImageWrapper>> m_swapchain_images;
+	static std::unique_ptr<VkAllocationCallbacks> s_allocator;
 	std::vector<std::unique_ptr<VkImageViewWrapper>> m_swapchain_image_views;
 	std::vector<std::unique_ptr<VkFrameBufferWrapper>> m_swapchain_frame_buffers;
 

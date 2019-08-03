@@ -16,7 +16,7 @@
 //		buffer_info.usage = usage;
 //		buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 //
-//		VKCALL(vkCreateBuffer(GetVkDevice(), &buffer_info, nullptr, &buffer));
+//		VKCALL(vkCreateBuffer(GetVkDevice(), &buffer_info, GetVkAllocationCallbacks(), &buffer));
 //
 //		VkMemoryRequirements mem_requirements;
 //		vkGetBufferMemoryRequirements(GetVkDevice(), buffer, &mem_requirements);
@@ -26,7 +26,7 @@
 //		alloc_info.allocationSize = mem_requirements.size;
 //		alloc_info.memoryTypeIndex = FindMemoryType(mem_requirements.memoryTypeBits, properties);
 //
-//		VKCALL(vkAllocateMemory(GetVkDevice(), &alloc_info, nullptr, &bufferMemory));
+//		VKCALL(vkAllocateMemory(GetVkDevice(), &alloc_info, GetVkAllocationCallbacks(), &bufferMemory));
 //
 //		vkBindBufferMemory(GetVkDevice(), buffer, bufferMemory, 0);
 //	}
@@ -55,8 +55,8 @@ VkBufferWrapper::VkBufferWrapper(unsigned int size, BufferUsage usage, const voi
 
 VkBufferWrapper::~VkBufferWrapper()
 {
-	vkDestroyBuffer(GetVkDevice(), m_buffer_gpu, nullptr);
-	vkFreeMemory(GetVkDevice(), m_buffer_memory_gpu, nullptr);
+	vkDestroyBuffer(GetVkDevice(), m_buffer_gpu, GetVkAllocationCallbacks());
+	vkFreeMemory(GetVkDevice(), m_buffer_memory_gpu, GetVkAllocationCallbacks());
 }
 
 VkBuffer VkBufferWrapper::GetBufferGpu() const
@@ -76,8 +76,8 @@ void VkBufferWrapper::SetDataInternal(const void* data, unsigned int size)
 	CreateBuffer(size, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, m_buffer_gpu, m_buffer_memory_gpu);
 	CopyBuffer(m_upload_buffer, m_buffer_gpu, size);
-	vkDestroyBuffer(GetVkDevice(), m_upload_buffer, nullptr);
-	vkFreeMemory(GetVkDevice(), m_upload_buffer_memory, nullptr);
+	vkDestroyBuffer(GetVkDevice(), m_upload_buffer, GetVkAllocationCallbacks());
+	vkFreeMemory(GetVkDevice(), m_upload_buffer_memory, GetVkAllocationCallbacks());
 }
 
 std::unique_ptr<DownloadBuffer> VkBufferWrapper::DownloadDataToBuffer(unsigned int size) const

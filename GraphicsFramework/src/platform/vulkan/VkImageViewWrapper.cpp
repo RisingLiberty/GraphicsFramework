@@ -22,12 +22,12 @@ VkImageViewWrapper::VkImageViewWrapper(VkImage image, VkFormat format, VkImageAs
 	view_info.subresourceRange.baseArrayLayer = 0;
 	view_info.subresourceRange.levelCount = 1;
 
-	VKCALL(vkCreateImageView(GetVkDevice(), &view_info, nullptr, &m_image_view));
+	VKCALL(vkCreateImageView(GetVkDevice(), &view_info, GetVkAllocationCallbacks(), &m_image_view));
 }
 
 VkImageViewWrapper::~VkImageViewWrapper()
 {
-	vkDestroyImageView(GetVkDevice(), m_image_view, nullptr);
+	vkDestroyImageView(GetVkDevice(), m_image_view, GetVkAllocationCallbacks());
 }
 
 VkImageView VkImageViewWrapper::GetApiImageView() const

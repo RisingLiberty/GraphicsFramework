@@ -15,12 +15,12 @@ VkFrameBufferWrapper::VkFrameBufferWrapper(unsigned int width, unsigned int heig
 	framebuffer_info.height = height;
 	framebuffer_info.layers = 1;
 
-	VKCALL(vkCreateFramebuffer(GetVkDevice(), &framebuffer_info, nullptr, &m_frame_buffer));
+	VKCALL(vkCreateFramebuffer(GetVkDevice(), &framebuffer_info, GetVkAllocationCallbacks(), &m_frame_buffer));
 }
 
 VkFrameBufferWrapper::~VkFrameBufferWrapper()
 {
-	vkDestroyFramebuffer(GetVkDevice(), m_frame_buffer, nullptr);
+	vkDestroyFramebuffer(GetVkDevice(), m_frame_buffer, GetVkAllocationCallbacks());
 }
 
 VkFramebuffer VkFrameBufferWrapper::GetApiFrameBuffer() const

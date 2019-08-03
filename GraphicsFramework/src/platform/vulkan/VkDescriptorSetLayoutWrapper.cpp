@@ -16,7 +16,7 @@ VkDescriptorSetLayoutWrapper::VkDescriptorSetLayoutWrapper()
 	//sampler_layout_binding.binding = 1;
 	//sampler_layout_binding.descriptorCount = 1;
 	//sampler_layout_binding.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-	//sampler_layout_binding.pImmutableSamplers = nullptr;
+	//sampler_layout_binding.pImmutableSamplers = GetVkAllocationCallbacks();
 
 	//sampler_layout_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT;
 
@@ -27,12 +27,12 @@ VkDescriptorSetLayoutWrapper::VkDescriptorSetLayoutWrapper()
 	layout_info.bindingCount = static_cast<uint32_t>(bindings.size());
 	layout_info.pBindings = bindings.data();
 
-	VKCALL(vkCreateDescriptorSetLayout(GetVkDevice(), &layout_info, nullptr, &m_descriptor_set_layout));
+	VKCALL(vkCreateDescriptorSetLayout(GetVkDevice(), &layout_info, GetVkAllocationCallbacks(), &m_descriptor_set_layout));
 }
 
 VkDescriptorSetLayoutWrapper::~VkDescriptorSetLayoutWrapper()
 {
-	vkDestroyDescriptorSetLayout(GetVkDevice(), m_descriptor_set_layout, nullptr);
+	vkDestroyDescriptorSetLayout(GetVkDevice(), m_descriptor_set_layout, GetVkAllocationCallbacks());
 }
 
 VkDescriptorSetLayout VkDescriptorSetLayoutWrapper::GetApiDescriptorSetLayout() const

@@ -26,6 +26,11 @@ VkCommandBuffer GetVkCurrentCommandBuffer()
 	return GetVkContext()->GetCurrentCommandBuffer();
 }
 
+VkAllocationCallbacks* GetVkAllocationCallbacks()
+{
+	return VkContext::GetAllocationCallbacks();
+}
+
 uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)
 {
 	VkPhysicalDeviceMemoryProperties mem_properties;
@@ -48,7 +53,7 @@ void CreateBuffer(size_t size, VkBufferUsageFlags usage, VkMemoryPropertyFlags p
 	buffer_info.usage = usage;
 	buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-	VKCALL(vkCreateBuffer(GetVkDevice(), &buffer_info, nullptr, &buffer));
+	VKCALL(vkCreateBuffer(GetVkDevice(), &buffer_info, GetVkAllocationCallbacks(), &buffer));
 
 	VkMemoryRequirements mem_requirements;
 	vkGetBufferMemoryRequirements(GetVkDevice(), buffer, &mem_requirements);
@@ -58,14 +63,14 @@ void CreateBuffer(size_t size, VkBufferUsageFlags usage, VkMemoryPropertyFlags p
 	alloc_info.allocationSize = mem_requirements.size;
 	alloc_info.memoryTypeIndex = FindMemoryType(mem_requirements.memoryTypeBits, properties);
 
-	VKCALL(vkAllocateMemory(GetVkDevice(), &alloc_info, nullptr, &bufferMemory));
+	VKCALL(vkAllocateMemory(GetVkDevice(), &alloc_info, GetVkAllocationCallbacks(), &bufferMemory));
 
 	vkBindBufferMemory(GetVkDevice(), buffer, bufferMemory, 0);
 }
 
 void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 {
-	auto command_buffer = GetVkContext()->BeginSingleTimeCommands();
+	std::unique_ptr<VkCommandList> command_buffer = GetVkContext()->CreateDirectCommandList();
 
 	VkBufferCopy copy_region = {};
 	copy_region.srcOffset = 0;
@@ -73,6 +78,4 @@ void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 	copy_region.size = size;
 
 	vkCmdCopyBuffer(command_buffer->GetApiBuffer(), srcBuffer, dstBuffer, 1, &copy_region);
-
-	GetVkContext()->EndSingleTimeCommands(command_buffer);
 }

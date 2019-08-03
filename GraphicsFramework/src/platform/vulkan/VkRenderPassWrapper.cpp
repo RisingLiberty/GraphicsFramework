@@ -76,12 +76,12 @@ VkRenderPassWrapper::VkRenderPassWrapper(Format format)
 	render_pass_info.dependencyCount = 1;
 	render_pass_info.pDependencies = &dependency;
 
-	VKCALL(vkCreateRenderPass(GetVkDevice(), &render_pass_info, nullptr, &m_render_pass));
+	VKCALL(vkCreateRenderPass(GetVkDevice(), &render_pass_info, GetVkAllocationCallbacks(), &m_render_pass));
 }
 
 VkRenderPassWrapper::~VkRenderPassWrapper()
 {
-	vkDestroyRenderPass(GetVkDevice(), m_render_pass, nullptr);
+	vkDestroyRenderPass(GetVkDevice(), m_render_pass, GetVkAllocationCallbacks());
 }
 
 VkRenderPass VkRenderPassWrapper::GetApiRenderPass() const

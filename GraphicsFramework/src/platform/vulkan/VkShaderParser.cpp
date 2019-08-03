@@ -261,7 +261,7 @@ namespace
 
 		//const char* str = string.c_str() + offset;
 		//const char* found = strstr(str, search.c_str());
-		//if (found == nullptr)
+		//if (found == GetVkAllocationCallbacks())
 		//	return -1;
 		//return (int)(found - str) + offset;
 	}

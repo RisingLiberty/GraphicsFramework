@@ -84,7 +84,7 @@ VkGraphicsPipelineWrapper::VkGraphicsPipelineWrapper(unsigned int width, unsigne
 	pipeline_layout_info.pushConstantRangeCount = 0;
 	pipeline_layout_info.pPushConstantRanges = nullptr;
 
-	VKCALL(vkCreatePipelineLayout(GetVkDevice(), &pipeline_layout_info, nullptr, &m_layout));
+	VKCALL(vkCreatePipelineLayout(GetVkDevice(), &pipeline_layout_info, GetVkAllocationCallbacks(), &m_layout));
 
 	VkPipelineDepthStencilStateCreateInfo depth_stencil = {};
 	depth_stencil.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
@@ -118,13 +118,13 @@ VkGraphicsPipelineWrapper::VkGraphicsPipelineWrapper(unsigned int width, unsigne
 	pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
 	pipeline_info.basePipelineIndex = -1;
 
-	VKCALL(vkCreateGraphicsPipelines(GetVkDevice(), VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &m_pipeline));
+	VKCALL(vkCreateGraphicsPipelines(GetVkDevice(), VK_NULL_HANDLE, 1, &pipeline_info, GetVkAllocationCallbacks(), &m_pipeline));
 }
 
 VkGraphicsPipelineWrapper::~VkGraphicsPipelineWrapper()
 {
-	vkDestroyPipeline(GetVkDevice(), m_pipeline, nullptr);
-	vkDestroyPipelineLayout(GetVkDevice(), m_layout, nullptr);
+	vkDestroyPipeline(GetVkDevice(), m_pipeline, GetVkAllocationCallbacks());
+	vkDestroyPipelineLayout(GetVkDevice(), m_layout, GetVkAllocationCallbacks());
 }
 
 VkPipelineLayout VkGraphicsPipelineWrapper::GetLayout() const

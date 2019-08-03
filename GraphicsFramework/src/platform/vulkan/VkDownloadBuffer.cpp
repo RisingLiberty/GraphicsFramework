@@ -12,8 +12,8 @@ VkDownloadBuffer::VkDownloadBuffer(unsigned int size):
 
 VkDownloadBuffer::~VkDownloadBuffer()
 {
-	vkDestroyBuffer(GetVkDevice(), m_buffer, nullptr);
-	vkFreeMemory(GetVkDevice(), m_buffer_memory, nullptr);
+	vkDestroyBuffer(GetVkDevice(), m_buffer, GetVkAllocationCallbacks());
+	vkFreeMemory(GetVkDevice(), m_buffer_memory, GetVkAllocationCallbacks());
 }
 
 void VkDownloadBuffer::Download(const ApiBufferWrapper* buffer)
@@ -28,6 +28,4 @@ void VkDownloadBuffer::Download(const ApiBufferWrapper* buffer)
 	vkMapMemory(GetVkDevice(), m_buffer_memory, 0, m_size, 0, &data);
 	memcpy(m_data, data, (size_t)m_size);
 	vkUnmapMemory(GetVkDevice(), m_buffer_memory);
-
-
 }

@@ -3,10 +3,14 @@
 #include "VkCommandQueue.h"
 #include "VkCommandList.h"
 #include "VkHelperMethods.h"
+#include "VkCommandPoolWrapper.h"
+#include "VkDirectCommandList.h"
 
 VkCommandQueue::VkCommandQueue(unsigned int familyIndex, unsigned int maxFramesInFlight)
 {
 	vkGetDeviceQueue(GetVkDevice(), familyIndex, 0, &m_queue);
+	m_command_pool = std::make_unique<VkCommandPoolWrapper>(familyIndex);
+	VkCommandList::SetGlobalCommandPool(m_command_pool->GetApiCommandPool());
 
 	VkSemaphoreCreateInfo semaphore_create_info = {};
 	semaphore_create_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -19,8 +23,8 @@ VkCommandQueue::VkCommandQueue(unsigned int familyIndex, unsigned int maxFramesI
 
 	for (unsigned int i = 0; i < maxFramesInFlight; ++i)
 	{
-		VKCALL(vkCreateFence(GetVkDevice(), &fence_create_info, nullptr, &m_in_flight_fences[i]));
-		this->Push(std::make_unique<VkCommandList>(familyIndex));
+		VKCALL(vkCreateFence(GetVkDevice(), &fence_create_info, GetVkAllocationCallbacks(), &m_in_flight_fences[i]));
+		this->Push(std::make_unique<VkCommandList>(familyIndex, m_command_pool.get()));
 	}
 }
 
@@ -28,7 +32,7 @@ VkCommandQueue::~VkCommandQueue()
 {
 	for (size_t i = 0; i < m_in_flight_fences.size(); ++i)
 	{
-		vkDestroyFence(GetVkDevice(), m_in_flight_fences[i], nullptr);
+		vkDestroyFence(GetVkDevice(), m_in_flight_fences[i], GetVkAllocationCallbacks());
 	}
 }
 
@@ -42,7 +46,7 @@ void VkCommandQueue::WaitForFence(unsigned int currentFrame)
 	vkWaitForFences(GetVkDevice(), 1, &m_in_flight_fences[currentFrame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 }
 
-void VkCommandQueue::DirectSubmit(VkSubmitInfo submitInfo)
+void VkCommandQueue::DirectSubmit(VkSubmitInfo submitInfo) const
 {
 	VKCALL(vkQueueSubmit(m_queue, 1, &submitInfo, VK_NULL_HANDLE));
 	vkQueueWaitIdle(m_queue);
@@ -88,4 +92,9 @@ VkCommandList* VkCommandQueue::GetApiList(unsigned int currentFrame) const
 VkFence VkCommandQueue::GetCurrentInFlightFence(unsigned int currentFrame) const
 {
 	return m_in_flight_fences[currentFrame];
+}
+
+std::unique_ptr<VkCommandList> VkCommandQueue::CreateDirectCommandList() const
+{
+	return std::make_unique<VkDirectCommandList>(this);
 }

@@ -49,7 +49,7 @@ VkImageWrapper::VkImageWrapper(unsigned int width,
 	image_info.flags = 0;
 	image_info.mipLevels = mipLevels;
 
-	VKCALL(vkCreateImage(GetVkDevice(), &image_info, nullptr, &m_image));
+	VKCALL(vkCreateImage(GetVkDevice(), &image_info, GetVkAllocationCallbacks(), &m_image));
 
 	VkMemoryRequirements mem_requirements;
 	vkGetImageMemoryRequirements(GetVkDevice(), m_image, &mem_requirements);
@@ -59,7 +59,7 @@ VkImageWrapper::VkImageWrapper(unsigned int width,
 	alloc_info.allocationSize = mem_requirements.size;
 	alloc_info.memoryTypeIndex = FindMemoryType(mem_requirements.memoryTypeBits, properties);
 
-	VKCALL(vkAllocateMemory(GetVkDevice(), &alloc_info, nullptr, &m_image_memory));
+	VKCALL(vkAllocateMemory(GetVkDevice(), &alloc_info, GetVkAllocationCallbacks(), &m_image_memory));
 	VKCALL(vkBindImageMemory(GetVkDevice(), m_image, m_image_memory, 0));
 
 	m_format = format;
@@ -71,14 +71,14 @@ VkImageWrapper::~VkImageWrapper()
 {
 	if (m_should_delete_images)
 	{
-		vkDestroyImage(GetVkDevice(), m_image, nullptr);
-		vkFreeMemory(GetVkDevice(), m_image_memory, nullptr);
+		vkDestroyImage(GetVkDevice(), m_image, GetVkAllocationCallbacks());
+		vkFreeMemory(GetVkDevice(), m_image_memory, GetVkAllocationCallbacks());
 	}
 }
 
 void VkImageWrapper::TransitionImageLayout(VkImageLayout newLayout)
 {
-	std::unique_ptr<VkCommandList> command_list = GetVkContext()->BeginSingleTimeCommands();
+	std::unique_ptr<VkCommandList> command_list = GetVkContext()->CreateDirectCommandList();
 
 	VkImageMemoryBarrier barrier = {};
 	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -143,7 +143,6 @@ void VkImageWrapper::TransitionImageLayout(VkImageLayout newLayout)
 		ThrowException("unsupported layout transition!");
 
 	command_list->PipelineBarrier(source_stage, destination_stage, barrier);
-	GetVkContext()->EndSingleTimeCommands(command_list);
 
 	m_layout = newLayout;
 }

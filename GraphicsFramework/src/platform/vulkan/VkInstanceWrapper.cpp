@@ -149,21 +149,21 @@ VkInstanceWrapper::VkInstanceWrapper(Window* window)
 	create_info.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
 	create_info.ppEnabledLayerNames = VALIDATION_LAYERS.data();
 
-	VKCALL(vkCreateInstance(&create_info, nullptr, &m_instance));
+	VKCALL(vkCreateInstance(&create_info, GetVkAllocationCallbacks(), &m_instance));
 
 	this->SetupDebugCallback();
 }
 
 VkInstanceWrapper::~VkInstanceWrapper()
 {
-	DestroyDebugUtilsMessengerEXT(m_instance, m_debug_callback, nullptr);
-	vkDestroyInstance(m_instance, nullptr);
+	DestroyDebugUtilsMessengerEXT(m_instance, m_debug_callback, GetVkAllocationCallbacks());
+	vkDestroyInstance(m_instance, GetVkAllocationCallbacks());
 }
 
 VkSurfaceKHR VkInstanceWrapper::CreateSurface(Window* window)
 {
 	VkSurfaceKHR surface;
-	VKCALL(CreateWindowSurface(m_instance, window, nullptr, &surface));
+	VKCALL(CreateWindowSurface(m_instance, window, GetVkAllocationCallbacks(), &surface));
 	return surface;
 }
 
@@ -192,9 +192,9 @@ void VkInstanceWrapper::SetupDebugCallback()
 		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 
 	createInfo.pfnUserCallback = DebugCallback;
-	createInfo.pUserData = nullptr; //Optional
+	createInfo.pUserData = GetVkAllocationCallbacks(); //Optional
 
-	if (CreateDebugUtilsMessengerEXT(m_instance, &createInfo, nullptr, &m_debug_callback) != VK_SUCCESS)
+	if (CreateDebugUtilsMessengerEXT(m_instance, &createInfo, GetVkAllocationCallbacks(), &m_debug_callback) != VK_SUCCESS)
 		throw std::runtime_error("failed to set up debug callback!");
 }
 

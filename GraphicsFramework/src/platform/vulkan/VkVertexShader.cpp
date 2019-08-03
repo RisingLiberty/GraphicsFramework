@@ -36,7 +36,7 @@ VkVertexShader::VkVertexShader(const std::string& path) :
 	create_info.codeSize = m_code.size();
 	create_info.pCode = reinterpret_cast<uint32_t*>(m_code.data());
 
-	VKCALL(vkCreateShaderModule(GetVkDevice(), &create_info, nullptr, &m_module));
+	VKCALL(vkCreateShaderModule(GetVkDevice(), &create_info, GetVkAllocationCallbacks(), &m_module));
 	m_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
 	m_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
 	m_stage_info.module = m_module;
@@ -45,7 +45,7 @@ VkVertexShader::VkVertexShader(const std::string& path) :
 
 VkVertexShader::~VkVertexShader()
 {
-	vkDestroyShaderModule(GetVkDevice(), m_module, nullptr);
+	vkDestroyShaderModule(GetVkDevice(), m_module, GetVkAllocationCallbacks());
 }
 
 int VkVertexShader::Compile()

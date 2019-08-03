@@ -85,14 +85,14 @@ VkSwapchain::VkSwapchain(const SwapChainSupportDetails& details, VkFormat format
 
 	create_info.oldSwapchain = VK_NULL_HANDLE;
 
-	VKCALL(vkCreateSwapchainKHR(GetVkDevice(), &create_info, nullptr, &m_swapchain));
+	VKCALL(vkCreateSwapchainKHR(GetVkDevice(), &create_info, GetVkAllocationCallbacks(), &m_swapchain));
 
 	m_extent = extent;
 }
 
 VkSwapchain::~VkSwapchain()
 {
-	vkDestroySwapchainKHR(GetVkDevice(), m_swapchain, nullptr);
+	vkDestroySwapchainKHR(GetVkDevice(), m_swapchain, GetVkAllocationCallbacks());
 }
 
 VkSwapchainKHR VkSwapchain::GetSwapchain() const

@@ -32,12 +32,13 @@ VkDefaultDevice::VkDefaultDevice(VkGpu* gpu)
 	create_info.enabledLayerCount = static_cast<uint32_t>(m_validation_layers.size());
 	create_info.ppEnabledLayerNames = m_validation_layers.data();
 
-	VKCALL(vkCreateDevice(gpu->GetPhysicalDevice(), &create_info, nullptr, &m_device));
+
+	VKCALL(vkCreateDevice(gpu->GetPhysicalDevice(), &create_info, GetVkAllocationCallbacks(), &m_device));
 }
 
 VkDefaultDevice::~VkDefaultDevice()
 {
-	vkDestroyDevice(m_device, nullptr);
+	vkDestroyDevice(m_device, GetVkAllocationCallbacks());
 }
 
 VkDevice VkDefaultDevice::GetApiDevice() const

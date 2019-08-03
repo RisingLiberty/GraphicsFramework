@@ -5,12 +5,18 @@
 #include "VkHelperMethods.h"
 #include "VkCommand.h"
 #include "VkSwapchain.h"
+#include "VkCommandPoolWrapper.h"
 
-VkCommandPool VkCommandList::m_pool = VK_NULL_HANDLE;
+VkCommandPool VkCommandList::s_pool = VK_NULL_HANDLE;
 
-VkCommandList::VkCommandList()
+VkCommandList::VkCommandList(VkCommandPoolWrapper* commandPool)
 {
-	assert(m_pool);
+	if (commandPool)
+		m_pool = commandPool->GetApiCommandPool();
+	else
+		m_pool = s_pool;
+
+	ASSERT(m_pool, "Command pool in command list is null!");
 
 	VkCommandBufferAllocateInfo alloc_info = {};
 	alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -23,13 +29,18 @@ VkCommandList::VkCommandList()
 	VkSemaphoreCreateInfo semaphore_info = {};
 	semaphore_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 
-	VKCALL(vkCreateSemaphore(GetVkDevice(), &semaphore_info, nullptr, &m_image_available_semaphore));
-	VKCALL(vkCreateSemaphore(GetVkDevice(), &semaphore_info, nullptr, &m_render_finished_semaphore));
+	VKCALL(vkCreateSemaphore(GetVkDevice(), &semaphore_info, GetVkAllocationCallbacks(), &m_image_available_semaphore));
+	VKCALL(vkCreateSemaphore(GetVkDevice(), &semaphore_info, GetVkAllocationCallbacks(), &m_render_finished_semaphore));
 }
 
-VkCommandList::VkCommandList(unsigned int familyIndex)
+VkCommandList::VkCommandList(unsigned int familyIndex, VkCommandPoolWrapper* commandPool)
 {
-	assert(m_pool);
+	if (commandPool)
+		m_pool = commandPool->GetApiCommandPool();
+	else
+		m_pool = s_pool;
+
+	ASSERT(m_pool, "Command pool in command list is null!");
 
 	VkCommandBufferAllocateInfo alloc_info = {};
 	alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -42,8 +53,8 @@ VkCommandList::VkCommandList(unsigned int familyIndex)
 	VkSemaphoreCreateInfo semaphore_info = {};
 	semaphore_info.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
 
-	VKCALL(vkCreateSemaphore(GetVkDevice(), &semaphore_info, nullptr, &m_image_available_semaphore));
-	VKCALL(vkCreateSemaphore(GetVkDevice(), &semaphore_info, nullptr, &m_render_finished_semaphore));
+	VKCALL(vkCreateSemaphore(GetVkDevice(), &semaphore_info, GetVkAllocationCallbacks(), &m_image_available_semaphore));
+	VKCALL(vkCreateSemaphore(GetVkDevice(), &semaphore_info, GetVkAllocationCallbacks(), &m_render_finished_semaphore));
 
 }
 
@@ -52,17 +63,7 @@ VkCommandList::~VkCommandList()
 	vkFreeCommandBuffers(GetVkDevice(), m_pool, 1, &m_buffer);
 
 	if (this->GetCount() == 1)
-		vkDestroyCommandPool(GetVkDevice(), m_pool, nullptr);
-}
-
-void VkCommandList::CreatePool(unsigned int familyIndex)
-{
-	VkCommandPoolCreateInfo pool_info = {};
-	pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	pool_info.queueFamilyIndex = familyIndex;
-	pool_info.flags = 0;
-
-	VKCALL(vkCreateCommandPool(GetVkDevice(), &pool_info, nullptr, &m_pool));
+		vkDestroyCommandPool(GetVkDevice(), m_pool, GetVkAllocationCallbacks());
 }
 
 void VkCommandList::Begin(VkCommandBufferBeginInfo beginInfo)
@@ -113,6 +114,11 @@ void VkCommandList::PipelineBarrier(VkPipelineStageFlags srcStage, VkPipelineSta
 		0, nullptr,
 		0, nullptr,
 		1, &barrier);
+}
+
+void VkCommandList::SetGlobalCommandPool(VkCommandPool pool)
+{
+	s_pool = pool;
 }
 
 VkResult VkCommandList::AcquireNextImage(VkSwapchain* swapchain, unsigned int& imageIndex) const

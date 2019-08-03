@@ -1,6 +1,7 @@
 #pragma once
 
 class VkCommand;
+class VkCommandPoolWrapper;
 class VkSwapchain;
 
 #include "graphics/GraphicsResource.h"
@@ -8,11 +9,9 @@ class VkSwapchain;
 class VkCommandList : public GraphicsResource<VkCommandList>
 {
 public:
-	VkCommandList();
-	VkCommandList(unsigned int familyIndex);
+	VkCommandList(VkCommandPoolWrapper* commandPool = nullptr);
+	VkCommandList(unsigned int familyIndex, VkCommandPoolWrapper* commandPool = nullptr);
 	virtual ~VkCommandList();
-
-	static void CreatePool(unsigned int familyIndex);
 
 	void Begin(VkCommandBufferBeginInfo beginInfo);
 	void End();
@@ -25,6 +24,8 @@ public:
 	void BindVertexBuffer(VkBuffer buffer, VkDeviceSize offset);
 	void PipelineBarrier(VkPipelineStageFlags srcStage, VkPipelineStageFlags dstStage, VkImageMemoryBarrier barrier);
 
+	static void SetGlobalCommandPool(VkCommandPool pool);
+
 	VkResult AcquireNextImage(VkSwapchain* swapchain, unsigned int& imageIndex) const;
 
 	VkCommandBuffer GetApiBuffer() const;
@@ -35,10 +36,11 @@ public:
 	VkSemaphore GetImageAvailableSemaphore() const;
 	VkSemaphore GetRenderFinishedSemaphore() const;
 
-private:
+protected:
 	VkCommandBuffer m_buffer;
-	static VkCommandPool m_pool;
-	
+	static VkCommandPool s_pool;
+
+	VkCommandPool m_pool;
 	VkSemaphore m_image_available_semaphore;
 	VkSemaphore m_render_finished_semaphore;
 

@@ -11,12 +11,12 @@ VkDescriptorPoolWrapper::VkDescriptorPoolWrapper(unsigned int maxSets, const std
 	pool_info.pPoolSizes = poolSizes.data();
 	pool_info.maxSets = static_cast<uint32_t>(maxSets);
 
-	VKCALL(vkCreateDescriptorPool(GetVkDevice(), &pool_info, nullptr, &m_descriptor_pool));
+	VKCALL(vkCreateDescriptorPool(GetVkDevice(), &pool_info, GetVkAllocationCallbacks(), &m_descriptor_pool));
 }
 
 VkDescriptorPoolWrapper::~VkDescriptorPoolWrapper()
 {
-	vkDestroyDescriptorPool(GetVkDevice(), m_descriptor_pool, nullptr);
+	vkDestroyDescriptorPool(GetVkDevice(), m_descriptor_pool, GetVkAllocationCallbacks());
 }
 
 VkDescriptorPool VkDescriptorPoolWrapper::GetDescriptorPool() const

@@ -17,6 +17,8 @@
 #include "VkRenderer.h"
 #include "VkCommandQueue.h"
 #include "VkCommandList.h"
+#include "VkCommandPoolWrapper.h"
+#include "VkDirectCommandList.h"
 
 #include "VkGpu.h"
 #include "VkDefaultDevice.h"
@@ -85,16 +87,95 @@ namespace
 
 		return picked_device;
 	}
-}
+
+	struct VkAllocatorMeta
+	{
+		bool shouldAllocate;
+	};
+
+	void* VkAllocate(void* userData, size_t size, size_t allignment, VkSystemAllocationScope allocationScope)
+	{
+
+		spdlog::info("VkAllocate");
+		spdlog::info("allocating {} bytes with an allignment of {}", size, allignment);
+
+		switch (allocationScope)
+		{
+		case VK_SYSTEM_ALLOCATION_SCOPE_COMMAND:
+			spdlog::info("COMMAND");
+			break;
+		case VK_SYSTEM_ALLOCATION_SCOPE_OBJECT:
+			spdlog::info("OBJECT");
+			break;
+		case VK_SYSTEM_ALLOCATION_SCOPE_CACHE:
+			spdlog::info("CACHE");
+			break;
+		case VK_SYSTEM_ALLOCATION_SCOPE_DEVICE:
+			spdlog::info("DEVICE");
+			break;
+		case VK_SYSTEM_ALLOCATION_SCOPE_INSTANCE:
+			spdlog::info("INSTANCE");
+			break;
+		}
+
+#ifdef _DEBUG
+		return _aligned_malloc_dbg(size, allignment, __FILE__, __LINE__);
+#else
+		return _aligned_malloc(size, allignment);
+#endif
+	}
+	void* VkReallocate(void* userData, void* pOriginal, size_t size, size_t allignment, VkSystemAllocationScope allocationScope)
+	{
+
+		spdlog::info("VkReallocate");
+#ifdef _DEBUG
+		return _aligned_realloc_dbg(pOriginal, size, allignment, __FILE__, __LINE__);
+#else
+		return realloc(pOriginal, size);
+#endif
+	}
+	void VkFree(void* userData, void* memory)
+	{
+		spdlog::info("VkFree");
+#ifdef _DEBUG
+		_aligned_free_dbg(memory);
+#else
+		_aligned_free(memory);
+#endif
+	}
+	void VkInternalAllocationNotification(void* userData, size_t size, VkInternalAllocationType allocationType, VkSystemAllocationScope allocationScope)
+	{
+		spdlog::info("internal allocation notification");
+	}
+	void VkInternalFreeNotification(void* userData, size_t size, VkInternalAllocationType allocationType, VkSystemAllocationScope allocationScope)
+	{
+		spdlog::info("internal free notification");
+	}
+	}
 
 void CheckVkResult(VkResult err)
 {
 	VKCALL(err);
 }
 
+std::unique_ptr<VkAllocationCallbacks> VkContext::s_allocator;
+
 VkContext::VkContext(Window* window)
 {
 	spdlog::info("Using Vulkan");
+
+	static VkAllocatorMeta allocator_meta;
+	allocator_meta.shouldAllocate = false;
+
+	if (allocator_meta.shouldAllocate)
+	{
+		s_allocator = std::make_unique<VkAllocationCallbacks>();
+		s_allocator->pfnAllocation = VkAllocate;
+		s_allocator->pfnReallocation = VkReallocate;
+		s_allocator->pfnFree = VkFree;
+		s_allocator->pfnInternalAllocation = VkInternalAllocationNotification;
+		s_allocator->pfnInternalFree = VkInternalFreeNotification;
+	}
 
 	m_instance = std::make_unique<VkInstanceWrapper>(window);
 	this->ShowExtentions();
@@ -113,28 +194,20 @@ VkContext::~VkContext()
 
 void VkContext::Initialize()
 {
-	m_gpu = std::make_unique<VkGpu>(::PickPhysicalDevice(m_instance->GetApiInstance(), m_surface), m_surface);
+	m_gpu					= std::make_unique<VkGpu>(::PickPhysicalDevice(m_instance->GetApiInstance(), m_surface), m_surface);
+	m_device				= std::make_unique<VkDefaultDevice>(m_gpu.get());
+	m_command_queue			= std::make_unique<VkCommandQueue>(m_gpu->GetGraphicsPresentQueueIndex(), MAX_FRAMES_IN_FLIGHT);
+	m_command_list			= m_command_queue->GetApiList(m_current_frame);
+	m_swapchain				= std::make_unique<VkSwapchain>(m_gpu->GetSwapchainSupportDetails(), m_back_buffer_format.ToVulkan(), m_surface, m_gpu->GetGraphicsPresentQueueIndex());
 
-	m_device = std::make_unique<VkDefaultDevice>(m_gpu.get());
-	VkCommandList::CreatePool(m_gpu->GetGraphicsPresentQueueIndex());
-	m_command_queue = std::make_unique<VkCommandQueue>(m_gpu->GetGraphicsPresentQueueIndex(), MAX_FRAMES_IN_FLIGHT);
-	m_command_list = m_command_queue->GetApiList(m_current_frame);
-
-	m_swapchain = std::make_unique<VkSwapchain>(m_gpu->GetSwapchainSupportDetails(), m_back_buffer_format.ToVulkan(), m_surface, m_gpu->GetGraphicsPresentQueueIndex());
 	std::vector<VkImage> images = m_swapchain->GetImages();
-	m_swapchain_images.resize(images.size());
-
-	for (uint32_t i = 0; i < images.size(); ++i)
-		m_swapchain_images[i] = std::make_unique<VkImageWrapper>(images[i]);
-
 	m_swapchain_image_views.resize(MAX_FRAMES_IN_FLIGHT);
 
-	for (size_t i = 0; i < m_swapchain_images.size(); ++i)
-		m_swapchain_image_views[i] = std::make_unique<VkImageViewWrapper>(m_swapchain_images[i]->GetImage(), m_back_buffer_format.ToVulkan(), VK_IMAGE_ASPECT_COLOR_BIT, 1);
+	for (size_t i = 0; i < images.size(); ++i)
+		m_swapchain_image_views[i] = std::make_unique<VkImageViewWrapper>(images[i], m_back_buffer_format.ToVulkan(), VK_IMAGE_ASPECT_COLOR_BIT, 1);
 
-	m_render_pass = std::make_unique<VkRenderPassWrapper>(m_back_buffer_format);
-	m_imgui_render_pass = std::make_unique<VkRenderPassWrapper>(m_back_buffer_format);
-
+	m_render_pass			= std::make_unique<VkRenderPassWrapper>(m_back_buffer_format);
+	m_imgui_render_pass		= std::make_unique<VkRenderPassWrapper>(m_back_buffer_format);
 	m_descriptor_set_layout = std::make_unique<VkDescriptorSetLayoutWrapper>();
 
 	//this->CreateColorResources();
@@ -162,27 +235,7 @@ void VkContext::Initialize()
 	//this->CreateUniformBuffer();
 	this->CreateDescriptorPool();
 
-	// Setup Platform/Renderer bindings
-	ImGui_ImplVulkan_InitInfo init_info = {};
-	init_info.Instance = m_instance->GetApiInstance();
-	init_info.PhysicalDevice = m_gpu->GetPhysicalDevice();
-	init_info.Device = m_device->GetApiDevice();
-	init_info.QueueFamily = m_gpu->GetGraphicsPresentQueueIndex();
-	init_info.Queue = m_command_queue->GetApiQueue();
-	init_info.PipelineCache = nullptr;
-	init_info.DescriptorPool = m_imgui_descriptor_pool->GetDescriptorPool();
-	init_info.Allocator = nullptr;
-	init_info.MinImageCount = MAX_FRAMES_IN_FLIGHT;
-	init_info.ImageCount = MAX_FRAMES_IN_FLIGHT; //  m_vulkan_window->ImageCount;
-	init_info.CheckVkResultFn = CheckVkResult;
-	ImGui_ImplVulkan_Init(&init_info, m_imgui_render_pass->GetApiRenderPass());
-
-	// Load Fonts
-	std::unique_ptr<VkCommandList> command_buffer = BeginSingleTimeCommands();
-	ImGui_ImplVulkan_CreateFontsTexture(command_buffer->GetApiBuffer());
-	EndSingleTimeCommands(command_buffer);
-
-	ImGui_ImplVulkan_DestroyFontUploadObjects();
+	this->InitializeImGui();
 
 	m_renderer = std::make_unique<VkRenderer>();
 }
@@ -191,13 +244,13 @@ void VkContext::Cleanup()
 {
 	Context::CleanUp();
 
-	//vkDestroySampler(m_device, m_texture_sampler, nullptr);
-	//vkDestroyImageView(m_device, m_texture_image_view, nullptr);
-	//vkDestroyImage(m_device, m_texture_image, nullptr);
-	//vkFreeMemory(m_device, m_texture_image_memory, nullptr);
+	//vkDestroySampler(m_device, m_texture_sampler, GetVkAllocationCallbacks());
+	//vkDestroyImageView(m_device, m_texture_image_view, GetVkAllocationCallbacks());
+	//vkDestroyImage(m_device, m_texture_image, GetVkAllocationCallbacks());
+	//vkFreeMemory(m_device, m_texture_image_memory, GetVkAllocationCallbacks());
 
-	//vkDestroyDescriptorPool(m_device->GetApiDevice(), m_descriptor_pool, nullptr);
-	vkDestroySurfaceKHR(m_instance->GetApiInstance(), m_surface, nullptr);
+	//vkDestroyDescriptorPool(m_device->GetApiDevice(), m_descriptor_pool, GetVkAllocationCallbacks());
+	vkDestroySurfaceKHR(m_instance->GetApiInstance(), m_surface, GetVkAllocationCallbacks());
 }
 
 void VkContext::BindResourcesToPipeline()
@@ -280,6 +333,11 @@ VkCommandList* VkContext::GetCurrentCommandList() const
 VkCommandBuffer VkContext::GetCurrentCommandBuffer() const
 {
 	return this->GetCurrentCommandList()->GetApiBuffer();
+}
+
+VkAllocationCallbacks* VkContext::GetAllocationCallbacks()
+{
+	return s_allocator.get();
 }
 
 VkPhysicalDevice VkContext::GetSelectedGpu() const
@@ -365,8 +423,8 @@ void VkContext::CreateGraphicsPipeline()
 //	CopyBufferToImage(staging_buffer, m_texture_image, static_cast<uint32_t>(tex_width), static_cast<uint32_t>(tex_height));
 //
 //	GenerateMipMaps(m_texture_image, VK_FORMAT_R8G8B8A8_UNORM, tex_width, tex_height, m_mip_levels);
-//	vkDestroyBuffer(m_device, staging_buffer, nullptr);
-//	vkFreeMemory(m_device, staging_buffer_memory, nullptr);
+//	vkDestroyBuffer(m_device, staging_buffer, GetVkAllocationCallbacks());
+//	vkFreeMemory(m_device, staging_buffer_memory, GetVkAllocationCallbacks());
 //}
 //
 //void VkContext::CreateTextureImageView()
@@ -394,7 +452,7 @@ void VkContext::CreateGraphicsPipeline()
 //	sampler_info.minLod = 0.0f;
 //	sampler_info.maxLod = static_cast<float>(m_mip_levels);
 //
-//	VKCALL(vkCreateSampler(m_device, &sampler_info, nullptr, &m_texture_sampler));
+//	VKCALL(vkCreateSampler(m_device, &sampler_info, GetVkAllocationCallbacks(), &m_texture_sampler));
 //}
 
 //void VkContext::LoadModel()
@@ -456,7 +514,7 @@ void VkContext::CreateGraphicsPipeline()
 
 void VkContext::CreateDescriptorPool()
 {
-	std::vector<VkDescriptorPoolSize> pool_sizes = 
+	std::vector<VkDescriptorPoolSize> pool_sizes =
 	{
 		{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_FRAMES_IN_FLIGHT},
 		{VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, MAX_FRAMES_IN_FLIGHT}
@@ -464,7 +522,7 @@ void VkContext::CreateDescriptorPool()
 
 	m_descriptor_pool = std::make_unique<VkDescriptorPoolWrapper>(MAX_FRAMES_IN_FLIGHT, pool_sizes);
 
-	std::vector<VkDescriptorPoolSize> pool_sizes_imgui = 
+	std::vector<VkDescriptorPoolSize> pool_sizes_imgui =
 	{
 		{ VK_DESCRIPTOR_TYPE_SAMPLER, MAX_FRAMES_IN_FLIGHT },
 		{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, MAX_FRAMES_IN_FLIGHT },
@@ -487,7 +545,7 @@ void VkContext::CreateDescriptorSets()
 	if (m_descriptor_sets)
 		return;
 
-	std::vector<VkDescriptorSetLayout> layouts(m_swapchain_images.size(), m_descriptor_set_layout->GetApiDescriptorSetLayout());
+	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, m_descriptor_set_layout->GetApiDescriptorSetLayout());
 	m_descriptor_sets = std::make_unique<VkDescriptorSetsWrapper>(MAX_FRAMES_IN_FLIGHT, layouts, static_cast<const VkShaderProgram*>(m_bound_shader_program)->GetUniformBuffer(), m_descriptor_pool->GetDescriptorPool());
 }
 
@@ -524,7 +582,7 @@ void VkContext::CreateDescriptorSets()
 //		barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
 //
 //		vkCmdPipelineBarrier(command_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
-//			VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+//			VK_PIPELINE_STAGE_TRANSFER_BIT, 0, 0, GetVkAllocationCallbacks(), 0, GetVkAllocationCallbacks(), 1, &barrier);
 //
 //		VkImageBlit blit = {};
 //		blit.srcOffsets[0] = { 0,0,0 };
@@ -551,7 +609,7 @@ void VkContext::CreateDescriptorSets()
 //		barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 //
 //		vkCmdPipelineBarrier(command_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT,
-//			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+//			VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, GetVkAllocationCallbacks(), 0, GetVkAllocationCallbacks(), 1, &barrier);
 //
 //		if (mip_width > 1) mip_width /= 2;
 //		if (mip_height > 1) mip_height /= 2;
@@ -564,7 +622,7 @@ void VkContext::CreateDescriptorSets()
 //	barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
 //	barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
 //
-//	vkCmdPipelineBarrier(command_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, nullptr, 0, nullptr, 1, &barrier);
+//	vkCmdPipelineBarrier(command_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0, 0, GetVkAllocationCallbacks(), 0, GetVkAllocationCallbacks(), 1, &barrier);
 //	EndSingleTimeCommands(command_list);
 //}
 //
@@ -588,23 +646,32 @@ void VkContext::CreateDescriptorSets()
 //	EndSingleTimeCommands(command_list);
 //}
 
-std::unique_ptr<VkCommandList> VkContext::BeginSingleTimeCommands()
+std::unique_ptr<VkCommandList> VkContext::CreateDirectCommandList() const
 {
-	std::unique_ptr<VkCommandList> cmd_list = std::make_unique<VkCommandList>();
-	
-	VkCommandBufferBeginInfo begin_info = {};
-	begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-	begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-
-	cmd_list->Begin(begin_info);
-
-	return std::move(cmd_list);
+	return m_command_queue->CreateDirectCommandList();
 }
 
-void VkContext::EndSingleTimeCommands(std::unique_ptr<VkCommandList>& commandBuffer)
+void VkContext::InitializeImGui() const
 {
-	commandBuffer->End();
-	m_command_queue->DirectSubmit(commandBuffer->GetDirectSubmitInfo());
+	// Setup Platform/Renderer bindings
+	ImGui_ImplVulkan_InitInfo init_info = {};
+	init_info.Instance = m_instance->GetApiInstance();
+	init_info.PhysicalDevice = m_gpu->GetPhysicalDevice();
+	init_info.Device = m_device->GetApiDevice();
+	init_info.QueueFamily = m_gpu->GetGraphicsPresentQueueIndex();
+	init_info.Queue = m_command_queue->GetApiQueue();
+	init_info.PipelineCache = nullptr;
+	init_info.DescriptorPool = m_imgui_descriptor_pool->GetDescriptorPool();
+	init_info.Allocator = GetVkAllocationCallbacks();
+	init_info.MinImageCount = MAX_FRAMES_IN_FLIGHT;
+	init_info.ImageCount = MAX_FRAMES_IN_FLIGHT; //  m_vulkan_window->ImageCount;
+	init_info.CheckVkResultFn = CheckVkResult;
+	ImGui_ImplVulkan_Init(&init_info, m_imgui_render_pass->GetApiRenderPass());
+
+	// Load Fonts
+	std::unique_ptr<VkCommandList> command_buffer = this->CreateDirectCommandList();
+	ImGui_ImplVulkan_CreateFontsTexture(command_buffer->GetApiBuffer());
+	ImGui_ImplVulkan_DestroyFontUploadObjects();
 }
 
 void VkContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
