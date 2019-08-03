@@ -107,7 +107,7 @@ void VkContext::Initialize()
 	init_info.MinImageCount = MAX_FRAMES_IN_FLIGHT;
 	init_info.ImageCount = MAX_FRAMES_IN_FLIGHT; //  m_vulkan_window->ImageCount;
 	init_info.CheckVkResultFn = CheckVkResult;
-	ImGui_ImplVulkan_Init(&init_info, m_render_pass);
+	ImGui_ImplVulkan_Init(&init_info, m_imgui_render_pass);
 
 	// Load Fonts
 	std::unique_ptr<VkCommandList> command_buffer = BeginSingleTimeCommands();
@@ -358,6 +358,10 @@ void VkContext::CreateRenderPass()
 	render_pass_info.pDependencies = &dependency;
 
 	VKCALL(vkCreateRenderPass(m_device->GetApiDevice(), &render_pass_info, nullptr, &m_render_pass));
+
+	color_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
+	attachments = { color_attachment };
+	render_pass_info.pAttachments = attachments.data();
 	VKCALL(vkCreateRenderPass(m_device->GetApiDevice(), &render_pass_info, nullptr, &m_imgui_render_pass));
 
 }
