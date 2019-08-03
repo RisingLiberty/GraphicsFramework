@@ -45,8 +45,8 @@ void Win64Application::Run()
 	m_is_exiting = false;
 	while (!m_is_exiting)
 	{
-		Context::GetCurrent()->PostInitialize();
 		this->Initialize();
+		Context::GetCurrent()->PostInitialize();
 		spdlog::info("Application is running");
 
 		bool is_running = true;
