@@ -7,6 +7,8 @@
 #include "VkVertexShader.h"
 #include "VkFragmentShader.h"
 
+#include "VkBufferWrapper.h"
+
 VkShaderProgram::VkShaderProgram(VertexShader* vs, FragmentShader* fs) :
 	ShaderProgram(vs, fs)
 {

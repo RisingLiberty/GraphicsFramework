@@ -18,6 +18,7 @@ struct ShaderUniform
 {
 public:
 	ShaderUniform(const std::string& name, UniformDataType type, unsigned int size = 0, char* data = nullptr);
+	ShaderUniform(const ShaderUniform& other);
 	virtual ~ShaderUniform();
 
 public:

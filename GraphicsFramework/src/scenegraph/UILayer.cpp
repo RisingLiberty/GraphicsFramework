@@ -23,10 +23,10 @@ std::unique_ptr<Layer> UILayer::Create(const std::string& title)
 {
 	switch (Context::GetApi())
 	{
-	case Context::API::OPENGL: return std::make_unique<OpenGLUILayer>(title);
-	case Context::API::DIRECTX11: return std::make_unique<Dx11UILayer>(title);
-	case Context::API::DIRECTX12: return std::make_unique<Dx12UILayer>(title);
-	case Context::API::VULKAN: return std::make_unique<VkUILayer>(title);
+	case API::OPENGL: return std::make_unique<OpenGLUILayer>(title);
+	case API::DIRECTX11: return std::make_unique<Dx11UILayer>(title);
+	case API::DIRECTX12: return std::make_unique<Dx12UILayer>(title);
+	case API::VULKAN: return std::make_unique<VkUILayer>(title);
 	}
 
 	return nullptr;

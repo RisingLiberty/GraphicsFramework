@@ -5,7 +5,7 @@
 void GLClearError()
 {
 	int err = glGetError();
-	while (err != GL_NO_ERROR) { err = glGetError(); std::cout << err << "\n"; }
+	while (err != GL_NO_ERROR) { spdlog::error("Opengl error: {}", err); err = glGetError(); }
 }
 
 bool GLLogCall(const char* glFunction, const char* function, const char* file, int line)

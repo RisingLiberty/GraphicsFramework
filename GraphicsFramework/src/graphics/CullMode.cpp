@@ -13,7 +13,7 @@ unsigned int CullMode::ToOpenGL() const
 	switch (enum_value)
 	{
 	case ECullMode::UNDEFINED:			return -1;
-	case ECullMode::NONE:				return -1;
+	case ECullMode::NONE:				return GL_FRONT_AND_BACK;
 	case ECullMode::FRONT:				return GL_FRONT;
 	case ECullMode::BACK:				return GL_BACK;
 	case ECullMode::FRONT_AND_BACK:		return GL_FRONT_AND_BACK;

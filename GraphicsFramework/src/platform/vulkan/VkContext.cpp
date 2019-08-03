@@ -8,8 +8,6 @@
 #include "VkVertexBuffer.h"
 #include "VkIndexBuffer.h"
 
-#include "VkVertexShader.h"
-#include "VkFragmentShader.h"
 #include "VkShaderProgram.h"
 #include "VkVertexLayout.h"
 #include "VkVertexArray.h"
@@ -242,6 +240,8 @@ void VkContext::Initialize()
 
 void VkContext::Cleanup()
 {
+	m_command_queue->WaitTillIdle();
+	m_command_queue->WaitForFence(m_current_frame);
 	Context::CleanUp();
 
 	//vkDestroySampler(m_device, m_texture_sampler, GetVkAllocationCallbacks());
@@ -315,7 +315,7 @@ void VkContext::End()
 	m_current_frame = (m_current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
 
-Context::API VkContext::GetApiType() const
+API VkContext::GetApiType() const
 {
 	return API::VULKAN;
 }

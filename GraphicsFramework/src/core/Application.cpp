@@ -10,9 +10,12 @@
 
 #include "scenegraph/Scene.h"
 
+Application* Application::s_app = nullptr;
 
 Application::Application()
 {
+	s_app = this;
+
 	m_timer = std::make_unique<Timer>();
 	m_scene_controller = std::make_unique<SceneController>();
 };
@@ -25,7 +28,7 @@ void Application::CalculateFrameStats() const
 	static int frameCount = 0;
 	static float timeElapsed = 0.0f;
 
-	const int SECONDS_PER_UPDATE = 10;
+	const int SECONDS_PER_UPDATE = 1;
 
 	frameCount++;
 
@@ -49,4 +52,14 @@ void Application::CalculateFrameStats() const
 void Application::PushScene(std::unique_ptr<Scene> scene)
 {
 	m_scene_controller->Push(std::move(scene));
+}
+
+void Application::SwitchApi(API type)
+{
+	m_context.reset(Context::Create(type, m_window.get()));
+}
+
+Application* Application::GetInstance()
+{
+	return s_app;
 }

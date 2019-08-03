@@ -2,6 +2,8 @@
 
 #include "graphics/ShaderProgram.h"
 
+class VkBufferWrapper;
+
 class VkShaderProgram : public ShaderProgram
 {
 public:

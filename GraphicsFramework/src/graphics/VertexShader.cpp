@@ -29,16 +29,16 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 
 	switch (Context::GetApi())
 	{
-	case Context::API::OPENGL:
+	case API::OPENGL:
 		path += "opengl/" + shaderName + ".glsl";
 		break;
-	case Context::API::DIRECTX11:
+	case API::DIRECTX11:
 		path += "directx11/" + shaderName + ".hlsl";
 		break;
-	case Context::API::DIRECTX12:
+	case API::DIRECTX12:
 		path += "directx12/" + shaderName + ".hlsl";
 		break;
-	case Context::API::VULKAN:
+	case API::VULKAN:
 		path += "vulkan/bin/" + shaderName + ".spv";
 		break;
 	}
@@ -53,22 +53,22 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OPENGL:
+	case API::OPENGL:
 		unique_shader = std::make_unique<OpenGLVertexShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);
 		break;
-	case Context::API::DIRECTX11:
+	case API::DIRECTX11:
 		unique_shader = std::make_unique<Dx11VertexShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);
 		break;
-	case Context::API::DIRECTX12:
+	case API::DIRECTX12:
 		unique_shader = std::make_unique<Dx12VertexShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);
 		break;
-	case Context::API::VULKAN:
+	case API::VULKAN:
 		unique_shader = std::make_unique<VkVertexShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);

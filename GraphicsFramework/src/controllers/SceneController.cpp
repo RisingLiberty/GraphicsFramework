@@ -32,3 +32,9 @@ void SceneController::Draw()
 	if (m_active_scene)
 		m_active_scene->Draw();
 }
+
+void SceneController::Clear()
+{
+	m_scenes.clear();
+	m_active_scene = nullptr;
+}

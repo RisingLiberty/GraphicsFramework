@@ -42,22 +42,22 @@ VertexArray* VertexArray::Create(const VertexBuffer* vb, const VertexLayout* lay
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OPENGL:
+	case API::OPENGL:
 		unique_array = std::make_unique<OpenGLVertexArray>(vb, layout);
 		vertex_array = unique_array.get();
 		vertex_array_controller->PushVertexArray(unique_array);
 		break;
-	case Context::API::DIRECTX11:
+	case API::DIRECTX11:
 		unique_array = std::make_unique<Dx11VertexArray>(vb, layout);
 		vertex_array = unique_array.get();
 		vertex_array_controller->PushVertexArray(unique_array);
 		break;
-	case Context::API::DIRECTX12:
+	case API::DIRECTX12:
 		unique_array = std::make_unique<Dx12VertexArray>(vb, layout);
 		vertex_array = unique_array.get();
 		vertex_array_controller->PushVertexArray(unique_array);
 		break;
-	case Context::API::VULKAN:
+	case API::VULKAN:
 		unique_array = std::make_unique<VkVertexArray>(vb, layout);
 		vertex_array = unique_array.get();
 		vertex_array_controller->PushVertexArray(unique_array);

@@ -31,10 +31,10 @@ VertexLayout* VertexLayout::Create()
 
 	switch (Context::GetApi())
 	{
-	case Context::API::OPENGL:		unique_layout = std::make_unique<VertexLayout>(); break;
-	case Context::API::DIRECTX11:	unique_layout = std::make_unique<Dx11VertexLayout>(); break;
-	case Context::API::DIRECTX12:	unique_layout = std::make_unique<Dx12VertexLayout>(); break;
-	case Context::API::VULKAN:		unique_layout = std::make_unique<VkVertexLayout>(); break;
+	case API::OPENGL:		unique_layout = std::make_unique<VertexLayout>(); break;
+	case API::DIRECTX11:	unique_layout = std::make_unique<Dx11VertexLayout>(); break;
+	case API::DIRECTX12:	unique_layout = std::make_unique<Dx12VertexLayout>(); break;
+	case API::VULKAN:		unique_layout = std::make_unique<VkVertexLayout>(); break;
 	}
 
 	layout = unique_layout.get();

@@ -376,7 +376,7 @@ void Dx12Context::BuildPSO()
 	DXCALL(m_device->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(m_pipeline_state.ReleaseAndGetAddressOf())));
 }
 
-Context::API Dx12Context::GetApiType() const
+API Dx12Context::GetApiType() const
 {
 	return API::DIRECTX12;
 }

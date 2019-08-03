@@ -9,6 +9,13 @@ Dx12ShaderUniform::Dx12ShaderUniform(const std::string& name, UniformDataType ty
 
 }
 
+Dx12ShaderUniform::Dx12ShaderUniform(const Dx12ShaderUniform& other):
+	ShaderUniform(other),
+	offset(other.offset)
+{
+
+}
+
 Dx12ShaderUniform::~Dx12ShaderUniform()
 {
 

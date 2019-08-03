@@ -53,7 +53,7 @@ void OpenGLContext::Present()
 	SwapBuffers(m_hdc);
 }
 
-OpenGLContext::API OpenGLContext::GetApiType() const
+API OpenGLContext::GetApiType() const
 {
 	return API::OPENGL;
 }
@@ -67,6 +67,7 @@ void OpenGLContext::InitializeRasterizer()
 	CullMode cull_mode = m_rasterizer_settings.cull_mode;
 
 	glPolygonMode(cull_mode.ToOpenGL(), polygon_mode.ToOpenGL());
+
 	glLineWidth(m_rasterizer_settings.line_width);
 	glFrontFace(m_rasterizer_settings.front_face_orientation.ToOpenGL());
 
@@ -81,7 +82,9 @@ void OpenGLContext::InitializeRasterizer()
 		}
 		glPolygonOffset(m_rasterizer_settings.depth_bias_constant_factor, m_rasterizer_settings.depth_bias_slope_factor);
 	}
+
 	glDepthRangef(0, m_rasterizer_settings.depth_bias_clamp);
+
 	m_rasterizer_settings.enable_multi_sample ? glEnable(GL_MULTISAMPLE) : glDisable(GL_MULTISAMPLE);
 
 	if (m_rasterizer_settings.enable_scissor)

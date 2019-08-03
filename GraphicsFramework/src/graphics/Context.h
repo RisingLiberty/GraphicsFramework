@@ -14,17 +14,11 @@ class ShaderProgram;
 
 #include "RasterizerSettings.h"
 #include "BufferHelpers.h"
+#include "API.h"
 
 class Context
 {
 public: 
-	enum class API
-	{
-		DIRECTX11,
-		DIRECTX12,
-		OPENGL,
-		VULKAN
-	};
 
 	Context();
 	virtual ~Context();

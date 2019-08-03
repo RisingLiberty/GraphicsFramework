@@ -15,7 +15,7 @@ Dx12UILayer::~Dx12UILayer()
 
 void Dx12UILayer::Update(float dTime)
 {
-
+	UILayer::Update(dTime);
 }
 
 void Dx12UILayer::Draw()

@@ -15,7 +15,7 @@ VkUILayer::~VkUILayer()
 
 void VkUILayer::Update(float dTime)
 {
-
+	UILayer::Update(dTime);
 }
 
 void VkUILayer::Draw()

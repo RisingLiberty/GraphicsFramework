@@ -26,13 +26,23 @@ ShaderUniform::ShaderUniform(const std::string& name, UniformDataType type, unsi
 {
 	if (size == 0)
 		this->size = GetUniformDataTypeSize(type);
-	else
-	{
-		this->data = (char*)malloc(size);
-		if (data)
-			memcpy(this->data, data, size);
-	}
+
+	this->data = (char*)malloc(this->size);
+	if (data)
+		memcpy(this->data, data, this->size);
 
 }
 
-ShaderUniform::~ShaderUniform() = default;
+ShaderUniform::ShaderUniform(const ShaderUniform& other):
+	name(other.name),
+	type(other.type),
+	size(other.size)
+{
+	this->data = (char*)malloc(this->size);
+	memcpy(this->data, other.data, this->size);
+}
+
+ShaderUniform::~ShaderUniform()
+{
+	free(this->data);
+};

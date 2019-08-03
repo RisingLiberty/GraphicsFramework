@@ -8,6 +8,8 @@ public:
 	Sandbox();
 	virtual ~Sandbox();
 
+	virtual void Initialize() override;
+
 private:
 
 };

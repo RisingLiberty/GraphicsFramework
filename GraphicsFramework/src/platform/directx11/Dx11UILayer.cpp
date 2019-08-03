@@ -14,7 +14,7 @@ Dx11UILayer::~Dx11UILayer()
 
 void Dx11UILayer::Update(float dTime)
 {
-
+	UILayer::Update(dTime);
 }
 
 void Dx11UILayer::Draw()

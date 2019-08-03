@@ -79,6 +79,11 @@ void VkCommandQueue::Present(VkSwapchainKHR swapchain, VkSemaphore renderFinishe
 	vkQueueWaitIdle(m_queue);
 }
 
+void VkCommandQueue::WaitTillIdle()
+{
+	vkQueueWaitIdle(m_queue);
+}
+
 VkQueue VkCommandQueue::GetApiQueue() const
 {
 	return m_queue;

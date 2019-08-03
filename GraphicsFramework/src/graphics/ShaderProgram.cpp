@@ -21,28 +21,28 @@ ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
 	std::unique_ptr<ShaderProgram> unique_program;
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OPENGL:
+	case API::OPENGL:
 	{
 		unique_program = std::make_unique<OpenGLShaderProgram>(vs, fs);
 		program = unique_program.get();
 		shader_controller->PushShaderProgram(unique_program);
 		break;
 	}
-	case Context::API::DIRECTX11:
+	case API::DIRECTX11:
 	{
 		unique_program = std::make_unique<Dx11ShaderProgram>(vs, fs);
 		program = unique_program.get();
 		shader_controller->PushShaderProgram(unique_program);
 		break;
 	}
-	case Context::API::DIRECTX12:
+	case API::DIRECTX12:
 	{
 		unique_program = std::make_unique<Dx12ShaderProgram>(vs, fs);
 		program = unique_program.get();
 		shader_controller->PushShaderProgram(unique_program);
 		break;
 	}
-	case Context::API::VULKAN:
+	case API::VULKAN:
 		unique_program = std::make_unique<VkShaderProgram>(vs, fs);
 		program = unique_program.get();
 		shader_controller->PushShaderProgram(unique_program);

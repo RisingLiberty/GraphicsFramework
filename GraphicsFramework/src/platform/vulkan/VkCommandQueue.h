@@ -15,6 +15,7 @@ public:
 	void Submit(VkCommandList* commandList, unsigned int currentFrame);
 	void DirectSubmit(VkSubmitInfo submitInfo) const;
 	void Present(VkSwapchainKHR swapchain, VkSemaphore renderFinishedSemaphore, unsigned int currentFrame) const;
+	void WaitTillIdle();
 
 	VkQueue GetApiQueue() const;
 	VkCommandList* GetApiList(unsigned int currentFrame) const;

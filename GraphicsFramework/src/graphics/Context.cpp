@@ -33,7 +33,10 @@ Context::Context()
 	m_rasterizer_settings.InitializeAsDefault();
 }
 
-Context::~Context() = default;
+Context::~Context()
+{
+
+};
 
 void Context::CleanUp()
 {
@@ -47,14 +50,14 @@ void Context::CleanUp()
 
 Context* Context::Create(API api, Window* window)
 {
-	assert(!s_current);
+//	assert(!s_current);
 
 	switch (api)
 	{
-	case Context::API::DIRECTX11: s_current = new Dx11Context(window); break;
-	case Context::API::DIRECTX12: s_current = new Dx12Context(window); break;
-	case Context::API::OPENGL: s_current = new OpenGLContext(window); break;
-	case Context::API::VULKAN: s_current = new VkContext(window); break;
+	case API::DIRECTX11: s_current = new Dx11Context(window); break;
+	case API::DIRECTX12: s_current = new Dx12Context(window); break;
+	case API::OPENGL: s_current = new OpenGLContext(window); break;
+	case API::VULKAN: s_current = new VkContext(window); break;
 	}
 
 	s_current->PreInitialize();
@@ -177,7 +180,7 @@ Context* Context::GetCurrent()
 	return s_current;
 }
 
-Context::API Context::GetApi()
+API Context::GetApi()
 {
 	return Context::GetCurrent()->GetApiType();
 }

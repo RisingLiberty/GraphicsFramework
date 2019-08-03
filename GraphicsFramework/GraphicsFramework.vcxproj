@@ -158,6 +158,7 @@
     <ClCompile Include="src\controllers\IndexBufferController.cpp" />
     <ClCompile Include="src\controllers\VertexBufferController.cpp" />
     <ClCompile Include="src\controllers\VertexLayoutController.cpp" />
+    <ClCompile Include="src\events\SwitchApiEvent.cpp" />
     <ClCompile Include="src\graphics\ApiBufferWrapper.cpp" />
     <ClCompile Include="src\graphics\Buffer.cpp" />
     <ClCompile Include="src\graphics\BufferHelpers.cpp" />
@@ -333,6 +334,8 @@
     <ClInclude Include="src\controllers\IndexBufferController.h" />
     <ClInclude Include="src\controllers\VertexBufferController.h" />
     <ClInclude Include="src\controllers\VertexLayoutController.h" />
+    <ClInclude Include="src\events\SwitchApiEvent.h" />
+    <ClInclude Include="src\graphics\API.h" />
     <ClInclude Include="src\graphics\ApiBufferWrapper.h" />
     <ClInclude Include="src\graphics\Buffer.h" />
     <ClInclude Include="src\graphics\BufferHelpers.h" />

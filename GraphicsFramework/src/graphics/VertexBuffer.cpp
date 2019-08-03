@@ -23,10 +23,10 @@ VertexBuffer* VertexBuffer::Create(unsigned int size, BufferUsage usage, void* d
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OPENGL:		unique_vb = std::make_unique<OpenGLVertexBuffer>(size, usage, data); break;
-	case Context::API::DIRECTX11:	unique_vb = std::make_unique<Dx11VertexBuffer>(size, usage, data); break;
-	case Context::API::DIRECTX12:	unique_vb = std::make_unique<Dx12VertexBuffer>(size, usage, data); break;
-	case Context::API::VULKAN:		unique_vb = std::make_unique<VkVertexBuffer>(size, usage, data); break;
+	case API::OPENGL:		unique_vb = std::make_unique<OpenGLVertexBuffer>(size, usage, data); break;
+	case API::DIRECTX11:	unique_vb = std::make_unique<Dx11VertexBuffer>(size, usage, data); break;
+	case API::DIRECTX12:	unique_vb = std::make_unique<Dx12VertexBuffer>(size, usage, data); break;
+	case API::VULKAN:		unique_vb = std::make_unique<VkVertexBuffer>(size, usage, data); break;
 	}
 
 	vb = unique_vb.get();

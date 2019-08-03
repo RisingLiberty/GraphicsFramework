@@ -146,7 +146,7 @@ void Dx11Context::Present()
 	DXCALL(m_resources.swapchain->Present(m_is_vsync, 0));
 }
 
-Context::API Dx11Context::GetApiType() const
+API Dx11Context::GetApiType() const
 {
 	return API::DIRECTX11;
 }

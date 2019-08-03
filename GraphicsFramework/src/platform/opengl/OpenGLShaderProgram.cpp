@@ -58,7 +58,7 @@ void OpenGLShaderProgram::LoadUniforms()
 
 		GLCALL(glGetActiveUniform(m_id, i, bufSize, &nameLength, &size, &type, name));
 
-		m_uniforms.push_back(std::make_unique<ShaderUniform>(name, GLUniformDataTypeToCustomDataType(type), size));
+		m_uniforms.push_back(std::make_unique<ShaderUniform>(name, GLUniformDataTypeToCustomDataType(type)));
 	}
 }
 

@@ -5,13 +5,22 @@
 #include "scenegraph/UILayer.h"
 #include "scenegraph/UIButton.h"
 
+#include <graphics/API.h>
+#include <core/Application.h>
+#include <events/SwitchApiEvent.h>
+
 MainScene::MainScene(const std::string& name) :
 	Scene(name)
 {
 	this->PushLayer(std::make_unique<MainLayer>());
 
 	std::unique_ptr<Layer> ui = UILayer::Create("--UI--");
-	ui->PushObject(std::make_unique<UIButton>("Button", 100, 100));
+	auto switchApi = []()
+	{
+		Application::GetInstance()->OnEvent(SwitchApiEvent(API::DIRECTX12));
+	};
+
+	ui->PushObject(std::make_unique<UIButton>("Switch API", 100, 100, switchApi));
 	this->PushLayer(std::move(ui));
 }
 

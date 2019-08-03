@@ -46,10 +46,10 @@ IndexBuffer* IndexBuffer::Create(unsigned int count, Format format, Topology top
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case Context::API::OPENGL:		unique_ib = std::make_unique<OpenGLIndexBuffer>(count, format, topology, usage, data); break;
-	case Context::API::DIRECTX11:	unique_ib = std::make_unique<Dx11IndexBuffer>(count, format, topology, usage, data); break;
-	case Context::API::DIRECTX12:	unique_ib = std::make_unique<Dx12IndexBuffer>(count, format, topology, usage, data); break;
-	case Context::API::VULKAN:		unique_ib = std::make_unique<VkIndexBuffer>(count, format, topology, usage, data); break;
+	case API::OPENGL:		unique_ib = std::make_unique<OpenGLIndexBuffer>(count, format, topology, usage, data); break;
+	case API::DIRECTX11:	unique_ib = std::make_unique<Dx11IndexBuffer>(count, format, topology, usage, data); break;
+	case API::DIRECTX12:	unique_ib = std::make_unique<Dx12IndexBuffer>(count, format, topology, usage, data); break;
+	case API::VULKAN:		unique_ib = std::make_unique<VkIndexBuffer>(count, format, topology, usage, data); break;
 	}
 
 	ib = unique_ib.get();

@@ -14,7 +14,7 @@ OpenGLUILayer::~OpenGLUILayer()
 
 void OpenGLUILayer::Update(float dTime)
 {
-
+	UILayer::Update(dTime);
 }
 
 void OpenGLUILayer::Draw()

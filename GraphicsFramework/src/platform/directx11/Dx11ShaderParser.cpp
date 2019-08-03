@@ -159,9 +159,8 @@ namespace
 
 			UniformDataType data_type = Dx11UniformDataTypeToCustomDataType(type);
 
-			Dx11ShaderUniform field = Dx11ShaderUniform(name, data_type, offset);
-			offset += field.size;
-			uniforms.push_back(field);
+			uniforms.push_back(Dx11ShaderUniform(name, data_type, offset));
+			offset += uniforms.back().size;
 		}
 		return Dx11ShaderStruct(struct_name, uniforms);
 	}
