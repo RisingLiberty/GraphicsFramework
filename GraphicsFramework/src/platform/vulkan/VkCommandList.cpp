@@ -4,6 +4,7 @@
 
 #include "VkHelperMethods.h"
 #include "VkCommand.h"
+#include "VkSwapchain.h"
 
 VkCommandPool VkCommandList::m_pool = VK_NULL_HANDLE;
 
@@ -114,9 +115,9 @@ void VkCommandList::PipelineBarrier(VkPipelineStageFlags srcStage, VkPipelineSta
 		1, &barrier);
 }
 
-VkResult VkCommandList::AcquireNextImage(VkSwapchainKHR swapchain, unsigned int& imageIndex) const
+VkResult VkCommandList::AcquireNextImage(VkSwapchain* swapchain, unsigned int& imageIndex) const
 {
-	return vkAcquireNextImageKHR(GetVkDevice(), swapchain, std::numeric_limits<uint64_t>::max(), m_image_available_semaphore, VK_NULL_HANDLE, &imageIndex);
+	return vkAcquireNextImageKHR(GetVkDevice(), swapchain->GetSwapchain(), std::numeric_limits<uint64_t>::max(), m_image_available_semaphore, VK_NULL_HANDLE, &imageIndex);
 }
 
 VkCommandBuffer VkCommandList::GetApiBuffer() const

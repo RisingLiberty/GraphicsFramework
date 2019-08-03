@@ -1,6 +1,7 @@
 #pragma once
 
 class VkCommand;
+class VkSwapchain;
 
 #include "graphics/GraphicsResource.h"
 
@@ -24,7 +25,7 @@ public:
 	void BindVertexBuffer(VkBuffer buffer, VkDeviceSize offset);
 	void PipelineBarrier(VkPipelineStageFlags srcStage, VkPipelineStageFlags dstStage, VkImageMemoryBarrier barrier);
 
-	VkResult AcquireNextImage(VkSwapchainKHR swapchain, unsigned int& imageIndex) const;
+	VkResult AcquireNextImage(VkSwapchain* swapchain, unsigned int& imageIndex) const;
 
 	VkCommandBuffer GetApiBuffer() const;
 

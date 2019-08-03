@@ -17,7 +17,7 @@ protected:
 
 	std::unique_ptr<DownloadBuffer> DownloadDataToBuffer(unsigned int size) const;
 
-private:
+protected:
 	VkBuffer m_buffer_gpu;
 	VkDeviceMemory m_buffer_memory_gpu;
 	VkBuffer m_upload_buffer;

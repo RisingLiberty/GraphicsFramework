@@ -25,6 +25,10 @@ class VkCommandQueue;
 class VkCommandList;
 class VkGpu;
 class VkDefaultDevice;
+class VkImageWrapper;
+class VkImageViewWrapper;
+class VkInstanceWrapper;
+class VkSwapchain;
 
 struct Vertex
 {
@@ -153,8 +157,8 @@ public:
 	void BindResourcesToPipeline();
 
 	VkDevice GetDevice() const;
-	VkInstance GetInstance() const;
 	VkPhysicalDevice GetSelectedGpu() const;
+	VkCommandList* GetCurrentCommandList() const;
 	VkCommandBuffer GetCurrentCommandBuffer() const;
 
 	std::unique_ptr<VkCommandList> BeginSingleTimeCommands();
@@ -171,19 +175,13 @@ protected:
 	void UnbindShaderProgramInternal(const ShaderProgram* shaderProgram) override;
 
 private:
-	void CreateInstance(Window* window);
 	void ShowExtentions();
-	void SetupDebugCallback();
 	void PickPhysicalDevice();
-	void CreateSurface(Window* window);
-	void CreateLogicalDevice();
-	void CreateSwapchain();
-	void CreateImageViews();
 	void CreateRenderPass();
 	void CreateDescriptorSetLayout();
 	void CreateGraphicsPipeline();
-	void CreateColorResources();
-	void CreateDepthResources();
+	//void CreateColorResources();
+	//void CreateDepthResources();
 	void CreateFrameBuffers();
 	void CreateTextureImage();
 	void CreateTextureImageView();
@@ -196,68 +194,41 @@ private:
 	void Cleanup();
 	void CleanupSwapchain();
 
-	bool CheckValidationLayerSupport() const;
-	std::vector<const char*> GetRequiredExtentions() const;
-
 private:
-	void CreateImage(uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits numSamples, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
-	VkSurfaceFormatKHR ChooseSwapchainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-	VkPresentModeKHR ChooseSwapchainPresentMode(const std::vector<VkPresentModeKHR> availablePresentModes);
-	VkExtent2D ChooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-	VkImageView CreateImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags, uint32_t mipLevels);
-	VkSampleCountFlagBits GetMaxUsableSampleCount();
-	VkFormat FindDepthFormat();
-	//void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-	void TransitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 	//void GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth, int32_t texHeight, uint32_t mipLevels);
 	//void CopyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-	//bool CheckDeviceExtensionSupport(VkPhysicalDevice device);
-	//void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size);
-	VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	void RecreateSwapchain();
 	void UpdateUniformBuffer(uint32_t imageIndex);
+
 private:
-	VkInstance m_instance = nullptr;
-	VkDebugUtilsMessengerEXT m_debug_callback;
 	VkSurfaceKHR m_surface;
-	VkSwapchainKHR m_swapchain;
-	std::vector<VkImage> m_swapchain_images;
-	VkFormat m_swapchain_image_format;
-	VkExtent2D m_swapchain_extent;
-	std::vector<VkImageView> m_swapchain_image_views;
+
 	VkRenderPass m_imgui_render_pass;
 	VkRenderPass m_render_pass;
 	VkPipelineLayout m_pipeline_layout = {};
 	VkPipeline m_graphics_pipeline;
-	std::vector<VkFramebuffer> m_swapchain_frame_buffers;
-	uint32_t m_current_frame = 0;
-	bool m_is_frame_buffer_resized = false;
 	VkDescriptorSetLayout m_descriptor_set_layout;
-	//std::vector<VkBuffer> m_uniform_buffers;
-	//std::vector<VkDeviceMemory> m_uniform_buffers_memory;
 	VkDescriptorPool m_descriptor_pool;
 	VkDescriptorPool m_imgui_descriptor_pool;
 	std::vector<VkDescriptorSet> m_descriptor_sets;
-	VkImage m_depth_image;
-	VkDeviceMemory m_depth_image_memory;
-	VkImageView m_depth_image_view;
-	VkSampleCountFlagBits m_msaa_samples = VK_SAMPLE_COUNT_1_BIT;
-	VkImage m_color_image;
-	VkDeviceMemory m_color_image_memory;
-	VkImageView m_color_image_view;
-	const std::vector<const char*> m_validation_layers = { "VK_LAYER_LUNARG_standard_validation" };
-	const std::vector<const char*> m_device_extentions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+	std::vector<VkFramebuffer> m_swapchain_frame_buffers;
 
-	const unsigned int MAX_FRAMES_IN_FLIGHT = 3;
+	//std::vector<VkBuffer> m_uniform_buffers;
+	//std::vector<VkDeviceMemory> m_uniform_buffers_memory;
 
-	bool m_enable_validation_layers = true;
+	uint32_t m_current_frame = 0;
+	bool m_is_frame_buffer_resized = false;
 
-	const std::string MODEL_PATH = "data/meshes/chalet.obj";
-	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
-
+	std::unique_ptr<VkInstanceWrapper> m_instance;
 	std::unique_ptr<VkDefaultDevice> m_device;
 	std::unique_ptr<VkCommandQueue> m_command_queue;
 	VkCommandList* m_command_list;
 	std::unique_ptr<VkGpu> m_gpu;
+	//std::unique_ptr<VkImageWrapper> m_depth_image_wrapper;
+	//std::unique_ptr<VkImageViewWrapper> m_depth_image_view_wrapper;
+	//std::unique_ptr<VkImageWrapper> m_color_image_wrapper;
+	//std::unique_ptr<VkImageViewWrapper> m_color_image_view_wrapper;
+	std::vector<std::unique_ptr<VkImageWrapper>> m_swapchain_images;
+	std::vector<std::unique_ptr<VkImageViewWrapper>> m_swapchain_image_views;
+	std::unique_ptr<VkSwapchain> m_swapchain;
 };

@@ -1,11 +1,6 @@
 #pragma once
 
-struct SwapChainSupportDetails
-{
-	VkSurfaceCapabilitiesKHR capabilities;
-	std::vector<VkSurfaceFormatKHR> formats;
-	std::vector<VkPresentModeKHR> present_modes;
-};
+#include "VkSwapchainSupportDetails.h"
 
 class VkGpu
 {
@@ -20,12 +15,14 @@ public:
 	unsigned int GetDeviceScore() const;
 	unsigned int GetGraphicsPresentQueueIndex() const;
 	bool IsSuitable() const;
+	VkFormat FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+	VkSampleCountFlagBits GetMaxUsableSampleCount() const;
 
 private:
 	unsigned int FindGraphicsAndPresentQueueFamilyIndex(VkSurfaceKHR surface) const;
 	unsigned int CalculateDeviceScore() const;
 	SwapChainSupportDetails QuerySwapchainSupport(VkSurfaceKHR surface) const;
-	VkSampleCountFlagBits GetMaxUsableSampleCount() const;
+	VkSampleCountFlagBits CalculateMaxUsableSampleCount() const;
 	bool IsSuitable(VkSurfaceKHR surface) const;
 
 private:

@@ -3,6 +3,48 @@
 #include "VkBufferWrapper.h"
 #include "VkHelperMethods.h"
 #include "VkDownloadBuffer.h"
+#include "VkContext.h"
+#include "VkCommandList.h"
+
+//namespace
+//{
+//	void CreateBuffer(size_t size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+//	{
+//		VkBufferCreateInfo buffer_info = {};
+//		buffer_info.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+//		buffer_info.size = size;
+//		buffer_info.usage = usage;
+//		buffer_info.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+//
+//		VKCALL(vkCreateBuffer(GetVkDevice(), &buffer_info, nullptr, &buffer));
+//
+//		VkMemoryRequirements mem_requirements;
+//		vkGetBufferMemoryRequirements(GetVkDevice(), buffer, &mem_requirements);
+//
+//		VkMemoryAllocateInfo alloc_info = {};
+//		alloc_info.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO;
+//		alloc_info.allocationSize = mem_requirements.size;
+//		alloc_info.memoryTypeIndex = FindMemoryType(mem_requirements.memoryTypeBits, properties);
+//
+//		VKCALL(vkAllocateMemory(GetVkDevice(), &alloc_info, nullptr, &bufferMemory));
+//
+//		vkBindBufferMemory(GetVkDevice(), buffer, bufferMemory, 0);
+//	}
+//
+//	void CopyBuffer(VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
+//	{
+//		auto command_buffer = GetVkContext()->BeginSingleTimeCommands();
+//
+//		VkBufferCopy copy_region = {};
+//		copy_region.srcOffset = 0;
+//		copy_region.dstOffset = 0;
+//		copy_region.size = size;
+//
+//		vkCmdCopyBuffer(command_buffer->GetApiBuffer(), srcBuffer, dstBuffer, 1, &copy_region);
+//
+//		GetVkContext()->EndSingleTimeCommands(command_buffer);
+//	}
+//}
 
 VkBufferWrapper::VkBufferWrapper(unsigned int size, BufferUsage usage, const void* data):
 	ApiBufferWrapper(usage)

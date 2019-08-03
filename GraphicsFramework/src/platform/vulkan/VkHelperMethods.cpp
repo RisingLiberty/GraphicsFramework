@@ -16,14 +16,14 @@ VkDevice GetVkDevice()
 	return GetVkContext()->GetDevice();
 }
 
+VkCommandList* GetVkCurrentCommandList()
+{
+	return GetVkContext()->GetCurrentCommandList();
+}
+
 VkCommandBuffer GetVkCurrentCommandBuffer()
 {
 	return GetVkContext()->GetCurrentCommandBuffer();
-}
-
-VkInstance GetVkInstance()
-{
-	return GetVkContext()->GetInstance();
 }
 
 uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties)

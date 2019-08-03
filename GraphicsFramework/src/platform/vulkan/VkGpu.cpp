@@ -2,14 +2,14 @@
 
 #include "VkGpu.h"
 
-VkGpu::VkGpu(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface):
+VkGpu::VkGpu(VkPhysicalDevice physicalDevice, VkSurfaceKHR surface) :
 	m_physical_device(physicalDevice)
 {
-	m_msaa_samples = GetMaxUsableSampleCount();
+	m_msaa_samples = CalculateMaxUsableSampleCount();
+	m_swapchain_support_details = this->QuerySwapchainSupport(surface);
 	m_graphics_present_queue_index = this->FindGraphicsAndPresentQueueFamilyIndex(surface);
 	m_is_suitable = this->IsSuitable(surface);
 	m_score = this->CalculateDeviceScore();
-	m_swapchain_support_details = this->QuerySwapchainSupport(surface);
 }
 
 VkGpu::~VkGpu()
@@ -19,13 +19,7 @@ VkGpu::~VkGpu()
 bool VkGpu::IsSuitable(VkSurfaceKHR surface) const
 {
 	bool extension_support = this->SupportExtensions();
-	bool swapchain_adequate = false;
-
-	if (extension_support)
-	{
-		SwapChainSupportDetails swapchain_support = QuerySwapchainSupport(surface);
-		swapchain_adequate = !swapchain_support.formats.empty() && !swapchain_support.present_modes.empty();
-	}
+	bool swapchain_adequate = !m_swapchain_support_details.formats.empty() && !m_swapchain_support_details.present_modes.empty();;
 
 	VkPhysicalDeviceFeatures supported_features;
 	vkGetPhysicalDeviceFeatures(m_physical_device, &supported_features);
@@ -61,7 +55,7 @@ unsigned int VkGpu::FindGraphicsAndPresentQueueFamilyIndex(VkSurfaceKHR surface)
 
 		++i;
 	}
-	
+
 	ASSERT(present_index == family_index, "Present Queue != Graphics Queue!");
 	return family_index;
 }
@@ -129,6 +123,55 @@ bool VkGpu::SupportExtensions() const
 		required_extensions.erase(extension.extensionName);
 
 	return required_extensions.empty();
+}
+
+VkFormat VkGpu::FindSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
+{
+	//The support of a format depends on the tiling mode and usage, so we must also include these as parameters.
+	//The support of a format can be queried using the vkGetPhysicalDeviceFormatPropererties function
+	for (VkFormat format : candidates)
+	{
+		//VkFormatProperties contains 3 fields:
+		//linearTilingFeatures: Use cases that are supported with linear tiling
+		//optimalTilingFeatures: USe cases that are supported with optimal tiling
+		//bufferFeatures: Use cases that are supported for buffers.
+		VkFormatProperties props;
+		vkGetPhysicalDeviceFormatProperties(m_physical_device, format, &props);
+
+		//Only the first 2 fields are relevant here, and the one we check depends on the tiling parameter
+		//of the function
+		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features)
+			return format;
+		else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
+			return format;
+
+		//If none of the candidate formats support the desired usage, then we can either return a special
+		//value of simply throw an exception
+	}
+
+	throw std::runtime_error("failed to find supported format!");
+
+}
+
+VkSampleCountFlagBits VkGpu::CalculateMaxUsableSampleCount() const
+{
+	VkPhysicalDeviceProperties physical_device_properties;
+	vkGetPhysicalDeviceProperties(m_physical_device, &physical_device_properties);
+
+	VkSampleCountFlags counts = std::min(physical_device_properties.limits.framebufferColorSampleCounts, physical_device_properties.limits.framebufferDepthSampleCounts);
+
+	if (counts & VK_SAMPLE_COUNT_64_BIT)
+		return VK_SAMPLE_COUNT_64_BIT;
+	else if (counts & VK_SAMPLE_COUNT_32_BIT)
+		return VK_SAMPLE_COUNT_32_BIT;
+	else if (counts & VK_SAMPLE_COUNT_8_BIT)
+		return VK_SAMPLE_COUNT_8_BIT;
+	else if (counts & VK_SAMPLE_COUNT_4_BIT)
+		return VK_SAMPLE_COUNT_4_BIT;
+	else if (counts & VK_SAMPLE_COUNT_2_BIT)
+		return VK_SAMPLE_COUNT_2_BIT;
+
+	return VK_SAMPLE_COUNT_1_BIT;
 }
 
 VkPhysicalDevice VkGpu::GetPhysicalDevice() const
