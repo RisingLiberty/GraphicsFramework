@@ -50,41 +50,10 @@ void VkCommandQueue::DirectSubmit(VkSubmitInfo submitInfo)
 
 void VkCommandQueue::Submit(VkCommandList* commandList, unsigned int currentFrame)
 {
-	VkSemaphore image_available_semaphore = commandList->GetImageAvailableSemaphore();
-	VkSemaphore render_finished_semaphore = commandList->GetRenderFinishedSemaphore();
 	VkPipelineStageFlags wait_stages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
 
-	VkSubmitInfo submit_info = {};
-	submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-	submit_info.waitSemaphoreCount = 1;
-	submit_info.pWaitSemaphores = &image_available_semaphore;
+	VkSubmitInfo submit_info = commandList->GetSubmitInfo();
 	submit_info.pWaitDstStageMask = wait_stages;
-	submit_info.commandBufferCount = 1;
-
-	VkCommandBuffer cmd_buffer = commandList->GetApiBuffer();
-	submit_info.pCommandBuffers = &cmd_buffer;
-	submit_info.signalSemaphoreCount = 1;
-	submit_info.pSignalSemaphores = &render_finished_semaphore;
-
-	vkResetFences(GetVkDevice(), 1, &m_in_flight_fences[currentFrame]);
-	VKCALL(vkQueueSubmit(m_queue, 1, &submit_info, m_in_flight_fences[currentFrame]));
-}
-
-void VkCommandQueue::Submit(VkSemaphore imageAvailableSemaphore, VkSemaphore renderFinishedSemaphore, VkCommandBuffer buffer, unsigned int currentFrame) const
-{
-	VkSubmitInfo submit_info = {};
-	submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-
-	VkPipelineStageFlags wait_stages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
-
-	submit_info.waitSemaphoreCount = 1;
-	submit_info.pWaitSemaphores = &imageAvailableSemaphore;
-	submit_info.pWaitDstStageMask = wait_stages;
-	submit_info.commandBufferCount = 1;
-	submit_info.pCommandBuffers = &buffer;
-			   
-	submit_info.signalSemaphoreCount = 1;
-	submit_info.pSignalSemaphores = &renderFinishedSemaphore;
 
 	vkResetFences(GetVkDevice(), 1, &m_in_flight_fences[currentFrame]);
 	VKCALL(vkQueueSubmit(m_queue, 1, &submit_info, m_in_flight_fences[currentFrame]));

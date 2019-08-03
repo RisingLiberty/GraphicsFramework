@@ -135,21 +135,18 @@ VkSubmitInfo VkCommandList::GetDirectSubmitInfo() const
 	return submit_info;
 }
 
-VkSubmitInfo* VkCommandList::GetSubmitInfo() const
+VkSubmitInfo VkCommandList::GetSubmitInfo() const
 {
-	VkSubmitInfo* submit_info = new VkSubmitInfo();
-	submit_info->sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+	VkSubmitInfo submit_info = {};
+	submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-	m_submit_wait_stages = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	submit_info.waitSemaphoreCount = 1;
+	submit_info.pWaitSemaphores = &m_image_available_semaphore;
+	submit_info.commandBufferCount = 1;
+	submit_info.pCommandBuffers = &m_buffer;
 
-	submit_info->waitSemaphoreCount = 1;
-	submit_info->pWaitSemaphores = &m_image_available_semaphore;
-	submit_info->pWaitDstStageMask = &m_submit_wait_stages;
-	submit_info->commandBufferCount = 1;
-	submit_info->pCommandBuffers = &m_buffer;
-
-	submit_info->signalSemaphoreCount = 1;
-	submit_info->pSignalSemaphores = &m_render_finished_semaphore;
+	submit_info.signalSemaphoreCount = 1;
+	submit_info.pSignalSemaphores = &m_render_finished_semaphore;
 
 	return submit_info;
 }

@@ -12,7 +12,6 @@ public:
 	void WaitForFence(unsigned int currentFrame);
 
 	void Submit(VkCommandList* commandList, unsigned int currentFrame);
-	void Submit(VkSemaphore imageAvailableSemaphore, VkSemaphore renderFinishedSemaphore, VkCommandBuffer buffer, unsigned int currentFrame) const;
 	void DirectSubmit(VkSubmitInfo submitInfo);
 	void Present(VkSwapchainKHR swapchain, VkSemaphore renderFinishedSemaphore, unsigned int currentFrame) const;
 

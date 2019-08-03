@@ -30,7 +30,7 @@ public:
 	VkCommandBuffer GetApiBuffer() const;
 
 	VkSubmitInfo GetDirectSubmitInfo() const;
-	VkSubmitInfo* GetSubmitInfo() const;
+	VkSubmitInfo GetSubmitInfo() const;
 
 	VkSemaphore GetImageAvailableSemaphore() const;
 	VkSemaphore GetRenderFinishedSemaphore() const;
@@ -41,8 +41,6 @@ private:
 	
 	VkSemaphore m_image_available_semaphore;
 	VkSemaphore m_render_finished_semaphore;
-
-	mutable VkPipelineStageFlags m_submit_wait_stages;
 
 	std::vector<std::unique_ptr<VkCommand>> m_commands;
 };
