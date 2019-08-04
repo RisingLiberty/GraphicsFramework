@@ -20,5 +20,6 @@ protected:
 private:
 	AreFramesCapped m_are_frames_capped;
 	bool m_switched_api;
+	API m_context_to_switch_to;
 	bool m_is_exiting;
 };

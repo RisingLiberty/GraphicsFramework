@@ -10,10 +10,6 @@
 
 #include "controllers/SceneController.h"
 
-#include "scenegraph/Scene.h"
-
-#include "platform/directx12/Dx12HelperMethods.h"
-
 #include "Events/SwitchApiEvent.h"
 
 namespace
@@ -32,7 +28,7 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped) :
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	m_context.reset(Context::Create(API::DIRECTX12, m_window.get()));
+	m_context.reset(Context::Create(API::VULKAN, m_window.get()));
 }
 
 Win64Application::~Win64Application()
@@ -93,6 +89,15 @@ void Win64Application::Run()
 
 			if (m_switched_api)
 			{
+				system("cls");
+
+				// std first sets new pointer, then deletes the old one.
+				// we want the reverse, that's why reset is called twice
+				m_context.reset();
+				m_context.reset(Context::Switch(m_context_to_switch_to, m_window.get()));
+				m_scene_controller->Clear();
+
+
 				is_running = false;
 				m_switched_api = false;
 				continue;
@@ -129,11 +134,6 @@ void Win64Application::OnEvent(const Event& event)
 {
 	const SwitchApiEvent* switch_api_event = dynamic_cast<const SwitchApiEvent*>(&event);
 
-	// std first sets new pointer, then deletes the old one.
-	// we want the reverse, that's why reset is called twice
-	m_context.reset();
-	m_context.reset(Context::Switch(switch_api_event->GetApi(), m_window.get()));
 	m_switched_api = true;
-
-	m_scene_controller->Clear();
+	m_context_to_switch_to = switch_api_event->GetApi();
 }
