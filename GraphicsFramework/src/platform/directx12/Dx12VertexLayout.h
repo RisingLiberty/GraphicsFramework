@@ -9,6 +9,7 @@ public:
 	virtual ~Dx12VertexLayout();
 
 	const std::vector<D3D12_INPUT_ELEMENT_DESC>& GetLayout() const;
+	D3D12_INPUT_LAYOUT_DESC GetLayoutDesc() const;
 
 private:
 	std::vector<D3D12_INPUT_ELEMENT_DESC> m_layout;

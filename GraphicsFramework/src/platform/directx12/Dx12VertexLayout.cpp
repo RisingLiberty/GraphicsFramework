@@ -21,3 +21,8 @@ const std::vector<D3D12_INPUT_ELEMENT_DESC>& Dx12VertexLayout::GetLayout() const
 {
 	return m_layout;
 }
+
+D3D12_INPUT_LAYOUT_DESC Dx12VertexLayout::GetLayoutDesc() const
+{
+	return { m_layout.data(), (UINT)m_layout.size() };
+}

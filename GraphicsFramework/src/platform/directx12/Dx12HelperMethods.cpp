@@ -59,9 +59,19 @@ ID3D12Device* GetDx12Device()
 	return GetDx12Context()->GetDevice();
 }
 
+ID3D12CommandQueue* GetDx12CommandQueue()
+{
+	return GetDx12Context()->GetCommandQueue();
+}
+
 ID3D12GraphicsCommandList* GetDx12CommandList()
 {
 	return GetDx12Context()->GetCommandList();
+}
+
+IDXGIFactory* GetDxgiFactory()
+{
+	return GetDx12Context()->GetDxgiFactory();
 }
 
 ComPtr<ID3D12Resource> CreateDefaultBuffer(const void* data, unsigned int size, ComPtr<ID3D12Resource>& uploadBuffer)

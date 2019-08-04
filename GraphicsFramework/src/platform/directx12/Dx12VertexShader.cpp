@@ -61,7 +61,11 @@ const std::string& Dx12VertexShader::GetCode() const
 	return m_code;
 }
 
-ID3DBlob* Dx12VertexShader::GetCompiledCode() const
+D3D12_SHADER_BYTECODE Dx12VertexShader::GetByteCode() const
 {
-	return m_compiled_code.Get();
+	return 	
+	{
+		reinterpret_cast<BYTE*>(m_compiled_code->GetBufferPointer()),
+		m_compiled_code->GetBufferSize()
+	};
 }

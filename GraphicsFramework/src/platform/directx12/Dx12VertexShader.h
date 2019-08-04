@@ -9,7 +9,7 @@ public:
 	virtual ~Dx12VertexShader();
 
 	const std::string& GetCode() const;
-	ID3DBlob* GetCompiledCode() const;
+	D3D12_SHADER_BYTECODE GetByteCode() const;
 
 protected:
 	int Compile() override;

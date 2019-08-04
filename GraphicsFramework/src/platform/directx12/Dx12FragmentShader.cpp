@@ -62,7 +62,11 @@ const std::string& Dx12FragmentShader::GetCode() const
 	return m_code;
 }
 
-ID3DBlob* Dx12FragmentShader::GetCompiledCode() const
+D3D12_SHADER_BYTECODE Dx12FragmentShader::GetByteCode() const
 {
-	return m_compiled_code.Get();
+	return
+	{
+		reinterpret_cast<BYTE*>(m_compiled_code->GetBufferPointer()),
+		m_compiled_code->GetBufferSize()
+	};
 }
