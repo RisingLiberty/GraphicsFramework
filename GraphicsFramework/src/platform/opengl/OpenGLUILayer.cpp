@@ -23,7 +23,7 @@ void OpenGLUILayer::Draw()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::Begin(m_name.c_str());
+	ImGui::Begin(m_name.c_str()/*, nullptr, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysAutoResize*/);
 
 	for (std::unique_ptr<LayerObject>& object : m_objects)
 	{
