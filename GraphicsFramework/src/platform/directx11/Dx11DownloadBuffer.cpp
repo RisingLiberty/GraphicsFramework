@@ -29,7 +29,6 @@ void Dx11DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 
 	D3D11_MAPPED_SUBRESOURCE mapped_subresource;
 	DXCALL(GetDx11DeviceContext()->Map(m_buffer.Get(), 0, D3D11_MAP_READ, 0, &mapped_subresource));
-	m_data = malloc(m_size);
 	memcpy(m_data, mapped_subresource.pData, m_size);
 	GetDx11DeviceContext()->Unmap(m_buffer.Get(), 0);
 }

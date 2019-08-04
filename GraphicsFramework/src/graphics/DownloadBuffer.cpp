@@ -5,7 +5,7 @@
 DownloadBuffer::DownloadBuffer(unsigned int size):
 	m_size(size)
 {
-	m_data = nullptr;
+	m_data = malloc(m_size);
 }
 
 DownloadBuffer::~DownloadBuffer()

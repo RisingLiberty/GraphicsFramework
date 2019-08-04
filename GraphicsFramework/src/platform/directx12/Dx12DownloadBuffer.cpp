@@ -4,16 +4,15 @@
 #include "Dx12HelperMethods.h"
 #include "Dx12VertexBuffer.h"
 #include "Dx12Context.h"
+#include "Dx12DirectCommandList.h"
 
 Dx12DownloadBuffer::Dx12DownloadBuffer(unsigned int size):
 	DownloadBuffer(size)
 {
-
 }
 
 Dx12DownloadBuffer::~Dx12DownloadBuffer()
 {
-
 }
 
 void Dx12DownloadBuffer::Download(const ApiBufferWrapper* buffer)
@@ -28,17 +27,18 @@ void Dx12DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 		nullptr,
 		IID_PPV_ARGS(m_buffer.GetAddressOf())));
 
-	GetDx12CommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(
+	std::unique_ptr<Dx12CommandList> cmd_list = GetDx12Context()->CreateDirectCommandList();
+
+	cmd_list->GetApiCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(
 		dx_vb->GetBufferGpu(),
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		D3D12_RESOURCE_STATE_COPY_SOURCE));
 
-	GetDx12CommandList()->CopyResource(m_buffer.Get(), dx_vb->GetBufferGpu());
+	cmd_list->GetApiCommandList()->CopyResource(m_buffer.Get(), dx_vb->GetBufferGpu());
 
 	// Uncomment following code in order to execute
-	//GetDx12CommandList()->Close();
-	//GetDx12Context()->ExecuteCommandQueue();
-	//GetDx12Context()->FlushCommandQueue();
+	cmd_list->Close();
+	cmd_list->Execute();
 
 	// The code below assumes that the GPU wrote FLOATs to the buffer.
 
@@ -54,6 +54,7 @@ void Dx12DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 	);
 		
 	// Code goes here to access the data via pReadbackBufferData.
+	memcpy(m_data, pReadbackBufferData, m_size);
 
 	D3D12_RANGE emptyRange{ 0, 0 };
 	m_buffer->Unmap
