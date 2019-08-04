@@ -22,7 +22,6 @@ public:
 
 	Context();
 	virtual ~Context();
-	
 
 	virtual void PreInitialize();
 	virtual void Initialize() = 0;
@@ -43,6 +42,7 @@ public:
 	void UnbindShaderProgram(const ShaderProgram* shaderProgram);
 
 	static Context* Create(API api, Window* window);
+	static Context* Switch(API api, Window* window);
 	static API GetApi();
 	static Context* GetCurrent();
 

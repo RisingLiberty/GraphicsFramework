@@ -219,12 +219,15 @@
     <ClCompile Include="src\platform\directx12\Dx12Command.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12CommandList.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12CommandQueue.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12DepthStencilBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12DepthStencilViewDescriptorHeap.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12DescriptorHeap.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12DirectCommandList.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12DownloadBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12FragmentShader.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12HelperMethods.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12IndexBuffer.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12PipelineState.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12Renderer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12RenderTargetViewDescriptorHeap.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderCBuffer.cpp" />
@@ -235,6 +238,7 @@
     <ClCompile Include="src\platform\directx12\Dx12ShaderTexture.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12ShaderUniform.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12Context.cpp" />
+    <ClCompile Include="src\platform\directx12\Dx12Swapchain.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12UILayer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12UploadBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexArray.cpp" />
@@ -399,9 +403,12 @@
     <ClInclude Include="src\platform\directx12\Dx12CommandQueue.h" />
     <ClInclude Include="src\platform\directx12\Dx12BufferWrapper.h" />
     <ClInclude Include="src\platform\directx12\Dx12CbvSrvUavDescriptorHeap.h" />
+    <ClInclude Include="src\platform\directx12\Dx12DepthStencilBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12DepthStencilViewDescriptorHeap.h" />
     <ClInclude Include="src\platform\directx12\Dx12DescriptorHeap.h" />
+    <ClInclude Include="src\platform\directx12\Dx12DirectCommandList.h" />
     <ClInclude Include="src\platform\directx12\Dx12DownloadBuffer.h" />
+    <ClInclude Include="src\platform\directx12\Dx12PipelineState.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderParser.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderSamplerState.h" />
@@ -409,6 +416,7 @@
     <ClInclude Include="src\platform\directx12\Dx12ShaderTexture.h" />
     <ClInclude Include="src\platform\directx12\Dx12ShaderUniform.h" />
     <ClInclude Include="src\platform\directx12\Dx12Context.h" />
+    <ClInclude Include="src\platform\directx12\Dx12Swapchain.h" />
     <ClInclude Include="src\platform\directx12\Dx12UILayer.h" />
     <ClInclude Include="src\platform\directx12\Dx12UploadBuffer.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexArray.h" />

@@ -50,7 +50,7 @@ void Context::CleanUp()
 
 Context* Context::Create(API api, Window* window)
 {
-//	assert(!s_current);
+	assert(!s_current);
 
 	switch (api)
 	{
@@ -64,6 +64,23 @@ Context* Context::Create(API api, Window* window)
 	s_current->Initialize();
 
 	return s_current;
+}
+
+Context* Context::Switch(API api, Window* window)
+{
+	switch (api)
+	{
+	case API::DIRECTX11: s_current = new Dx11Context(window); break;
+	case API::DIRECTX12: s_current = new Dx12Context(window); break;
+	case API::OPENGL: s_current = new OpenGLContext(window); break;
+	case API::VULKAN: s_current = new VkContext(window); break;
+	}
+
+	s_current->PreInitialize();
+	s_current->Initialize();
+
+	return s_current;
+
 }
 
 void Context::PreInitialize()
