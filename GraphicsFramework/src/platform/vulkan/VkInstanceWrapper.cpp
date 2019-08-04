@@ -192,7 +192,7 @@ void VkInstanceWrapper::SetupDebugCallback()
 		VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 
 	createInfo.pfnUserCallback = DebugCallback;
-	createInfo.pUserData = GetVkAllocationCallbacks(); //Optional
+	createInfo.pUserData = nullptr; //Optional
 
 	if (CreateDebugUtilsMessengerEXT(m_instance, &createInfo, GetVkAllocationCallbacks(), &m_debug_callback) != VK_SUCCESS)
 		throw std::runtime_error("failed to set up debug callback!");
