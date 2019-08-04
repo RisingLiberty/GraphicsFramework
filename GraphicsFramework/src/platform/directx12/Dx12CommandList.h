@@ -32,6 +32,7 @@ public:
 	void SetPipelineState(ComPtr<ID3D12PipelineState> pipelineState);
 
 	ID3D12GraphicsCommandList* GetApiCommandList() const;
+	bool IsClosed() const;
 
 protected:
 	std::vector<std::unique_ptr<Dx12Command>> m_commands;

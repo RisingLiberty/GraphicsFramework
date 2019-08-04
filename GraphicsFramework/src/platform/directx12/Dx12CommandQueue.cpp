@@ -68,7 +68,8 @@ void Dx12CommandQueue::Execute()
 	for (unsigned int i = 0; i < m_command_lists.size(); ++i)
 	{
 		std::unique_ptr<Dx12CommandList>& command_list = m_command_lists[i];
-		command_list->Close();
+		if (!command_list->IsClosed())
+			command_list->Close();
 		command_list->Execute();
 		
 		cmds_lists[i] = (command_list->GetApiCommandList());

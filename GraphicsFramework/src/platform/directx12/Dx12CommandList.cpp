@@ -112,3 +112,8 @@ ID3D12GraphicsCommandList* Dx12CommandList::GetApiCommandList() const
 {
 	return m_list.Get();
 }
+
+bool Dx12CommandList::IsClosed() const
+{
+	return m_is_closed;
+}
