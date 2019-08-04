@@ -6,10 +6,10 @@ class Dx12CommandList
 {
 public:
 	Dx12CommandList();
-	~Dx12CommandList();
+	virtual ~Dx12CommandList();
 
 	void Push(std::unique_ptr<Dx12Command> command);
-	void Execute();
+	virtual void Execute();
 
 	void SetDescriptorHeaps(ID3D12DescriptorHeap* heap);
 	void SetGraphicsRootSignature(ID3D12RootSignature* rootsignature);
@@ -33,7 +33,7 @@ public:
 
 	ID3D12GraphicsCommandList* GetApiCommandList() const;
 
-private:
+protected:
 	std::vector<std::unique_ptr<Dx12Command>> m_commands;
 	ComPtr<ID3D12GraphicsCommandList> m_list;
 	ComPtr<ID3D12CommandAllocator> m_cmd_alloc;

@@ -3,6 +3,7 @@
 #include "Dx12CommandQueue.h"
 #include "Dx12HelperMethods.h"
 #include "Dx12CommandList.h"
+#include "Dx12DirectCommandList.h"
 
 Dx12CommandQueue::Dx12CommandQueue()
 {
@@ -24,7 +25,7 @@ Dx12CommandQueue::~Dx12CommandQueue()
 
 }
 
-void Dx12CommandQueue::Flush()
+void Dx12CommandQueue::Flush() const
 {
 	unsigned int fence_value = this->Signal();
 	
@@ -39,7 +40,7 @@ void Dx12CommandQueue::Flush()
 	}
 }
 
-unsigned int Dx12CommandQueue::Signal()
+unsigned int Dx12CommandQueue::Signal() const
 {
 	DXCALL(m_queue->Signal(m_fence.Get(), ++m_fence_value));
 	return m_fence_value;
@@ -48,6 +49,17 @@ unsigned int Dx12CommandQueue::Signal()
 void Dx12CommandQueue::Push(std::unique_ptr<Dx12CommandList> commandList)
 {
 	m_command_lists.push_back(std::move(commandList));
+}
+
+std::unique_ptr<Dx12CommandList> Dx12CommandQueue::CreateDirectCommandList() const
+{
+	return std::make_unique<Dx12DirectCommandList>(this);
+}
+
+void Dx12CommandQueue::Execute(Dx12CommandList* cmdList) const
+{
+	ID3D12CommandList* cmd_list[] = { cmdList->GetApiCommandList() };
+	m_queue->ExecuteCommandLists(1, cmd_list);
 }
 
 void Dx12CommandQueue::Execute()

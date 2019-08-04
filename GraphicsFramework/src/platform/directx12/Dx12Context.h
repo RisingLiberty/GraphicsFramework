@@ -24,6 +24,10 @@ class Dx12VertexLayout;
 class Dx12DescriptorHeap;
 class Dx12CommandQueue;
 class Dx12CommandList;
+class Dx12Swapchain;
+
+class Dx12DepthStencilBuffer;
+class Dx12PipelineState;
 
 class Dx12Context : public Context
 {
@@ -39,7 +43,10 @@ public:
 	virtual API GetApiType() const override;
 
 	ID3D12Device* GetDevice() const;
+	ID3D12CommandQueue* GetCommandQueue() const;
 	ID3D12GraphicsCommandList* GetCommandList() const;
+	IDXGIFactory* GetDxgiFactory() const;
+	std::unique_ptr<Dx12CommandList> CreateDirectCommandList() const;
 
 	void BindResourcesToPipeline();
 	void BindImgui();
@@ -67,15 +74,6 @@ private:
 	void InitD3D(Window* window);
 	void OnResize(unsigned int width, unsigned int height);
 
-	void CreateCommandObjects();
-	void CreateSwapChain(Window* window);
-	void CreateRtvDescriptorHeaps();
-	void CreateDsvDescriptorHeap();
-
-	void LogAdapters();
-	void LogAdapterOutputs(IDXGIAdapter* adapter);
-	void LogOutputDisplayModes(IDXGIOutput* output, DXGI_FORMAT format);
-
 	void BuildPSO();
 
 	ID3D12Resource* GetCurrentBackBuffer() const;
@@ -84,12 +82,8 @@ private:
 	ComPtr<IDXGIFactory4> m_dxgi_factory;
 	ComPtr<ID3D12Device> m_device;
 
-	ComPtr<IDXGISwapChain> m_swapchain;
-	static const int SWAPCHAIN_BUFFER_COUNT = 2;
 	static const int NUM_FRAME_RESOURCES = 1;
 	int m_current_back_buffer_index = 0;
-	ComPtr<ID3D12Resource> m_swapchain_buffers[SWAPCHAIN_BUFFER_COUNT];
-	ComPtr<ID3D12Resource> m_depth_stencil_buffer;
 
 	UINT m_rtv_descriptor_size = 0;
 	UINT m_dsv_descriptor_size = 0;
@@ -100,15 +94,20 @@ private:
 
 	D3D_DRIVER_TYPE m_driver_type = D3D_DRIVER_TYPE_HARDWARE;
 
-	ComPtr<ID3D12PipelineState> m_pipeline_state = nullptr;
+	//ComPtr<ID3D12PipelineState> m_pipeline_state = nullptr;
 
 	std::unique_ptr<Dx12DescriptorHeap> m_dsv_heap;
 	std::unique_ptr<Dx12DescriptorHeap> m_rtv_heap;
 	std::unique_ptr<Dx12DescriptorHeap> m_cbv_heap;
 	std::unique_ptr<Dx12DescriptorHeap> m_cbv_imgui_heap;
 
+	std::unique_ptr<Dx12DepthStencilBuffer> m_depth_stencil_buffer;
+	std::unique_ptr<Dx12PipelineState> m_pipeline_state;
+
 	std::unique_ptr<Dx12CommandQueue> m_command_queue;
 	Dx12CommandList* m_command_list;
+
+	std::unique_ptr<Dx12Swapchain> m_swapchain;
 
 	Window* m_window;
 };
