@@ -134,7 +134,8 @@ void Dx12Context::PreInitialize()
 	m_rtv_heap = std::make_unique<Dx12RenderTargetViewDescriptorHeap>(SWAPCHAIN_BUFFER_COUNT);
 	m_dsv_heap = std::make_unique<Dx12DepthStencilViewDescriptorHeap>(1);
 
-	this->OnResize(m_window->GetPropeties().width, m_window->GetPropeties().height);
+	DXGI_SWAP_CHAIN_DESC sd = m_swapchain->GetDesc();
+	this->OnResize(sd.BufferDesc.Width, sd.BufferDesc.Height);
 
 	// Reset the command list to prep for initialization commands.
 	m_command_list->Reset();

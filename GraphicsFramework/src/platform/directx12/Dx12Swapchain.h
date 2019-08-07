@@ -17,6 +17,8 @@ public:
 	IDXGISwapChain* GetSwapchain() const;
 	ID3D12Resource* GetBuffer(unsigned int index) const;
 
+	DXGI_SWAP_CHAIN_DESC GetDesc() const;
+
 private:
 	std::vector<ComPtr<ID3D12Resource>> m_swapchain_buffers;
 	ComPtr<IDXGISwapChain> m_swapchain;

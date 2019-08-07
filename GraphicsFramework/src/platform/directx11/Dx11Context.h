@@ -7,6 +7,8 @@ class Window;
 class Dx11VertexShader;
 class Dx11FragmentShader;
 
+class Window;
+
 class Dx11Context : public Context
 {
 public:
@@ -27,6 +29,7 @@ public:
 	void BindFragmentShader(Dx11FragmentShader* fragmentShader);
 
 	virtual void Initialize() override;
+	virtual void Begin() override;
 	virtual void Present() override;
 	virtual API GetApiType() const override;
 
@@ -66,4 +69,6 @@ private:
 
 	Dx11VertexShader* m_bound_vertex_shader;
 	Dx11FragmentShader* m_bound_fragment_shader;
+
+	Window* m_window;
 };

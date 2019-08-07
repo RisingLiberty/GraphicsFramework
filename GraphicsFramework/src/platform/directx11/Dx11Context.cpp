@@ -14,7 +14,10 @@
 #include "Dx11VertexArray.h"
 #include "Dx11VertexBuffer.h"
 
-Dx11Context::Dx11Context(Window* window)
+#include "graphics/Window.h"
+
+Dx11Context::Dx11Context(Window* window):
+	m_window(window)
 {
 	spdlog::info("Using DirectX 11");
 
@@ -43,27 +46,15 @@ void Dx11Context::InitD3D(Window* window)
 	creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	DXCALL(D3D11CreateDevice(
-		NULL, 
-		D3D_DRIVER_TYPE_HARDWARE, 
-		NULL, 
-		creationFlags,
-		NULL, 
-		NULL, 
-		D3D11_SDK_VERSION, 
-		m_resources.device.ReleaseAndGetAddressOf(), 
-		&m_feature_level, 
-		m_resources.device_context.ReleaseAndGetAddressOf()
-	));
-
 	DXGI_SWAP_CHAIN_DESC swapchain_desc;
 	ZeroMemory(&swapchain_desc, sizeof(swapchain_desc));
 
-	swapchain_desc.BufferDesc.Width = properties.width;
-	swapchain_desc.BufferDesc.Height = properties.height;
+	// specifying 0 makes the desc use the window's renderable rectangle
+	swapchain_desc.BufferDesc.Width = 0;
+	swapchain_desc.BufferDesc.Height = 0;
 	swapchain_desc.BufferDesc.RefreshRate.Numerator = 60;
 	swapchain_desc.BufferDesc.RefreshRate.Denominator = 1;
-	swapchain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapchain_desc.BufferDesc.Format = m_back_buffer_format.ToDirectX();
 
 	swapchain_desc.SampleDesc.Count = 1;	// no msaa
 	swapchain_desc.SampleDesc.Quality = 0;  // no msaa
@@ -75,14 +66,14 @@ void Dx11Context::InitD3D(Window* window)
 	swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapchain_desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
+	m_feature_level = D3D_FEATURE_LEVEL_11_1;
+	D3D_FEATURE_LEVEL feature_level = m_feature_level;
+	if (D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, creationFlags, &feature_level, 1, D3D11_SDK_VERSION, &swapchain_desc, m_resources.swapchain.GetAddressOf(), m_resources.device.GetAddressOf(), &m_feature_level, &m_resources.device_context) != S_OK)
+		assert(false);
+
 	ComPtr<IDXGIDevice> dxgi_device = nullptr;
 	ComPtr<IDXGIAdapter> dxgi_adapter = nullptr;
 	ComPtr<IDXGIFactory> dxgi_factory = nullptr;
-
-	DXCALL(m_resources.device->QueryInterface(IID_PPV_ARGS(dxgi_device.GetAddressOf()));
-	DXCALL(dxgi_device->GetParent(IID_PPV_ARGS(dxgi_adapter.GetAddressOf())));
-	DXCALL(dxgi_adapter->GetParent(IID_PPV_ARGS(dxgi_factory.GetAddressOf())));
-	DXCALL(dxgi_factory->CreateSwapChain(m_resources.device.Get(), &swapchain_desc, m_resources.swapchain.ReleaseAndGetAddressOf())));
 
 #if defined _DEBUG
 	DXCALL(m_resources.device->QueryInterface(IID_PPV_ARGS(m_debug_layer.ReleaseAndGetAddressOf())));
@@ -99,12 +90,16 @@ void Dx11Context::InitD3D(Window* window)
 	DXCALL(info_queue->AddStorageFilterEntries(&filter));
 #endif
 
-	this->ResizeBuffers(properties.width, properties.height);
+	// Swapchain can't use window's width and height directly cause they'll scale incorectly.
+	// instead get swapchain's desc after creation and use these width and height values.
+	m_resources.swapchain->GetDesc(&swapchain_desc);
+
+	this->ResizeBuffers(swapchain_desc.BufferDesc.Width, swapchain_desc.BufferDesc.Height);
 }
 
 void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 {
-	DXCALL(m_resources.swapchain->ResizeBuffers(1, width, height, DXGI_FORMAT_R8G8B8A8_UNORM, 0));
+	DXCALL(m_resources.swapchain->ResizeBuffers(2, width, height, m_back_buffer_format.ToDirectX(), 0));
 
 	ComPtr<ID3D11Texture2D> back_buffer;
 	DXCALL(m_resources.swapchain->GetBuffer(0, IID_PPV_ARGS(back_buffer.GetAddressOf())));
@@ -115,7 +110,7 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 	depth_stencil_desc.Height = height;
 	depth_stencil_desc.MipLevels = 1;
 	depth_stencil_desc.ArraySize = 1;
-	depth_stencil_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depth_stencil_desc.Format = m_depth_stencil_format.ToDirectX();
 
 	depth_stencil_desc.SampleDesc.Count = 1;	// no msaa
 	depth_stencil_desc.SampleDesc.Quality = 0;  // no msaa
@@ -139,6 +134,11 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 	ComPtr<ID3D11RasterizerState> rasterizer_state;
 	DXCALL(m_resources.device->CreateRasterizerState(&m_rasterizer_settings.ToDirectX11(), rasterizer_state.GetAddressOf()));
 	m_resources.device_context->RSSetState(rasterizer_state.Get());
+}
+
+void Dx11Context::Begin()
+{
+	this->SetRenderTargets(m_render_target_view.Get(), m_depth_stencil_view.Get());
 }
 
 void Dx11Context::Present()

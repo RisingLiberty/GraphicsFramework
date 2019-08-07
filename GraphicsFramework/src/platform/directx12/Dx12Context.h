@@ -94,8 +94,6 @@ private:
 
 	D3D_DRIVER_TYPE m_driver_type = D3D_DRIVER_TYPE_HARDWARE;
 
-	//ComPtr<ID3D12PipelineState> m_pipeline_state = nullptr;
-
 	std::unique_ptr<Dx12DescriptorHeap> m_dsv_heap;
 	std::unique_ptr<Dx12DescriptorHeap> m_rtv_heap;
 	std::unique_ptr<Dx12DescriptorHeap> m_cbv_heap;

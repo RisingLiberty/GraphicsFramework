@@ -10,8 +10,8 @@ Dx12Swapchain::Dx12Swapchain(Window* window, Format format, unsigned int bufferC
 	m_is_v_sync(isVSync)
 {
 	DXGI_SWAP_CHAIN_DESC desc;
-	desc.BufferDesc.Width = window->GetPropeties().width;
-	desc.BufferDesc.Height = window->GetPropeties().height;
+	desc.BufferDesc.Width = 0;// window->GetPropeties().width;
+	desc.BufferDesc.Height = 0;// window->GetPropeties().height;
 	desc.BufferDesc.RefreshRate.Numerator = 60;
 	desc.BufferDesc.RefreshRate.Denominator = 1;
 	desc.BufferDesc.Format = format.ToDirectX();
@@ -49,7 +49,7 @@ void Dx12Swapchain::Present()
 
 void Dx12Swapchain::ResizeBuffers(unsigned int width, unsigned int height, Format format, DXGI_SWAP_CHAIN_FLAG flags)
 {
-	for (int i = 0; i < m_buffer_count; ++i)
+	for (unsigned int i = 0; i < m_buffer_count; ++i)
 		m_swapchain_buffers[i].Reset();
 
 	DXCALL(m_swapchain->ResizeBuffers(m_buffer_count, width, height, format.ToDirectX(), flags));
@@ -67,4 +67,11 @@ IDXGISwapChain* Dx12Swapchain::GetSwapchain() const
 ID3D12Resource* Dx12Swapchain::GetBuffer(unsigned int index) const
 {
 	return m_swapchain_buffers[index].Get();
+}
+
+DXGI_SWAP_CHAIN_DESC Dx12Swapchain::GetDesc() const
+{
+	DXGI_SWAP_CHAIN_DESC desc;
+	m_swapchain->GetDesc(&desc);
+	return desc;
 }
