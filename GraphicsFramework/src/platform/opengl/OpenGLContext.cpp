@@ -15,19 +15,18 @@
 #include "OpenGLVertexBuffer.h"
 #include "OpenGLShaderProgram.h"
 
-using HandleGLRenderingContext = HGLRC;
-
-OpenGLContext::OpenGLContext(Window* window)
+OpenGLContext::OpenGLContext(Window* window):
+	m_window(window)
 {
 	spdlog::info("Using OpenGL");
 
 	m_hdc = GetDC((HWND)window->GetHandle());
 
 	// Handle to GL Rendering Context
-	HandleGLRenderingContext hrc = wglCreateContext(m_hdc);
-	if (hrc)
+	m_hglrc = wglCreateContext(m_hdc);
+	if (m_hglrc)
 	{
-		if (!wglMakeCurrent(m_hdc, hrc))
+		if (!wglMakeCurrent(m_hdc, m_hglrc))
 			ThrowContextException("Failed to set OpenGL context!");
 	}
 	else
@@ -39,7 +38,16 @@ OpenGLContext::OpenGLContext(Window* window)
 	}
 }
 
-OpenGLContext::~OpenGLContext() = default;
+OpenGLContext::~OpenGLContext()
+{
+	this->CleanUp();
+	wglMakeCurrent(NULL, NULL);
+	ReleaseDC((HWND)m_window->GetHandle(), m_hdc);
+	wglDeleteContext(m_hglrc);
+
+	wglGetCurrentContext();
+	wglGetCurrentDC();
+}
 
 void OpenGLContext::Initialize()
 {

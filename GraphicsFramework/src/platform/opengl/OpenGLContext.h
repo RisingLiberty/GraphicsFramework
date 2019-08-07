@@ -4,6 +4,8 @@
 
 class Window;
 
+using HandleGLRenderingContext = HGLRC;
+
 class OpenGLContext : public Context
 {
 public: 
@@ -26,4 +28,6 @@ protected:
 private:
 	// Handle to device context
 	HDC m_hdc;
+	HandleGLRenderingContext m_hglrc;
+	Window* m_window;
 };
