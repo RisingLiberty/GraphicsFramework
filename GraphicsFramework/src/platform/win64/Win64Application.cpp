@@ -14,8 +14,8 @@
 
 namespace
 {
-	const int WINDOW_WIDTH = 720;
-	const int WINDOW_HEIGHT = 480;
+	const int WINDOW_WIDTH = 1280;
+	const int WINDOW_HEIGHT = 800;
 	const std::string& WINDOW_TITLE = "Sandbox";
 
 	const float UPDATE_FREQUENCY = 60; //frames per seconds
@@ -28,7 +28,7 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped) :
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	m_context.reset(Context::Create(API::VULKAN, m_window.get()));
+	m_context.reset(Context::Create(API::DIRECTX12, m_window.get()));
 }
 
 Win64Application::~Win64Application()
@@ -53,13 +53,14 @@ void Win64Application::Run()
 		while (is_running)
 		{
 			using namespace std::chrono_literals;
-			if (m_window->EventLoop() == WM_QUIT)
+			if (m_window->EventLoop() == WM_QUIT && m_switched_api_last_frame == false)
 			{
 				is_running = false;
 				m_is_exiting = true;
 				continue;
 			}
 
+			m_switched_api_last_frame = false;
 			// sleep thread so window can activate again when debugging
 			if (m_window->IsPaused())
 			{
@@ -87,19 +88,32 @@ void Win64Application::Run()
 				++frame_count;
 			}
 
-			if (m_switched_api)
+			if (m_switched_api_last_frame)
 			{
 				system("cls");
+
+				// Switching from opengl to vulkan currently leaves a opengl context existing in the window.
+				// By recreating the window, this is forcfully destroyed.
+				// (wglDeleteContext is not working for some reason)
+				bool should_recreate_window = Context::GetApi() == API::OPENGL && m_context_to_switch_to == API::VULKAN;
 
 				// std first sets new pointer, then deletes the old one.
 				// we want the reverse, that's why reset is called twice
 				m_context.reset();
+
+				if (should_recreate_window)
+				{
+					m_window.reset();
+					m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
+					m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
+				}
+
+				//std::this_thread::sleep_for(5s);
 				m_context.reset(Context::Switch(m_context_to_switch_to, m_window.get()));
 				m_scene_controller->Clear();
 
 
 				is_running = false;
-				m_switched_api = false;
 				continue;
 			}
 
@@ -134,6 +148,6 @@ void Win64Application::OnEvent(const Event& event)
 {
 	const SwitchApiEvent* switch_api_event = dynamic_cast<const SwitchApiEvent*>(&event);
 
-	m_switched_api = true;
+	m_switched_api_last_frame = true;
 	m_context_to_switch_to = switch_api_event->GetApi();
 }
