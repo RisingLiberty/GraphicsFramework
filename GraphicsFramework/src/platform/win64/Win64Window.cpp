@@ -21,6 +21,9 @@ namespace
 		pfd.iLayerType = PFD_MAIN_PLANE;
 		return pfd;
 	}
+
+	const unsigned int BORDER_WIDTH = 20;
+	const unsigned int TITLE_BAR_HEIGHT = 50;
 }
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -31,28 +34,22 @@ Win64Window::Win64Window(unsigned int width, unsigned int height, const std::str
 {
 	std::wstring wide_title(title.begin(), title.end());
 
-	const std::wstring window_class_name = L"DirectXWindowClass";
+	const std::wstring window_class_name = L"DefaultWindowClass";
+
 	DefaultWndClass wnd_class((WNDPROC)WindowProcdureStatic, m_hinstance, window_class_name.c_str());
 
-	RECT r = { 0,0, (LONG)width, (LONG)height };
-	AdjustWindowRect(&r, WS_OVERLAPPED, false);
-	int win_width = r.right - r.left;
-	int win_height = r.bottom - r.top;
-
-	m_handle = CreateWindowExW(
-		0L,
-		window_class_name.c_str(),
-		wide_title.c_str(),
-		WS_OVERLAPPED | WS_SYSMENU,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		win_width,
-		win_height,
-		NULL,			//no parent window
-		nullptr,		//not using menus
-		m_hinstance,
-		this
-	);
+	m_handle = CreateWindow(
+		window_class_name.c_str(), 
+		wide_title.c_str(), 
+		WS_OVERLAPPEDWINDOW, 
+		CW_USEDEFAULT, 
+		CW_USEDEFAULT, 
+		width,
+		height,
+		NULL, 
+		nullptr, 
+		m_hinstance, 
+		this);
 
 	if (!m_handle)
 	{
@@ -72,6 +69,7 @@ Win64Window::Win64Window(unsigned int width, unsigned int height, const std::str
 		ThrowException("Failed to choose pixel format!");
 
 	ShowWindow(m_handle, SW_SHOWDEFAULT);
+	UpdateWindow(m_handle);
 
 	ImGui::CreateContext();
 	ImGui_ImplWin32_Init(m_handle);
@@ -80,12 +78,15 @@ Win64Window::Win64Window(unsigned int width, unsigned int height, const std::str
 Win64Window::~Win64Window()
 {
 	ImGui_ImplWin32_Shutdown();
+	DestroyWindow(m_handle);
 }
 
 LRESULT Win64Window::WindowProcdureStatic(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	if (message == WM_CREATE)
 	{
+		spdlog::info("Window created");
+
 		CREATESTRUCT* pCs = reinterpret_cast<CREATESTRUCT*>(lParam);
 		SetWindowLongPtrW(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCs->lpCreateParams));
 	}
