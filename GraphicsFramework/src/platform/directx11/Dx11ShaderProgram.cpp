@@ -10,7 +10,7 @@
 #include "Dx11ShaderTexture.h"
 #include "Dx11ShaderSamplerState.h"
 #include "Dx11HelperMethods.h"
-
+#include "Dx11CommandList.h"
 
 Dx11ShaderProgram::Dx11ShaderProgram(VertexShader* vs, FragmentShader* fs):
 	ShaderProgram(vs, fs)
@@ -75,11 +75,11 @@ void Dx11ShaderProgram::UploadVertexConstantBuffer() const
 	D3D11_MAPPED_SUBRESOURCE msr;
 	ZeroMemory(&msr, sizeof(msr));
 
-	GetDx11DeviceContext()->Map(m_vs_constant_buffer->buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &msr);
+	GetDx11CommandList()->Map(m_vs_constant_buffer->buffer.Get(), D3D11_MAP_WRITE_DISCARD, msr);
 	memcpy(msr.pData, vertex_constant_buffer, m_vs_constant_buffer->size);
-	GetDx11DeviceContext()->Unmap(m_vs_constant_buffer->buffer.Get(), NULL);
+	GetDx11CommandList()->Unmap(m_vs_constant_buffer->buffer.Get());
 
-	GetDx11DeviceContext()->VSSetConstantBuffers(m_vs_constant_buffer->reg, 1, m_vs_constant_buffer->buffer.GetAddressOf());
+	GetDx11CommandList()->SetVSConstantBuffer(m_vs_constant_buffer->reg, 1, m_vs_constant_buffer->buffer.Get());
 }
 
 void Dx11ShaderProgram::UploadFragmentConstantBuffer() const
@@ -104,11 +104,11 @@ void Dx11ShaderProgram::UploadFragmentConstantBuffer() const
 	D3D11_MAPPED_SUBRESOURCE msr;
 	ZeroMemory(&msr, sizeof(msr));
 
-	GetDx11DeviceContext()->Map(m_fs_constant_buffer->buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &msr);
+	GetDx11CommandList()->Map(m_fs_constant_buffer->buffer.Get(), D3D11_MAP_WRITE_DISCARD, msr);
 	memcpy(msr.pData, fragment_constant_buffer, m_fs_constant_buffer->size);
-	GetDx11DeviceContext()->Unmap(m_fs_constant_buffer->buffer.Get(), NULL);
+	GetDx11CommandList()->Unmap(m_fs_constant_buffer->buffer.Get());
 
-	GetDx11DeviceContext()->PSSetConstantBuffers(m_fs_constant_buffer->reg, 1, m_fs_constant_buffer->buffer.GetAddressOf());
+	GetDx11CommandList()->SetPSConstantBuffer(m_fs_constant_buffer->reg, 1, m_fs_constant_buffer->buffer.Get());
 }
 
 Dx11VertexShader* Dx11ShaderProgram::GetDxVertexShader() const

@@ -5,7 +5,7 @@
 class Dx11Renderer : public Renderer
 {
 public:
-	Dx11Renderer(ID3D11RenderTargetView* renderTargetView, ID3D11DepthStencilView* depthStencilView);
+	Dx11Renderer(ID3D11DeviceContext* deviceContext, ID3D11RenderTargetView* renderTargetView, ID3D11DepthStencilView* depthStencilView);
 	virtual ~Dx11Renderer();
 
 	virtual void Draw() override;

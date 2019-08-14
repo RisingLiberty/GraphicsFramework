@@ -112,7 +112,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <PreprocessorDefinitions>IMGUI_IMPL_OPENGL_LOADER_GLEW;GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;IMGUI_IMPL_OPENGL_LOADER_GLEW;GLEW_STATIC;_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -170,6 +170,8 @@
     <ClCompile Include="src\graphics\GraphicsResource.cpp" />
     <ClCompile Include="src\graphics\RasterizerSettings.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11BufferWrapper.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11CommandList.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11CommandQueue.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11DownloadBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderCBuffer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11FragmentShader.cpp" />
@@ -180,6 +182,7 @@
     <ClCompile Include="src\platform\directx11\Dx11ShaderStruct.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderTexture.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11ShaderUniform.cpp" />
+    <ClCompile Include="src\platform\directx11\Dx11Swapchain.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11UILayer.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexArray.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11VertexBuffer.cpp" />
@@ -306,6 +309,45 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\platform\win64\DefaultWndClass.cpp" />
+    <ClCompile Include="src\vendor\glfw\glfwcontext.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\init.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\input.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\monitor.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\vulkan.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\wgl_context.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\win32_init.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\win32_joystick.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\win32_monitor.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\win32_time.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\win32_tls.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\win32_window.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\vendor\glfw\glfwwindow.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="src\vendor\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -352,6 +394,8 @@
     <ClInclude Include="src\graphics\GraphicsResource.h" />
     <ClInclude Include="src\graphics\RasterizerSettings.h" />
     <ClInclude Include="src\platform\directx11\Dx11BufferWrapper.h" />
+    <ClInclude Include="src\platform\directx11\Dx11CommandList.h" />
+    <ClInclude Include="src\platform\directx11\Dx11CommandQueue.h" />
     <ClInclude Include="src\platform\directx11\Dx11DownloadBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderCBuffer.h" />
     <ClInclude Include="src\platform\directx11\Dx11FragmentShader.h" />
@@ -361,6 +405,7 @@
     <ClInclude Include="src\platform\directx11\Dx11ShaderStruct.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderTexture.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderUniform.h" />
+    <ClInclude Include="src\platform\directx11\Dx11Swapchain.h" />
     <ClInclude Include="src\platform\directx11\Dx11UILayer.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexArray.h" />
     <ClInclude Include="src\platform\directx11\Dx11VertexBuffer.h" />
@@ -488,6 +533,12 @@
     <ClInclude Include="src\scenegraph\UIObject.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\platform\win64\DefaultWndClass.h" />
+    <ClInclude Include="src\vendor\glfw\egl_context.h" />
+    <ClInclude Include="src\vendor\glfw\glfw3.h" />
+    <ClInclude Include="src\vendor\glfw\internal.h" />
+    <ClInclude Include="src\vendor\glfw\wgl_context.h" />
+    <ClInclude Include="src\vendor\glfw\win32_joystick.h" />
+    <ClInclude Include="src\vendor\glfw\win32_platform.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />
     <ClInclude Include="src\vendor\imgui\imgui.h" />
     <ClInclude Include="src\vendor\imgui\imgui_impl_dx11.h" />

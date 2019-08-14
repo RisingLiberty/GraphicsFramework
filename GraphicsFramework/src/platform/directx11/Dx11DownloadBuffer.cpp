@@ -3,6 +3,7 @@
 #include "Dx11HelperMethods.h"
 #include "Dx11DownloadBuffer.h"
 #include "Dx11VertexBuffer.h"
+#include "Dx11CommandList.h"
 
 Dx11DownloadBuffer::Dx11DownloadBuffer(unsigned int size):
 	DownloadBuffer(size)
@@ -25,10 +26,10 @@ Dx11DownloadBuffer::~Dx11DownloadBuffer()
 void Dx11DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 {
 	const Dx11VertexBuffer* dx_vb = static_cast<const Dx11VertexBuffer*>(buffer);
-	GetDx11DeviceContext()->CopyResource(m_buffer.Get(), dx_vb->GetBuffer());
+	GetDx11CommandList()->CopyResource(m_buffer.Get(), dx_vb->GetBuffer());
 
 	D3D11_MAPPED_SUBRESOURCE mapped_subresource;
-	DXCALL(GetDx11DeviceContext()->Map(m_buffer.Get(), 0, D3D11_MAP_READ, 0, &mapped_subresource));
+	GetDx11CommandList()->Map(m_buffer.Get(), D3D11_MAP_READ, mapped_subresource);
 	memcpy(m_data, mapped_subresource.pData, m_size);
-	GetDx11DeviceContext()->Unmap(m_buffer.Get(), 0);
+	GetDx11CommandList()->Unmap(m_buffer.Get());
 }

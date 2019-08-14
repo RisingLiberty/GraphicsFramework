@@ -9,34 +9,27 @@ class Dx11FragmentShader;
 
 class Window;
 
+class Dx11CommandQueue;
+class Dx11Swapchain;
+class Dx11CommandList;
+
 class Dx11Context : public Context
 {
 public:
-	struct Dx11Resources
-	{
-		ComPtr<ID3D11Device> device;
-		ComPtr<ID3D11DeviceContext> device_context;
-		ComPtr<IDXGISwapChain> swapchain;
-		ComPtr<ID3D11RenderTargetView> backbuffer;
-	};
 
 	Dx11Context(Window* window);
 	virtual ~Dx11Context();
 
 	void ResizeBuffers(unsigned int width, unsigned int height);
 
-	void BindVertexShader(Dx11VertexShader* vertexShader);
-	void BindFragmentShader(Dx11FragmentShader* fragmentShader);
-
+	virtual void PreInitialize() override;
 	virtual void Initialize() override;
 	virtual void Begin() override;
 	virtual void Present() override;
 	virtual API GetApiType() const override;
 
-	Dx11Resources GetResources() const;
-	
 	ID3D11Device* GetDevice() const;
-	ID3D11DeviceContext* GetDeviceContext() const;
+	Dx11CommandList* GetCommandList() const;
 	
 	const Dx11VertexShader* GetBoundVertexShader() const;
 
@@ -52,23 +45,20 @@ protected:
 
 private:
 	void InitD3D(Window* window);
-	void SetRenderTargets(ID3D11RenderTargetView* target, ID3D11DepthStencilView* view);
 
 private:
-
-	Dx11Resources m_resources;
 
 	D3D_FEATURE_LEVEL m_feature_level;
 
 	ComPtr<ID3D11RenderTargetView> m_render_target_view;
 	ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
 	ComPtr<ID3D11Texture2D> m_depth_stencil_buffer;
-	ComPtr<ID3D11Debug> m_debug_layer;
 
 	D3D11_VIEWPORT m_viewport;
 
-	Dx11VertexShader* m_bound_vertex_shader;
-	Dx11FragmentShader* m_bound_fragment_shader;
-
 	Window* m_window;
+
+	std::unique_ptr<Dx11CommandQueue> m_command_queue;
+	Dx11CommandList* m_command_list;
+	std::unique_ptr<Dx11Swapchain> m_swapchain;
 };
