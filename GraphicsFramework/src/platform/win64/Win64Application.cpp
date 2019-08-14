@@ -28,7 +28,7 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped) :
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	m_context.reset(Context::Create(API::DIRECTX12, m_window.get()));
+	m_context.reset(Context::Create(API::DIRECTX11, m_window.get()));
 }
 
 Win64Application::~Win64Application()
@@ -95,7 +95,8 @@ void Win64Application::Run()
 				// Switching from opengl to vulkan currently leaves a opengl context existing in the window.
 				// By recreating the window, this is forcfully destroyed.
 				// (wglDeleteContext is not working for some reason)
-				bool should_recreate_window = Context::GetApi() == API::OPENGL && m_context_to_switch_to == API::VULKAN;
+
+				bool should_recreate_window = m_context_to_switch_to == API::VULKAN || Context::GetApi() == API::DIRECTX12;
 
 				// std first sets new pointer, then deletes the old one.
 				// we want the reverse, that's why reset is called twice
