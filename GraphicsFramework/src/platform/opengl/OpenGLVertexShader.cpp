@@ -36,7 +36,7 @@ OpenGLVertexShader::OpenGLVertexShader(const std::string& path) :
 
 OpenGLVertexShader::~OpenGLVertexShader()
 {
-
+	GetOpenGLCommandList()->DeleteShader(m_id);
 }
 
 int OpenGLVertexShader::Compile()
