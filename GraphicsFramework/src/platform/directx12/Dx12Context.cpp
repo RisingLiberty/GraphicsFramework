@@ -118,6 +118,7 @@ Dx12Context::~Dx12Context()
 {
 	//m_command_list->Close();
 	//m_command_list->Execute();
+
 	m_command_queue->Execute();
 	m_command_queue->Flush();
 	this->CleanUp();

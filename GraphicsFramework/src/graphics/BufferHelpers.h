@@ -2,8 +2,8 @@
 
 enum class BufferType
 {
-	INDEX,
-	VERTEX
+	VERTEX,
+	INDEX
 };
 
 enum class EBufferStage

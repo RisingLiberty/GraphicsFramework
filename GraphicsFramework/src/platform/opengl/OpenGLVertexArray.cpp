@@ -11,14 +11,14 @@
 OpenGLVertexArray::OpenGLVertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	VertexArray(vb, layout)
 {
-	GLCALL(glGenVertexArrays(1, &m_id));
+	m_id = GetOpenGLCommandList()->CreateVertexArray();
 
 	this->EnableAttributes();
 }
 
 OpenGLVertexArray::~OpenGLVertexArray()
 {
-	GLCALL(glDeleteVertexArrays(1, &m_id));
+	GetOpenGLCommandList()->DeleteVertexArray(m_id);
 }
 
 unsigned int OpenGLVertexArray::GetId() const

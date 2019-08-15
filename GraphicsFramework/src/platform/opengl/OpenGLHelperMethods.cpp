@@ -22,3 +22,8 @@ OpenGLContext* GetOpenGLContext()
 {
 	return static_cast<OpenGLContext*>(Context::GetCurrent());
 }
+
+OpenGLCommandList* GetOpenGLCommandList()
+{
+	return GetOpenGLContext()->GetCommandList();
+}

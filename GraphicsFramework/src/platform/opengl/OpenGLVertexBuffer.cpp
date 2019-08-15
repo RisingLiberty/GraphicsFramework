@@ -29,5 +29,5 @@ std::unique_ptr<byte> OpenGLVertexBuffer::GetData() const
 
 void OpenGLVertexBuffer::GLBind() const
 {
-	glBindBuffer(GL_ARRAY_BUFFER, m_id);
+	GetOpenGLCommandList()->BindVertexBuffer(m_id);
 }

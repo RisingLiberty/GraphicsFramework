@@ -39,7 +39,7 @@ OpenGLShaderProgram::OpenGLShaderProgram(VertexShader* vs, FragmentShader* fs) :
 
 OpenGLShaderProgram::~OpenGLShaderProgram()
 {
-	GLCALL(glDeleteProgram(m_id));
+	GetOpenGLCommandList()->DeleteProgram(m_id);
 }
 
 void OpenGLShaderProgram::LoadUniforms()
@@ -64,30 +64,17 @@ void OpenGLShaderProgram::LoadUniforms()
 
 void OpenGLShaderProgram::Create(const std::vector<unsigned int>& shaderIDs)
 {
-	GLCALL(m_id = glCreateProgram());
+	m_id = GetOpenGLCommandList()->CreateProgram();
 
 	for (unsigned int id : shaderIDs)
-	{
-		GLCALL(glAttachShader(m_id, id));
-	}
+		GetOpenGLCommandList()->AttachShader(m_id, id);
 
-	GLCALL(glLinkProgram(m_id));
-	GLCALL(glValidateProgram(m_id));
+	GetOpenGLCommandList()->LinkProgram(m_id);
+	GetOpenGLCommandList()->ValidateProgram(m_id);
 
-	int result = GL_FALSE;
-	int messageLength = 0;
-
-	GLCALL(glGetProgramiv(m_id, GL_LINK_STATUS, &result));
-	GLCALL(glGetProgramiv(m_id, GL_INFO_LOG_LENGTH, &messageLength));
-
-	if (messageLength > 0)
-	{
-		std::string error;
-		error.resize(messageLength);
-		GLCALL(glGetProgramInfoLog(m_id, messageLength, nullptr, error.data()));
-		spdlog::error(error);
-		return;
-	}
+	std::string info_log = GetOpenGLCommandList()->GetProgramInfoLog(m_id);
+	if (!info_log.empty())
+		spdlog::error(info_log);
 }
 
 void OpenGLShaderProgram::UploadVariables() const
@@ -173,7 +160,7 @@ int OpenGLShaderProgram::GetUniformLocation(const std::string& name) const
 	if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end())
 		return m_uniform_location_cache[name];
 
-	GLCALL(int location = glGetUniformLocation(m_id, name.c_str()));
+	int location = GetOpenGLCommandList()->GetUniformLocation(m_id, name.c_str());
 	if (location == -1)
 	{
 		spdlog::warn("Uniform '{}' not found in shader or doesn't exists", name);

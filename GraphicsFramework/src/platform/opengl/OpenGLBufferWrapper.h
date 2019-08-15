@@ -8,6 +8,8 @@ public:
 	OpenGLBufferWrapper(unsigned int size, BufferUsage usage, BufferType type, const void* data);
 	~OpenGLBufferWrapper();
 
+	BufferType GetType() const;
+
 protected:
 	virtual void GLBind() const = 0;
 	void SetDataInternal(const void* data, unsigned int size) override;

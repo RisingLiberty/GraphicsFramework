@@ -15,6 +15,9 @@
 #include "OpenGLVertexBuffer.h"
 #include "OpenGLShaderProgram.h"
 
+#include "OpenGLCommandQueue.h"
+#include "OpenGLCommandList.h"
+
 OpenGLContext::OpenGLContext(Window* window):
 	m_window(window)
 {
@@ -52,6 +55,8 @@ OpenGLContext::~OpenGLContext()
 void OpenGLContext::Initialize()
 {
 	m_renderer = std::make_unique<OpenGLRenderer>();
+	m_command_queue = std::make_unique<OpenGLCommandQueue>();
+	m_command_list = m_command_queue->GetCommandList();
 
 	this->InitializeRasterizer();
 }
@@ -68,65 +73,42 @@ API OpenGLContext::GetApiType() const
 
 void OpenGLContext::InitializeRasterizer()
 {
-	m_rasterizer_settings.enable_depth_clamp ? glEnable(GL_DEPTH_CLAMP) : glDisable(GL_DEPTH_CLAMP);
-	m_rasterizer_settings.is_discarded ? glEnable(GL_RASTERIZER_DISCARD) : glDisable(GL_RASTERIZER_DISCARD);
-	
-	FillMode polygon_mode = m_rasterizer_settings.polygon_mode;
-	CullMode cull_mode = m_rasterizer_settings.cull_mode;
+	m_command_list->SetRasterizerState(m_rasterizer_settings);
+}
 
-	glPolygonMode(cull_mode.ToOpenGL(), polygon_mode.ToOpenGL());
-
-	glLineWidth(m_rasterizer_settings.line_width);
-	glFrontFace(m_rasterizer_settings.front_face_orientation.ToOpenGL());
-
-	if (m_rasterizer_settings.enable_depth_bias)
-	{
-		switch (m_rasterizer_settings.polygon_mode)
-		{
-		case EFillMode::UNDEFINED:	glEnable(-1);
-		case EFillMode::FILL:		glEnable(GL_POLYGON_OFFSET_FILL);
-		case EFillMode::WIREFRAME:	glEnable(GL_POLYGON_OFFSET_LINE);
-		case EFillMode::VERTEX:		glEnable(GL_POLYGON_OFFSET_POINT);
-		}
-		glPolygonOffset(m_rasterizer_settings.depth_bias_constant_factor, m_rasterizer_settings.depth_bias_slope_factor);
-	}
-
-	glDepthRangef(0, m_rasterizer_settings.depth_bias_clamp);
-
-	m_rasterizer_settings.enable_multi_sample ? glEnable(GL_MULTISAMPLE) : glDisable(GL_MULTISAMPLE);
-
-	if (m_rasterizer_settings.enable_scissor)
-		spdlog::warn("OpenGL scissoring not implemented yet!");
+OpenGLCommandList* OpenGLContext::GetCommandList() const
+{
+	return m_command_list;
 }
 
 void OpenGLContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
 	const OpenGLIndexBuffer* ib = static_cast<const OpenGLIndexBuffer*>(indexBuffer);
-	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ib->GetId()));
+	m_command_list->BindIndexBuffer(ib->GetId());
 }
 
 void OpenGLContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+	m_command_list->BindIndexBuffer(0);
 }
 
 void OpenGLContext::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
 	static_cast<const OpenGLVertexBuffer*>(vertexArray->GetVertexBuffer())->GLBind();
-	GLCALL(glBindVertexArray(static_cast<const OpenGLVertexArray*>(vertexArray)->GetId()));
+	m_command_list->BindVertexArray(static_cast<const OpenGLVertexArray*>(vertexArray)->GetId());
 }
 
 void OpenGLContext::UnbindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	GLCALL(glBindVertexArray(0));
+	m_command_list->BindVertexArray(0);
 }
 
 void OpenGLContext::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
-	GLCALL(glUseProgram(static_cast<const OpenGLShaderProgram*>(shaderProgram)->GetId()));
+	m_command_list->BindShaderProgram(static_cast<const OpenGLShaderProgram*>(shaderProgram)->GetId());
 }
 
 void OpenGLContext::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
-	GLCALL(glUseProgram(0));
+	m_command_list->BindShaderProgram(0);
 }

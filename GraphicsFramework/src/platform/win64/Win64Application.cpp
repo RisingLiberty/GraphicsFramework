@@ -28,7 +28,7 @@ Win64Application::Win64Application(AreFramesCapped areFramesCapped) :
 {
 	m_window = std::make_unique<Win64Window>(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	m_window->SetEventCallback(std::bind(&Application::OnEvent, this, std::placeholders::_1));
-	m_context.reset(Context::Create(API::DIRECTX11, m_window.get()));
+	m_context.reset(Context::Create(API::OPENGL, m_window.get()));
 }
 
 Win64Application::~Win64Application()

@@ -41,27 +41,19 @@ OpenGLVertexShader::~OpenGLVertexShader()
 
 int OpenGLVertexShader::Compile()
 {
-	GLCALL(m_id = glCreateShader(GL_VERTEX_SHADER));
+	m_id = GetOpenGLCommandList()->CreateShader(GL_VERTEX_SHADER);
 	std::string source = LoadCode(m_path);
 	const char* code = source.c_str();
 
-	GLCALL(glShaderSource(m_id, 1, &code, nullptr));
-	GLCALL(glCompileShader(m_id));
+	GetOpenGLCommandList()->SetShaderSource(m_id, code);
+	GetOpenGLCommandList()->CompileShader(m_id);
 
-	int result = GL_FALSE;
-	int infoLength = 0;
-	GLCALL(glGetShaderiv(m_id, GL_COMPILE_STATUS, &result));
-	GLCALL(glGetShaderiv(m_id, GL_INFO_LOG_LENGTH, &infoLength));
+	std::string info_log = GetOpenGLCommandList()->GetShaderInfoLog(m_id);
 
-	if (infoLength > 0)
-	{
-		std::string message;
-		message.resize(infoLength);
-		GLCALL(glGetShaderInfoLog(m_id, infoLength, nullptr, message.data()));
-		spdlog::error(message);
-	}
+	if (!info_log.empty())
+		spdlog::error(info_log);
 
-	return result;
+	return !info_log.empty();
 }
 
 unsigned int OpenGLVertexShader::GetId() const

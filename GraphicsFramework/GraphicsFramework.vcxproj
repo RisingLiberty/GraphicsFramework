@@ -249,6 +249,8 @@
     <ClCompile Include="src\platform\directx12\Dx12VertexLayout.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexShader.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLBufferWrapper.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLCommandList.cpp" />
+    <ClCompile Include="src\platform\opengl\OpenGLCommandQueue.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLDownloadBuffer.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLHelperMethods.cpp" />
     <ClCompile Include="src\platform\opengl\OpenGLContext.cpp" />
@@ -475,6 +477,8 @@
     <ClInclude Include="src\platform\directx12\Dx12VertexShader.h" />
     <ClInclude Include="src\platform\directx12\Dx12RenderTargetViewDescriptorHeap.h" />
     <ClInclude Include="src\platform\opengl\OpenGLBufferWrapper.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLCommandList.h" />
+    <ClInclude Include="src\platform\opengl\OpenGLCommandQueue.h" />
     <ClInclude Include="src\platform\opengl\OpenGLDownloadBuffer.h" />
     <ClInclude Include="src\platform\opengl\OpenGLHelperMethods.h" />
     <ClInclude Include="src\platform\opengl\OpenGLContext.h" />

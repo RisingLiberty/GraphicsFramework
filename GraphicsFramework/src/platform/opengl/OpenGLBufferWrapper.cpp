@@ -8,14 +8,14 @@ OpenGLBufferWrapper::OpenGLBufferWrapper(unsigned int size, BufferUsage usage, B
 	ApiBufferWrapper(usage),
 	m_type(type)
 {
-	GLCALL(glGenBuffers(1, &m_id));
+	m_id = GetOpenGLCommandList()->CreateBuffer();
 
 	if (data)
 	{
 		switch (type)
 		{
-		case BufferType::INDEX: GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id));
-		case BufferType::VERTEX: GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_id));
+		case BufferType::VERTEX: GLCALL(glBindBuffer(GL_ARRAY_BUFFER, m_id)); break;
+		case BufferType::INDEX: GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_id)); break;
 		}
 		this->SetDataInternal(data, size);
 	}
@@ -23,7 +23,12 @@ OpenGLBufferWrapper::OpenGLBufferWrapper(unsigned int size, BufferUsage usage, B
 
 OpenGLBufferWrapper::~OpenGLBufferWrapper()
 {
-	GLCALL(glDeleteBuffers(1, &m_id));
+	GetOpenGLCommandList()->DeleteBuffer(m_id);
+}
+
+BufferType OpenGLBufferWrapper::GetType() const
+{
+	return m_type;
 }
 
 void OpenGLBufferWrapper::SetDataInternal(const void* data, unsigned int size)
@@ -33,14 +38,14 @@ void OpenGLBufferWrapper::SetDataInternal(const void* data, unsigned int size)
 	case EBufferUsage::DYNAMIC:
 		switch (m_type)
 		{
-		case BufferType::VERTEX: GLCALL(glBufferData(GL_ARRAY_BUFFER, size, data, m_usage.ToOpenGL())); break;
-		case BufferType::INDEX: GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, m_usage.ToOpenGL())); break;
+		case BufferType::VERTEX: GetOpenGLCommandList()->SetVertexBufferDataDynamic(data, size, m_usage.ToOpenGL()); break;
+		case BufferType::INDEX: GetOpenGLCommandList()->SetIndexBufferDataDynamic(data, size, m_usage.ToOpenGL()); break;
 		}
 	case EBufferUsage::STATIC:
 		switch (m_type)
 		{
-		case BufferType::VERTEX: GLCALL(glBufferStorage(GL_ARRAY_BUFFER, size, data, GL_MAP_READ_BIT)); break;
-		case BufferType::INDEX: GLCALL(glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_MAP_READ_BIT)); break;
+		case BufferType::VERTEX: GetOpenGLCommandList()->SetVertexBufferDataStatic(data, size); break;
+		case BufferType::INDEX: GetOpenGLCommandList()->SetIndexBufferDataStatic(data, size); break;
 		}
 	}
 }

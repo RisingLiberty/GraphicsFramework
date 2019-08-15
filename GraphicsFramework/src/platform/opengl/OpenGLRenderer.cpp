@@ -23,7 +23,7 @@ namespace
 
 OpenGLRenderer::OpenGLRenderer()
 {
-	glClearColor(m_clear_color[0], m_clear_color[1], m_clear_color[2], m_clear_color[3]);
+	GetOpenGLCommandList()->SetClearColor(m_clear_color);
 	ImGui_ImplOpenGL3_Init("#version 330");
 }
 
@@ -50,7 +50,7 @@ void OpenGLRenderer::Draw()
 
 		unsigned int* offset = NULL_OFFSET;
 
-		GLCALL(glDrawElements(topology.ToOpenGL(), count, format.ToOpenGL(), offset));
+		GetOpenGLCommandList()->DrawElements(topology.ToOpenGL(), count, format.ToOpenGL());
 	}
 
 	m_scene_objects.clear();
@@ -58,27 +58,28 @@ void OpenGLRenderer::Draw()
 
 void OpenGLRenderer::ClearAllBuffers()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	GetOpenGLCommandList()->ClearColorBuffer();
+	GetOpenGLCommandList()->ClearDepthStencilBuffer();
 }
 
 void OpenGLRenderer::ClearColorBuffer()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
+	GetOpenGLCommandList()->ClearColorBuffer();
 }
 
 void OpenGLRenderer::ClearDepthStencilBuffer()
 {
-	glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	GetOpenGLCommandList()->ClearDepthStencilBuffer();
 }
 
 void OpenGLRenderer::ClearDepthBuffer()
 {
-	glClear(GL_DEPTH_BUFFER_BIT);
+	GetOpenGLCommandList()->ClearDepthBuffer();
 }
 
 void OpenGLRenderer::ClearStencilBuffer()
 {
-	glClear(GL_STENCIL_BUFFER_BIT);
+	GetOpenGLCommandList()->ClearStencilBuffer();
 }
 
 void OpenGLRenderer::RenderImgui()
