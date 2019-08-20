@@ -21,9 +21,6 @@ public:
 private:
 	void BuildRootSignature(Dx12ParsedShader* vs_parsed, Dx12ParsedShader* fs_parsed);
 
-	Dx12VertexShader* GetDxVertexShader() const;
-	Dx12FragmentShader* GetDxFragmentShader() const;
-
 private:
 	std::unique_ptr<Dx12UploadBuffer> m_constant_buffer;
 	ComPtr<ID3D12RootSignature> m_root_signature;

@@ -19,10 +19,6 @@ private:
 	void UploadVertexConstantBuffer() const;
 	void UploadFragmentConstantBuffer() const;
 
-	class Dx11VertexShader* GetDxVertexShader() const;
-	class Dx11FragmentShader* GetDxFragmentShader() const;
-
-
 private:
 
 	// currently only allow 1 constant buffer per shader

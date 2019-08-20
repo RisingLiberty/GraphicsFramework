@@ -25,7 +25,7 @@ Dx11DownloadBuffer::~Dx11DownloadBuffer()
 
 void Dx11DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 {
-	const Dx11VertexBuffer* dx_vb = static_cast<const Dx11VertexBuffer*>(buffer);
+	const Dx11VertexBuffer* dx_vb = buffer->As<Dx11VertexBuffer>();
 	GetDx11CommandList()->CopyResource(m_buffer.Get(), dx_vb->GetBuffer());
 
 	D3D11_MAPPED_SUBRESOURCE mapped_subresource;

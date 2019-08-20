@@ -47,7 +47,6 @@ namespace
 {
 	const std::string MODEL_PATH = "data/meshes/chalet.obj";
 	const std::string TEXTURE_PATH = "data/textures/chalet.jpg";
-	const unsigned int MAX_FRAMES_IN_FLIGHT = 3;
 
 	VkPhysicalDevice PickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface)
 	{
@@ -149,7 +148,7 @@ namespace
 	{
 		spdlog::info("internal free notification");
 	}
-	}
+}
 
 void CheckVkResult(VkResult err)
 {
@@ -158,7 +157,8 @@ void CheckVkResult(VkResult err)
 
 std::unique_ptr<VkAllocationCallbacks> VkContext::s_allocator;
 
-VkContext::VkContext(Window* window)
+VkContext::VkContext(Window* window) :
+	m_window(window)
 {
 	spdlog::info("Using Vulkan");
 
@@ -192,28 +192,32 @@ VkContext::~VkContext()
 
 void VkContext::Initialize()
 {
-	m_gpu					= std::make_unique<VkGpu>(::PickPhysicalDevice(m_instance->GetApiInstance(), m_surface), m_surface);
-	m_device				= std::make_unique<VkDefaultDevice>(m_gpu.get());
-	m_command_queue			= std::make_unique<VkCommandQueue>(m_gpu->GetGraphicsPresentQueueIndex(), MAX_FRAMES_IN_FLIGHT);
-	m_command_list			= m_command_queue->GetApiList(m_current_frame);
-	m_swapchain				= std::make_unique<VkSwapchain>(m_gpu->GetSwapchainSupportDetails(), m_back_buffer_format.ToVulkan(), m_surface, m_gpu->GetGraphicsPresentQueueIndex());
+	m_gpu = std::make_unique<VkGpu>(::PickPhysicalDevice(m_instance->GetApiInstance(), m_surface), m_surface);
+	m_device = std::make_unique<VkDefaultDevice>(m_gpu.get());
+	m_command_queue = std::make_unique<VkCommandQueue>(m_gpu->GetGraphicsPresentQueueIndex(), MAX_NR_OF_FRAMES_IN_FLIGHT);
+	m_command_list = m_command_queue->As<VkCommandQueue>()->GetApiList(m_current_frame);
+
+	//CreateGLFWWindow(m_window);
+	//CreateTestContext(m_window);
+
+	m_swapchain = std::make_unique<VkSwapchain>(m_gpu->GetSwapchainSupportDetails(), m_back_buffer_format.ToVulkan(), m_surface, m_gpu->GetGraphicsPresentQueueIndex());
 
 	std::vector<VkImage> images = m_swapchain->GetImages();
-	m_swapchain_image_views.resize(MAX_FRAMES_IN_FLIGHT);
+	m_swapchain_image_views.resize(MAX_NR_OF_FRAMES_IN_FLIGHT);
 
 	for (size_t i = 0; i < images.size(); ++i)
 		m_swapchain_image_views[i] = std::make_unique<VkImageViewWrapper>(images[i], m_back_buffer_format.ToVulkan(), VK_IMAGE_ASPECT_COLOR_BIT, 1);
 
-	m_render_pass			= std::make_unique<VkRenderPassWrapper>(m_back_buffer_format);
-	m_imgui_render_pass		= std::make_unique<VkRenderPassWrapper>(m_back_buffer_format);
+	m_render_pass = std::make_unique<VkRenderPassWrapper>(m_back_buffer_format);
+	m_imgui_render_pass = std::make_unique<VkRenderPassWrapper>(m_back_buffer_format);
 	m_descriptor_set_layout = std::make_unique<VkDescriptorSetLayoutWrapper>();
 
 	//this->CreateColorResources();
 	//this->CreateDepthResources();
 
-	m_swapchain_frame_buffers.resize(MAX_FRAMES_IN_FLIGHT);
+	m_swapchain_frame_buffers.resize(MAX_NR_OF_FRAMES_IN_FLIGHT);
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; ++i)
+	for (size_t i = 0; i < MAX_NR_OF_FRAMES_IN_FLIGHT; ++i)
 	{
 		//std::array<VkImageView, 3> attachments =
 		//{
@@ -240,9 +244,12 @@ void VkContext::Initialize()
 
 void VkContext::Cleanup()
 {
-	m_command_queue->WaitTillIdle();
-	m_command_queue->WaitForFence(m_current_frame);
+	m_command_queue->As<VkCommandQueue>()->WaitTillIdle();
+	m_command_queue->As<VkCommandQueue>()->WaitForFence(m_current_frame);
 	Context::CleanUp();
+
+	// Currently needs to be done, because this depends on VkDevice
+	m_command_queue.reset();
 
 	//vkDestroySampler(m_device, m_texture_sampler, GetVkAllocationCallbacks());
 	//vkDestroyImageView(m_device, m_texture_image_view, GetVkAllocationCallbacks());
@@ -260,12 +267,12 @@ void VkContext::BindResourcesToPipeline()
 
 void VkContext::Begin()
 {
-	m_command_list = m_command_queue->GetApiList(m_current_frame);
+	m_command_list = m_command_queue->As<VkCommandQueue>()->GetApiList(m_current_frame);
 
 	this->CreateGraphicsPipeline();
 	this->CreateDescriptorSets();
 
-	m_command_queue->WaitForFence(m_current_frame);
+	m_command_queue->As<VkCommandQueue>()->WaitForFence(m_current_frame);
 
 	uint32_t image_index;
 	if (m_command_list->AcquireNextImage(m_swapchain.get(), image_index) == VK_ERROR_OUT_OF_DATE_KHR)
@@ -306,13 +313,13 @@ void VkContext::Present()
 	m_command_list->EndRenderPass();
 	m_command_list->End();
 
-	m_command_queue->Submit(m_command_list, m_current_frame);
-	m_command_queue->Present(m_swapchain->GetSwapchain(), m_command_list->GetRenderFinishedSemaphore(), m_current_frame);
+	m_command_queue->As<VkCommandQueue>()->Submit(m_command_list, m_current_frame);
+	m_command_queue->As<VkCommandQueue>()->Present(m_swapchain->GetSwapchain(), m_command_list->GetRenderFinishedSemaphore(), m_current_frame);
 }
 
 void VkContext::End()
 {
-	m_current_frame = (m_current_frame + 1) % MAX_FRAMES_IN_FLIGHT;
+	m_current_frame = (m_current_frame + 1) % MAX_NR_OF_FRAMES_IN_FLIGHT;
 }
 
 API VkContext::GetApiType() const
@@ -359,8 +366,8 @@ void VkContext::CreateGraphicsPipeline()
 	if (m_pipeline_wrapper)
 		return;
 
-	const VkVertexLayout* vk_layout = static_cast<const VkVertexLayout*>(m_bound_vertex_array->GetVertexLayout());
-	const VkShaderProgram* vk_shader = static_cast<const VkShaderProgram*>(m_bound_shader_program);
+	const VkVertexLayout* vk_layout = m_bound_vertex_array->GetVertexLayout()->As<VkVertexLayout>();
+	const VkShaderProgram* vk_shader = m_bound_shader_program->As<VkShaderProgram>();
 
 	m_pipeline_wrapper = std::make_unique<VkGraphicsPipelineWrapper>(m_swapchain->GetExtent().width, m_swapchain->GetExtent().height,
 		m_swapchain->GetExtent(), m_gpu->GetMaxUsableSampleCount(), m_bound_index_buffer->GetTopology(), m_descriptor_set_layout->GetApiDescriptorSetLayout(),
@@ -410,7 +417,7 @@ void VkContext::CreateGraphicsPipeline()
 //
 //	void* data;
 //	vkMapMemory(m_device, staging_buffer_memory, 0, image_size, 0, &data);
-//	memcpy(data, pixels, static_cast<size_t>(image_size));
+//	memcpy(data, pixels, static_castt<size_t>(image_size));
 //	vkUnmapMemory(m_device, staging_buffer_memory);
 //
 //	stbi_image_free(pixels);
@@ -450,7 +457,7 @@ void VkContext::CreateGraphicsPipeline()
 //	sampler_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
 //	sampler_info.mipLodBias = 0.0f;
 //	sampler_info.minLod = 0.0f;
-//	sampler_info.maxLod = static_cast<float>(m_mip_levels);
+//	sampler_info.maxLod = static_castt<float>(m_mip_levels);
 //
 //	VKCALL(vkCreateSampler(m_device, &sampler_info, GetVkAllocationCallbacks(), &m_texture_sampler));
 //}
@@ -516,28 +523,28 @@ void VkContext::CreateDescriptorPool()
 {
 	std::vector<VkDescriptorPoolSize> pool_sizes =
 	{
-		{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_FRAMES_IN_FLIGHT},
-		{VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, MAX_FRAMES_IN_FLIGHT}
+		{VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_NR_OF_FRAMES_IN_FLIGHT},
+		{VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, MAX_NR_OF_FRAMES_IN_FLIGHT}
 	};
 
-	m_descriptor_pool = std::make_unique<VkDescriptorPoolWrapper>(MAX_FRAMES_IN_FLIGHT, pool_sizes);
+	m_descriptor_pool = std::make_unique<VkDescriptorPoolWrapper>(MAX_NR_OF_FRAMES_IN_FLIGHT, pool_sizes);
 
 	std::vector<VkDescriptorPoolSize> pool_sizes_imgui =
 	{
-		{ VK_DESCRIPTOR_TYPE_SAMPLER, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, MAX_FRAMES_IN_FLIGHT },
-		{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, MAX_FRAMES_IN_FLIGHT }
+		{ VK_DESCRIPTOR_TYPE_SAMPLER, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, MAX_NR_OF_FRAMES_IN_FLIGHT },
+		{ VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, MAX_NR_OF_FRAMES_IN_FLIGHT }
 	};
 
-	m_imgui_descriptor_pool = std::make_unique<VkDescriptorPoolWrapper>(MAX_FRAMES_IN_FLIGHT * (unsigned int)pool_sizes_imgui.size(), pool_sizes_imgui);
+	m_imgui_descriptor_pool = std::make_unique<VkDescriptorPoolWrapper>(MAX_NR_OF_FRAMES_IN_FLIGHT * (unsigned int)pool_sizes_imgui.size(), pool_sizes_imgui);
 }
 
 void VkContext::CreateDescriptorSets()
@@ -545,8 +552,8 @@ void VkContext::CreateDescriptorSets()
 	if (m_descriptor_sets)
 		return;
 
-	std::vector<VkDescriptorSetLayout> layouts(MAX_FRAMES_IN_FLIGHT, m_descriptor_set_layout->GetApiDescriptorSetLayout());
-	m_descriptor_sets = std::make_unique<VkDescriptorSetsWrapper>(MAX_FRAMES_IN_FLIGHT, layouts, static_cast<const VkShaderProgram*>(m_bound_shader_program)->GetUniformBuffer(), m_descriptor_pool->GetDescriptorPool());
+	std::vector<VkDescriptorSetLayout> layouts(MAX_NR_OF_FRAMES_IN_FLIGHT, m_descriptor_set_layout->GetApiDescriptorSetLayout());
+	m_descriptor_sets = std::make_unique<VkDescriptorSetsWrapper>(MAX_NR_OF_FRAMES_IN_FLIGHT, layouts, m_bound_shader_program->As<VkShaderProgram>()->GetUniformBuffer(), m_descriptor_pool->GetDescriptorPool());
 }
 
 //void VkContext::GenerateMipMaps(VkImage image, VkFormat format, int32_t texWidth, int32_t texHeight, uint32_t mipLevels)
@@ -592,7 +599,7 @@ void VkContext::CreateDescriptorSets()
 //		blit.srcSubresource.baseArrayLayer = 0;
 //		blit.srcSubresource.layerCount = 1;
 //		blit.dstOffsets[0] = { 0,0,0 };
-//		blit.srcOffsets[1] = { mip_width > 1 ? static_cast<int32_t>(mip_width * 0.5f) : 1, mip_height > 1 ? static_cast<int32_t>(mip_height * 0.5f) : 1, 1 };
+//		blit.srcOffsets[1] = { mip_width > 1 ? static_castt<int32_t>(mip_width * 0.5f) : 1, mip_height > 1 ? static_castt<int32_t>(mip_height * 0.5f) : 1, 1 };
 //		blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
 //		blit.dstSubresource.mipLevel = i;
 //		blit.dstSubresource.baseArrayLayer = 0;
@@ -648,7 +655,7 @@ void VkContext::CreateDescriptorSets()
 
 std::unique_ptr<VkCommandList> VkContext::CreateDirectCommandList() const
 {
-	return m_command_queue->CreateDirectCommandList();
+	return m_command_queue->As<VkCommandQueue>()->CreateDirectCommandList();
 }
 
 void VkContext::InitializeImGui() const
@@ -659,12 +666,12 @@ void VkContext::InitializeImGui() const
 	init_info.PhysicalDevice = m_gpu->GetPhysicalDevice();
 	init_info.Device = m_device->GetApiDevice();
 	init_info.QueueFamily = m_gpu->GetGraphicsPresentQueueIndex();
-	init_info.Queue = m_command_queue->GetApiQueue();
+	init_info.Queue = m_command_queue->As<VkCommandQueue>()->GetApiQueue();
 	init_info.PipelineCache = nullptr;
 	init_info.DescriptorPool = m_imgui_descriptor_pool->GetDescriptorPool();
 	init_info.Allocator = GetVkAllocationCallbacks();
-	init_info.MinImageCount = MAX_FRAMES_IN_FLIGHT;
-	init_info.ImageCount = MAX_FRAMES_IN_FLIGHT; //  m_vulkan_window->ImageCount;
+	init_info.MinImageCount = MAX_NR_OF_FRAMES_IN_FLIGHT;
+	init_info.ImageCount = MAX_NR_OF_FRAMES_IN_FLIGHT; //  m_vulkan_window->ImageCount;
 	init_info.CheckVkResultFn = CheckVkResult;
 	ImGui_ImplVulkan_Init(&init_info, m_imgui_render_pass->GetApiRenderPass());
 
@@ -676,7 +683,7 @@ void VkContext::InitializeImGui() const
 
 void VkContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	const VkIndexBuffer* vk_ib = static_cast<const VkIndexBuffer*>(indexBuffer);
+	const VkIndexBuffer* vk_ib = indexBuffer->As<VkIndexBuffer>();
 	m_command_list->BindIndexBuffer(vk_ib->GetBufferGpu(), 0, vk_ib->GetFormat().ToVulkanIndexType());
 }
 
@@ -686,7 +693,7 @@ void VkContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
 
 void VkContext::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	const VkVertexBuffer* vk_vb = static_cast<const VkVertexBuffer*>(vertexArray->GetVertexBuffer());
+	const VkVertexBuffer* vk_vb = vertexArray->GetVertexBuffer()->As<VkVertexBuffer>();
 	m_command_list->BindVertexBuffer(vk_vb->GetBufferGpu(), 0);
 }
 

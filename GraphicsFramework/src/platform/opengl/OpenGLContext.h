@@ -35,6 +35,6 @@ private:
 	HandleGLRenderingContext m_hglrc;
 	Window* m_window;
 
-	std::unique_ptr<OpenGLCommandQueue> m_command_queue;
-	OpenGLCommandList* m_command_list;
+	//std::unique_ptr<OpenGLCommandQueue> m_command_queue;
+	//OpenGLCommandList* m_command_list;
 };

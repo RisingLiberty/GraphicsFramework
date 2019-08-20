@@ -102,8 +102,8 @@ private:
 	std::unique_ptr<Dx12DepthStencilBuffer> m_depth_stencil_buffer;
 	std::unique_ptr<Dx12PipelineState> m_pipeline_state;
 
-	std::unique_ptr<Dx12CommandQueue> m_command_queue;
-	Dx12CommandList* m_command_list;
+	//std::unique_ptr<Dx12CommandQueue> m_command_queue;
+	//Dx12CommandList* m_command_list;
 
 	std::unique_ptr<Dx12Swapchain> m_swapchain;
 

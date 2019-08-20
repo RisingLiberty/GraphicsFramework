@@ -1,12 +1,12 @@
 #pragma once
 
+#include "graphics/CommandList.h"
+
 class VkCommand;
 class VkCommandPoolWrapper;
 class VkSwapchain;
 
-#include "graphics/GraphicsResource.h"
-
-class VkCommandList : public GraphicsResource<VkCommandList>
+class VkCommandList : public CommandList
 {
 public:
 	VkCommandList(VkCommandPoolWrapper* commandPool = nullptr);

@@ -15,8 +15,8 @@
 Dx11ShaderProgram::Dx11ShaderProgram(VertexShader* vs, FragmentShader* fs):
 	ShaderProgram(vs, fs)
 {
-	Dx11VertexShader* dx_vs = static_cast<Dx11VertexShader*>(vs);
-	Dx11FragmentShader* dx_fs = static_cast<Dx11FragmentShader*>(fs);
+	Dx11VertexShader* dx_vs = vs->As<Dx11VertexShader>();
+	Dx11FragmentShader* dx_fs = fs->As<Dx11FragmentShader>();
 
 	Dx11ShaderParser parser;
 	
@@ -109,14 +109,4 @@ void Dx11ShaderProgram::UploadFragmentConstantBuffer() const
 	GetDx11CommandList()->Unmap(m_fs_constant_buffer->buffer.Get());
 
 	GetDx11CommandList()->SetPSConstantBuffer(m_fs_constant_buffer->reg, 1, m_fs_constant_buffer->buffer.Get());
-}
-
-Dx11VertexShader* Dx11ShaderProgram::GetDxVertexShader() const
-{
-	return static_cast<Dx11VertexShader*>(m_vertex_shader);
-}
-
-Dx11FragmentShader* Dx11ShaderProgram::GetDxFragmentShader() const
-{
-	return static_cast<Dx11FragmentShader*>(m_fragment_shader);
 }

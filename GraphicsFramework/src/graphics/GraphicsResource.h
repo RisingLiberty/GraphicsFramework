@@ -36,6 +36,18 @@ public:
 		return m_resource_id;
 	}
 
+	template <typename T>
+	const T* As() const
+	{
+		return static_cast<const T*>(this);
+	}
+
+	template <typename T>
+	T* As()
+	{
+		return static_cast<T*>(this);
+	}
+	
 protected:
 	static unsigned int m_resource_id;
 	static unsigned int m_count;

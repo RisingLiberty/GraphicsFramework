@@ -5,7 +5,8 @@
 
 #include "Dx11CommandList.h"
 
-Dx11CommandQueue::Dx11CommandQueue()
+Dx11CommandQueue::Dx11CommandQueue(unsigned int maxNrOfFramesInFlight):
+	CommandQueue(maxNrOfFramesInFlight)
 {
 	UINT creationFlags = 0; //D3D11_CREATE_DEVICE_BGRA_SUPPORT <-- not needed, but good to have on stand by
 #if defined(_DEBUG)
@@ -41,7 +42,8 @@ Dx11CommandQueue::Dx11CommandQueue()
 	DXCALL(info_queue->AddStorageFilterEntries(&filter));
 #endif
 
-	m_command_lists.push_back(std::make_unique<Dx11CommandList>(m_device_context));
+	m_command_lists.resize(1);
+	m_command_lists[0] = std::make_unique<Dx11CommandList>(m_device_context);
 }
 
 Dx11CommandQueue::~Dx11CommandQueue()
@@ -61,5 +63,5 @@ ID3D11DeviceContext* Dx11CommandQueue::GetDeviceContext() const
 
 Dx11CommandList* Dx11CommandQueue::GetCommandList() const
 {
-	return m_command_lists.front().get();
+	return m_command_lists.front()->As<Dx11CommandList>();
 }

@@ -1,15 +1,16 @@
 #pragma once
 
+#include "graphics/CommandQueue.h"
+
 class VkCommandPoolWrapper;
 class VkCommandList;
 
-class VkCommandQueue
+class VkCommandQueue : public CommandQueue
 {
 public:
 	VkCommandQueue(unsigned int familyIndex, unsigned int maxFramesInFlight);
 	virtual ~VkCommandQueue();
 
-	void Push(std::unique_ptr<VkCommandList> commandList);
 	void WaitForFence(unsigned int currentFrame);
 
 	void Submit(VkCommandList* commandList, unsigned int currentFrame);
@@ -25,7 +26,6 @@ public:
 private:
 	VkQueue m_queue;
 	std::unique_ptr<VkCommandPoolWrapper> m_command_pool;
-	std::vector<std::unique_ptr<VkCommandList>> m_command_lists;
 
 	std::vector<VkFence> m_in_flight_fences;
 };

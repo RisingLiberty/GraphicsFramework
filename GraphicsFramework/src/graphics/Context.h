@@ -11,6 +11,8 @@ class Window;
 class IndexBuffer;
 class VertexArray;
 class ShaderProgram;
+class CommandQueue;
+class CommandList;
 
 #include "RasterizerSettings.h"
 #include "BufferHelpers.h"
@@ -75,6 +77,9 @@ protected:
 	std::unique_ptr<VertexBufferController> m_vertex_buffer_controller;
 	std::unique_ptr<VertexLayoutController> m_vertex_layout_controller;
 	std::unique_ptr<IndexBufferController> m_index_buffer_controller;
+	std::unique_ptr<CommandQueue> m_command_queue;
+
+	CommandList* m_command_list;
 
 	const IndexBuffer* m_bound_index_buffer;
 	const VertexArray* m_bound_vertex_array;
@@ -85,6 +90,8 @@ protected:
 
 	Format m_back_buffer_format;
 	Format m_depth_stencil_format;
+
+	const unsigned int MAX_NR_OF_FRAMES_IN_FLIGHT = 3;
 
 private:
 	static Context* s_current;

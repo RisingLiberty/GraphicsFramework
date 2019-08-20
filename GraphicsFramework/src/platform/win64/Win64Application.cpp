@@ -147,7 +147,7 @@ void Win64Application::Draw()
 
 void Win64Application::OnEvent(const Event& event)
 {
-	const SwitchApiEvent* switch_api_event = dynamic_cast<const SwitchApiEvent*>(&event);
+	const SwitchApiEvent* switch_api_event = static_cast<const SwitchApiEvent*>(&event);
 
 	m_switched_api_last_frame = true;
 	m_context_to_switch_to = switch_api_event->GetApi();

@@ -17,7 +17,7 @@ Dx12DownloadBuffer::~Dx12DownloadBuffer()
 
 void Dx12DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 {
-	const Dx12VertexBuffer* dx_vb = static_cast<const Dx12VertexBuffer*>(buffer);
+	const Dx12VertexBuffer* dx_vb = buffer->As<Dx12VertexBuffer>();
 
 	DXCALL(GetDx12Device()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_READBACK),

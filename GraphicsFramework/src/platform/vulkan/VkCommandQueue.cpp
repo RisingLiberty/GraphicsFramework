@@ -6,7 +6,8 @@
 #include "VkCommandPoolWrapper.h"
 #include "VkDirectCommandList.h"
 
-VkCommandQueue::VkCommandQueue(unsigned int familyIndex, unsigned int maxFramesInFlight)
+VkCommandQueue::VkCommandQueue(unsigned int familyIndex, unsigned int maxFramesInFlight):
+	CommandQueue(maxFramesInFlight)
 {
 	vkGetDeviceQueue(GetVkDevice(), familyIndex, 0, &m_queue);
 	m_command_pool = std::make_unique<VkCommandPoolWrapper>(familyIndex);
@@ -24,7 +25,7 @@ VkCommandQueue::VkCommandQueue(unsigned int familyIndex, unsigned int maxFramesI
 	for (unsigned int i = 0; i < maxFramesInFlight; ++i)
 	{
 		VKCALL(vkCreateFence(GetVkDevice(), &fence_create_info, GetVkAllocationCallbacks(), &m_in_flight_fences[i]));
-		this->Push(std::make_unique<VkCommandList>(familyIndex, m_command_pool.get()));
+		m_command_lists[i] = std::make_unique<VkCommandList>(familyIndex, m_command_pool.get());
 	}
 }
 
@@ -34,11 +35,6 @@ VkCommandQueue::~VkCommandQueue()
 	{
 		vkDestroyFence(GetVkDevice(), m_in_flight_fences[i], GetVkAllocationCallbacks());
 	}
-}
-
-void VkCommandQueue::Push(std::unique_ptr<VkCommandList> commandQueue)
-{
-	m_command_lists.push_back(std::move(commandQueue));
 }
 
 void VkCommandQueue::WaitForFence(unsigned int currentFrame)
@@ -91,7 +87,7 @@ VkQueue VkCommandQueue::GetApiQueue() const
 
 VkCommandList* VkCommandQueue::GetApiList(unsigned int currentFrame) const
 {
-	return m_command_lists[currentFrame].get();
+	return m_command_lists[currentFrame]->As<VkCommandList>();
 }
 
 VkFence VkCommandQueue::GetCurrentInFlightFence(unsigned int currentFrame) const

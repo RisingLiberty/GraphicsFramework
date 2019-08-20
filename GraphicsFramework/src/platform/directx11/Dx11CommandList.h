@@ -1,10 +1,12 @@
 #pragma once
 
-class Dx11CommandList
+#include "graphics/CommandList.h"
+
+class Dx11CommandList : public CommandList
 {
 public:
 	Dx11CommandList(ComPtr<ID3D11DeviceContext> deviceContext);
-	~Dx11CommandList();
+	virtual ~Dx11CommandList();
 
 	ID3D11DeviceContext* GetDeviceContext() const;
 

@@ -30,8 +30,8 @@ std::array<VkPipelineShaderStageCreateInfo, 2> VkShaderProgram::GetPipelineShade
 {
 	return
 	{
-		static_cast<VkVertexShader*>(m_vertex_shader)->GetPipelineShaderStageCreateInfo(),
-		static_cast<VkFragmentShader*>(m_fragment_shader)->GetPipelineShaderStageCreateInfo()
+		m_vertex_shader->As<VkVertexShader>()->GetPipelineShaderStageCreateInfo(),
+		m_fragment_shader->As<VkFragmentShader>()->GetPipelineShaderStageCreateInfo()
 	};
 }
 

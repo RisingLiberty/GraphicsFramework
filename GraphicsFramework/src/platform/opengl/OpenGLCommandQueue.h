@@ -1,15 +1,15 @@
 #pragma once
 
+#include "graphics/CommandQueue.h"
+
 class OpenGLCommandList;
 
-class OpenGLCommandQueue
+class OpenGLCommandQueue : public CommandQueue
 {
 public:
-	OpenGLCommandQueue();
-	~OpenGLCommandQueue();
+	OpenGLCommandQueue(unsigned int maxNrOfFramesInFlight);
+	virtual ~OpenGLCommandQueue();
 
 	OpenGLCommandList* GetCommandList() const;
 
-private:
-	std::vector<std::unique_ptr<OpenGLCommandList>> m_command_lists;
 };

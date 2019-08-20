@@ -1,12 +1,13 @@
 #pragma once
 
 #include "graphics/RasterizerSettings.h"
+#include "graphics/CommandList.h"
 
-class OpenGLCommandList
+class OpenGLCommandList : public CommandList
 {
 public:
 	OpenGLCommandList();
-	~OpenGLCommandList();
+	virtual ~OpenGLCommandList();
 
 	unsigned int CreateBuffer();
 	unsigned int CreateShader(unsigned int type);

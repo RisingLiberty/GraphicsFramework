@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <array>
 #include <set>
+#include <queue>
 
 // directx headers
 #include <d3d12.h>

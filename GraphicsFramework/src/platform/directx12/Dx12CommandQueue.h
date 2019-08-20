@@ -1,15 +1,16 @@
 #pragma once
 
+#include "graphics/CommandQueue.h"
+
 class Dx12CommandList;
 
-class Dx12CommandQueue
+class Dx12CommandQueue : public CommandQueue
 {
 public:
-	Dx12CommandQueue();
-	~Dx12CommandQueue();
+	Dx12CommandQueue(unsigned int maxNrOfFramesInFlight);
+	virtual ~Dx12CommandQueue();
 
 	void Flush() const;
-	void Push(std::unique_ptr<Dx12CommandList> commandList);
 	void Execute(Dx12CommandList* cmdList) const;
 	void Execute();
 	unsigned int Signal() const;
@@ -19,7 +20,6 @@ public:
 	ID3D12CommandQueue* GetApiQueue() const;
 
 private:
-	std::vector<std::unique_ptr<Dx12CommandList>> m_command_lists;
 	ComPtr<ID3D12CommandQueue> m_queue;
 	ComPtr<ID3D12Fence> m_fence;
 	mutable unsigned int m_fence_value;

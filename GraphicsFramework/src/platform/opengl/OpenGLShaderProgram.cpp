@@ -26,8 +26,8 @@ namespace
 OpenGLShaderProgram::OpenGLShaderProgram(VertexShader* vs, FragmentShader* fs) :
 	ShaderProgram(vs, fs)
 {
-	OpenGLVertexShader* gl_vs = static_cast<OpenGLVertexShader*>(vs);
-	OpenGLFragmentShader* gl_fs = static_cast<OpenGLFragmentShader*>(fs);
+	OpenGLVertexShader* gl_vs = vs->As<OpenGLVertexShader>();
+	OpenGLFragmentShader* gl_fs = fs->As<OpenGLFragmentShader>();
 
 	assert(gl_vs);
 	assert(gl_fs);

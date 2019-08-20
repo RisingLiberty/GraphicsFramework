@@ -1,8 +1,10 @@
 #pragma once
 
+#include "graphics/CommandList.h"
+
 class Dx12Command;
 
-class Dx12CommandList
+class Dx12CommandList : public CommandList
 {
 public:
 	Dx12CommandList();

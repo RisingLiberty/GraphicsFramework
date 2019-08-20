@@ -14,8 +14,8 @@ Dx12ShaderProgram::Dx12ShaderProgram(VertexShader* vs, FragmentShader* fs):
 {
 	Dx12ShaderParser parser;
 
-	Dx12VertexShader* dx_vs = GetDxVertexShader();
-	Dx12FragmentShader* dx_fs = GetDxFragmentShader();
+	Dx12VertexShader* dx_vs = m_vertex_shader->As<Dx12VertexShader>();
+	Dx12FragmentShader* dx_fs = m_fragment_shader->As<Dx12FragmentShader>();
 
 	Dx12ParsedShader vs_parsed = parser.Parse(dx_vs->GetCode());
 	Dx12ParsedShader fs_parsed = parser.Parse(dx_fs->GetCode());
@@ -40,7 +40,7 @@ void Dx12ShaderProgram::UploadVariables() const
 {
 	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
 	{
-		const Dx12ShaderUniform* dx_uniform = static_cast<const Dx12ShaderUniform*>(uniform.get());
+		const Dx12ShaderUniform* dx_uniform =  static_cast<const Dx12ShaderUniform*>(uniform.get());
 		m_constant_buffer->CopyData(dx_uniform->data, dx_uniform->size, dx_uniform->offset);
 	}
 }
@@ -99,14 +99,4 @@ void Dx12ShaderProgram::BuildRootSignature(Dx12ParsedShader* vs_parsed, Dx12Pars
 		serialized_root_signature->GetBufferPointer(),
 		serialized_root_signature->GetBufferSize(),
 		IID_PPV_ARGS(m_root_signature.ReleaseAndGetAddressOf())));
-}
-
-Dx12VertexShader* Dx12ShaderProgram::GetDxVertexShader() const
-{
-	return static_cast<Dx12VertexShader*>(m_vertex_shader);
-}
-
-Dx12FragmentShader* Dx12ShaderProgram::GetDxFragmentShader() const
-{
-	return static_cast<Dx12FragmentShader*>(m_fragment_shader);
 }

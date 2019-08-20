@@ -20,7 +20,7 @@ void OpenGLDownloadBuffer::Download(const ApiBufferWrapper* buffer)
 	if (m_data)
 		return;
 
-	const OpenGLBufferWrapper* gl_buffer = static_cast<const OpenGLBufferWrapper*>(buffer);
+	const OpenGLBufferWrapper* gl_buffer = buffer->As<OpenGLBufferWrapper>();
 
 	switch (gl_buffer->GetType())
 	{

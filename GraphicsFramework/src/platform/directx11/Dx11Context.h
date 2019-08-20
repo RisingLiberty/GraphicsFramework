@@ -58,7 +58,7 @@ private:
 
 	Window* m_window;
 
-	std::unique_ptr<Dx11CommandQueue> m_command_queue;
-	Dx11CommandList* m_command_list;
+	//std::unique_ptr<Dx11CommandQueue> m_command_queue;
+	//Dx11CommandList* m_command_list;
 	std::unique_ptr<Dx11Swapchain> m_swapchain;
 };

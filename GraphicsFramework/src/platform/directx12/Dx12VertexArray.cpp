@@ -18,7 +18,7 @@ Dx12VertexArray::~Dx12VertexArray()
 
 D3D12_VERTEX_BUFFER_VIEW Dx12VertexArray::GetVertexBufferView() const
 {
-	const Dx12VertexBuffer* dx_vb = static_cast<const Dx12VertexBuffer*>(m_vertex_buffer);
+	const Dx12VertexBuffer* dx_vb = m_vertex_buffer->As<Dx12VertexBuffer>();
 
 	D3D12_VERTEX_BUFFER_VIEW vb_view;
 	vb_view.BufferLocation = dx_vb->GetBufferGpu()->GetGPUVirtualAddress();

@@ -5,7 +5,8 @@
 #include "Dx12CommandList.h"
 #include "Dx12DirectCommandList.h"
 
-Dx12CommandQueue::Dx12CommandQueue()
+Dx12CommandQueue::Dx12CommandQueue(unsigned int maxNrOfFramesInFlight):
+	CommandQueue(maxNrOfFramesInFlight)
 {
 	m_fence_value = 0;
 
@@ -17,7 +18,8 @@ Dx12CommandQueue::Dx12CommandQueue()
 	DXCALL(GetDx12Device()->CreateFence(0, D3D12_FENCE_FLAG_NONE,
 	IID_PPV_ARGS(&m_fence)));
 
-	m_command_lists.push_back(std::make_unique<Dx12CommandList>());
+	m_command_lists.resize(1);
+	m_command_lists[0] = std::make_unique<Dx12CommandList>();
 }
 
 Dx12CommandQueue::~Dx12CommandQueue()
@@ -46,11 +48,6 @@ unsigned int Dx12CommandQueue::Signal() const
 	return m_fence_value;
 }
 
-void Dx12CommandQueue::Push(std::unique_ptr<Dx12CommandList> commandList)
-{
-	m_command_lists.push_back(std::move(commandList));
-}
-
 std::unique_ptr<Dx12CommandList> Dx12CommandQueue::CreateDirectCommandList() const
 {
 	return std::make_unique<Dx12DirectCommandList>(this);
@@ -67,7 +64,7 @@ void Dx12CommandQueue::Execute()
 	std::vector<ID3D12CommandList*> cmds_lists(m_command_lists.size());
 	for (unsigned int i = 0; i < m_command_lists.size(); ++i)
 	{
-		std::unique_ptr<Dx12CommandList>& command_list = m_command_lists[i];
+		Dx12CommandList* command_list = m_command_lists[i]->As<Dx12CommandList>();
 		if (!command_list->IsClosed())
 			command_list->Close();
 		command_list->Execute();
@@ -79,7 +76,7 @@ void Dx12CommandQueue::Execute()
 
 Dx12CommandList* Dx12CommandQueue::GetApiCommandList() const
 {
-	return m_command_lists.front().get();
+	return m_command_lists.front()->As<Dx12CommandList>();
 }
 
 ID3D12CommandQueue* Dx12CommandQueue::GetApiQueue() const

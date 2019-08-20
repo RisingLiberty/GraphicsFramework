@@ -41,7 +41,7 @@ void Dx11Context::PreInitialize()
 
 void Dx11Context::Initialize()
 {
-	m_renderer = std::make_unique<Dx11Renderer>(m_command_queue->GetDeviceContext(), m_render_target_view.Get(), m_depth_stencil_view.Get());
+	m_renderer = std::make_unique<Dx11Renderer>(m_command_queue->As<Dx11CommandQueue>()->GetDeviceContext(), m_render_target_view.Get(), m_depth_stencil_view.Get());
 }
 
 void Dx11Context::InitD3D(Window* window)
@@ -49,8 +49,8 @@ void Dx11Context::InitD3D(Window* window)
 	HWND handle = (HWND)window->GetHandle();
 	Window::Properties properties = window->GetPropeties();
 
-	m_command_queue = std::make_unique<Dx11CommandQueue>();
-	m_command_list = m_command_queue->GetCommandList();
+	m_command_queue = std::make_unique<Dx11CommandQueue>(MAX_NR_OF_FRAMES_IN_FLIGHT);
+	m_command_list = m_command_queue->As<Dx11CommandQueue>()->GetCommandList();
 	m_swapchain = std::make_unique<Dx11Swapchain>(m_back_buffer_format, (HWND)m_window->GetHandle(), m_window->GetPropeties().is_fullscreen);
 
 	// Swapchain can't use window's width and height directly cause they'll scale incorectly.
@@ -67,7 +67,7 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 
 	ComPtr<ID3D11Texture2D> back_buffer;
 	DXCALL(m_swapchain->GetSwapchain()->GetBuffer(0, IID_PPV_ARGS(back_buffer.GetAddressOf())));
-	DXCALL(m_command_queue->GetDevice()->CreateRenderTargetView(back_buffer.Get(), NULL, m_render_target_view.ReleaseAndGetAddressOf()));
+	DXCALL(m_command_queue->As<Dx11CommandQueue>()->GetDevice()->CreateRenderTargetView(back_buffer.Get(), NULL, m_render_target_view.ReleaseAndGetAddressOf()));
 	
 	D3D11_TEXTURE2D_DESC depth_stencil_desc;
 	depth_stencil_desc.Width = width;
@@ -83,9 +83,9 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 	depth_stencil_desc.CPUAccessFlags = 0;
 	depth_stencil_desc.MiscFlags = 0;
 
-	DXCALL(m_command_queue->GetDevice()->CreateTexture2D(&depth_stencil_desc, 0, m_depth_stencil_buffer.ReleaseAndGetAddressOf()));
-	DXCALL(m_command_queue->GetDevice()->CreateDepthStencilView(m_depth_stencil_buffer.Get(), 0, m_depth_stencil_view.ReleaseAndGetAddressOf()));
-	m_command_list->SetRenderTarget(m_render_target_view.Get(), m_depth_stencil_view.Get());
+	DXCALL(m_command_queue->As<Dx11CommandQueue>()->GetDevice()->CreateTexture2D(&depth_stencil_desc, 0, m_depth_stencil_buffer.ReleaseAndGetAddressOf()));
+	DXCALL(m_command_queue->As<Dx11CommandQueue>()->GetDevice()->CreateDepthStencilView(m_depth_stencil_buffer.Get(), 0, m_depth_stencil_view.ReleaseAndGetAddressOf()));
+	m_command_list->As<Dx11CommandList>()->SetRenderTarget(m_render_target_view.Get(), m_depth_stencil_view.Get());
 
 	m_viewport.TopLeftX = 0;
 	m_viewport.TopLeftY = 0;
@@ -93,17 +93,17 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 	m_viewport.Height = (float)height;
 	m_viewport.MinDepth = 0.0f;
 	m_viewport.MaxDepth = 1.0f;
-	m_command_queue->GetDeviceContext()->RSSetViewports(1, &m_viewport);
+	m_command_queue->As<Dx11CommandQueue>()->GetDeviceContext()->RSSetViewports(1, &m_viewport);
 
 	ComPtr<ID3D11RasterizerState> rasterizer_state;
-	DXCALL(m_command_queue->GetDevice()->CreateRasterizerState(&m_rasterizer_settings.ToDirectX11(), rasterizer_state.GetAddressOf()));
-	m_command_queue->GetDeviceContext()->RSSetState(rasterizer_state.Get());
+	DXCALL(m_command_queue->As<Dx11CommandQueue>()->GetDevice()->CreateRasterizerState(&m_rasterizer_settings.ToDirectX11(), rasterizer_state.GetAddressOf()));
+	m_command_queue->As<Dx11CommandQueue>()->GetDeviceContext()->RSSetState(rasterizer_state.Get());
 }
 
 void Dx11Context::Begin()
 {
-	m_command_list = m_command_queue->GetCommandList();
-	m_command_list->SetRenderTarget(m_render_target_view.Get(), m_depth_stencil_view.Get());
+	m_command_list = m_command_queue->As<Dx11CommandQueue>()->GetCommandList();
+	m_command_list->As<Dx11CommandList>()->SetRenderTarget(m_render_target_view.Get(), m_depth_stencil_view.Get());
 }
 
 void Dx11Context::Present()
@@ -118,43 +118,43 @@ API Dx11Context::GetApiType() const
 
 ID3D11Device* Dx11Context::GetDevice() const
 {
-	return m_command_queue->GetDevice();
+	return m_command_queue->As<Dx11CommandQueue>()->GetDevice();
 }
 
 Dx11CommandList* Dx11Context::GetCommandList() const
 {
-	return m_command_list;
+	return m_command_list->As<Dx11CommandList>();
 }
 
 const Dx11VertexShader* Dx11Context::GetBoundVertexShader() const
 {
 	if (m_bound_shader_program)
-		return static_cast<Dx11VertexShader*>(m_bound_shader_program->GetVertexShader());
+		return m_bound_shader_program->GetVertexShader()->As<Dx11VertexShader>();
 
 	return nullptr;
 }
 
 void Dx11Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	const Dx11IndexBuffer* dx_ib = static_cast<const Dx11IndexBuffer*>(indexBuffer);
+	const Dx11IndexBuffer* dx_ib = indexBuffer->As<Dx11IndexBuffer>();
 	const unsigned int offset = 0;
 
-	m_command_list->SetPrimitiveTopology(dx_ib->GetTopology().ToDirectX());
-	m_command_list->SetIndexBuffer(dx_ib->GetBuffer(), dx_ib->GetFormat().ToDirectX(), offset);
+	m_command_list->As<Dx11CommandList>()->SetPrimitiveTopology(dx_ib->GetTopology().ToDirectX());
+	m_command_list->As<Dx11CommandList>()->SetIndexBuffer(dx_ib->GetBuffer(), dx_ib->GetFormat().ToDirectX(), offset);
 }
 
 void Dx11Context::UnbindIndexBufferInternal(const IndexBuffer * indexBuffer)
 {
-	m_command_list->SetPrimitiveTopology(Topology(ETopology::UNDEFINED).ToDirectX());
-	m_command_list->SetIndexBuffer(nullptr, Format(EFormat::UNKNOWN).ToDirectX(), 0);
+	m_command_list->As<Dx11CommandList>()->SetPrimitiveTopology(Topology(ETopology::UNDEFINED).ToDirectX());
+	m_command_list->As<Dx11CommandList>()->SetIndexBuffer(nullptr, Format(EFormat::UNKNOWN).ToDirectX(), 0);
 }
 
 void Dx11Context::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
 	// Currently can only bind 1 vertex buffer at a time
 
-	const Dx11VertexLayout* dx_layout = static_cast<const Dx11VertexLayout*>(vertexArray->GetVertexLayout());
-	const Dx11VertexBuffer* dx_vb = static_cast<const Dx11VertexBuffer*>(vertexArray->GetVertexBuffer());
+	const Dx11VertexLayout* dx_layout = vertexArray->GetVertexLayout()->As<Dx11VertexLayout>();
+	const Dx11VertexBuffer* dx_vb = vertexArray->GetVertexBuffer()->As<Dx11VertexBuffer>();
 
 	unsigned int offset = 0;
 	unsigned int stride = dx_layout->GetSize();
@@ -163,28 +163,28 @@ void Dx11Context::BindVertexArrayInternal(const VertexArray* vertexArray)
 
 	unsigned int input_slot = 0;
 
-	m_command_list->SetVertexBuffer(buffer, stride);
-	m_command_list->SetInputLayout(dx_layout->GetLayout());
+	m_command_list->As<Dx11CommandList>()->SetVertexBuffer(buffer, stride);
+	m_command_list->As<Dx11CommandList>()->SetInputLayout(dx_layout->GetLayout());
 }
 
 void Dx11Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	m_command_list->SetVertexBuffer(nullptr, 0);
-	m_command_list->SetInputLayout(nullptr);
+	m_command_list->As<Dx11CommandList>()->SetVertexBuffer(nullptr, 0);
+	m_command_list->As<Dx11CommandList>()->SetInputLayout(nullptr);
 }
 
 void Dx11Context::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
-	const Dx11VertexShader* dx_vs = static_cast<const Dx11VertexShader*>(shaderProgram->GetVertexShader());
-	const Dx11FragmentShader* dx_fs = static_cast<const Dx11FragmentShader*>(shaderProgram->GetFragmentShader());
+	const Dx11VertexShader* dx_vs = shaderProgram->GetVertexShader()->As<Dx11VertexShader>();
+	const Dx11FragmentShader* dx_fs = shaderProgram->GetFragmentShader()->As<Dx11FragmentShader>();
 
-	m_command_list->SetVertexShader(dx_vs->GetShader());
-	m_command_list->SetPixelShader(dx_fs->GetShader());
+	m_command_list->As<Dx11CommandList>()->SetVertexShader(dx_vs->GetShader());
+	m_command_list->As<Dx11CommandList>()->SetPixelShader(dx_fs->GetShader());
 }
 
 void Dx11Context::UnbindShaderProgramInternal(const ShaderProgram * shaderProgram)
 {
-	m_command_list->SetVertexShader(nullptr);
-	m_command_list->SetPixelShader(nullptr);
+	m_command_list->As<Dx11CommandList>()->SetVertexShader(nullptr);
+	m_command_list->As<Dx11CommandList>()->SetPixelShader(nullptr);
 }
 

@@ -185,7 +185,6 @@ private:
 	uint32_t m_current_frame = 0;
 	bool m_is_frame_buffer_resized = false;
 
-
 	std::unique_ptr<VkInstanceWrapper> m_instance;
 	std::unique_ptr<VkDefaultDevice> m_device;
 
@@ -193,7 +192,7 @@ private:
 	std::vector<std::unique_ptr<VkImageViewWrapper>> m_swapchain_image_views;
 	std::vector<std::unique_ptr<VkFrameBufferWrapper>> m_swapchain_frame_buffers;
 
-	std::unique_ptr<VkCommandQueue> m_command_queue;
+	//std::unique_ptr<VkCommandQueue> m_command_queue;
 	std::unique_ptr<VkGpu> m_gpu;
 	std::unique_ptr<VkSwapchain> m_swapchain;
 	std::unique_ptr<VkDescriptorSetsWrapper> m_descriptor_sets;
@@ -206,6 +205,8 @@ private:
 	std::unique_ptr<VkGraphicsPipelineWrapper> m_pipeline_wrapper;
 
 	VkCommandList* m_command_list;
+
+	Window* m_window;
 
 	//std::vector<VkBuffer> m_uniform_buffers;
 	//std::vector<VkDeviceMemory> m_uniform_buffers_memory;
