@@ -23,6 +23,13 @@ void CommandList::Close()
 	m_is_open = false;
 }
 
+void CommandList::Push(std::unique_ptr<Command> command)
+{
+	ASSERT(m_is_open, "Trying to push a command on a closed command list");
+
+	m_commands.push(std::move(command));
+}
+
 void CommandList::Execute()
 {
 	if (m_is_open)
@@ -34,8 +41,8 @@ void CommandList::Execute()
 	while (!m_commands.empty())
 	{
 		std::unique_ptr<Command>& command = m_commands.front();
-		m_commands.pop();
-
 		command->Execute();
+
+		m_commands.pop();
 	}
 }

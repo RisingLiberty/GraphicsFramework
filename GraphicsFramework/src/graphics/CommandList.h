@@ -16,6 +16,8 @@ public:
 	void Open();
 	void Close();
 
+	void Push(std::unique_ptr<Command> command);
+
 	void Execute();
 
 private:
