@@ -162,19 +162,28 @@
     <ClCompile Include="src\graphics\ApiBufferWrapper.cpp" />
     <ClCompile Include="src\graphics\BindIndexBufferCommand.cpp" />
     <ClCompile Include="src\graphics\BindVertexBufferCommand.cpp" />
+    <ClCompile Include="src\graphics\BindVertexLayoutCommand.cpp" />
     <ClCompile Include="src\graphics\Buffer.cpp" />
     <ClCompile Include="src\graphics\BufferHelpers.cpp" />
+    <ClCompile Include="src\graphics\ClearDepthStencilCommand.cpp" />
+    <ClCompile Include="src\graphics\ClearRenderTargetCommand.cpp" />
     <ClCompile Include="src\graphics\Command.cpp" />
     <ClCompile Include="src\graphics\CommandList.cpp" />
     <ClCompile Include="src\graphics\CommandQueue.cpp" />
+    <ClCompile Include="src\graphics\CopyBufferCommand.cpp" />
+    <ClCompile Include="src\graphics\CreateBufferCommand.cpp" />
     <ClCompile Include="src\graphics\CullMode.cpp" />
+    <ClCompile Include="src\graphics\DeleteBufferCommand.cpp" />
     <ClCompile Include="src\graphics\DescriptorHeap.cpp" />
     <ClCompile Include="src\graphics\DownloadBuffer.cpp" />
+    <ClCompile Include="src\graphics\DrawIndexedCommand.cpp" />
     <ClCompile Include="src\graphics\FillMode.cpp" />
     <ClCompile Include="src\graphics\FrontFaceOrientation.cpp" />
     <ClCompile Include="src\graphics\GraphicsResource.cpp" />
     <ClCompile Include="src\graphics\MapBufferCommand.cpp" />
     <ClCompile Include="src\graphics\RasterizerSettings.cpp" />
+    <ClCompile Include="src\graphics\SetBufferDataCommand.cpp" />
+    <ClCompile Include="src\graphics\SetRenderTargetCommand.cpp" />
     <ClCompile Include="src\graphics\UnmapBufferCommand.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11BufferWrapper.cpp" />
     <ClCompile Include="src\platform\directx11\Dx11CommandList.cpp" />
@@ -255,21 +264,26 @@
     <ClCompile Include="src\platform\directx12\Dx12VertexBuffer.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexLayout.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexShader.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLBindIndexBufferCommand.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLBufferWrapper.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLCommandList.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLCommandQueue.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLDownloadBuffer.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLHelperMethods.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLContext.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLFragmentShader.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLIndexBuffer.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLRenderer.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLShaderProgram.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLUILayer.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLVertexArray.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLVertexBuffer.cpp" />
-    <ClCompile Include="src\platform\opengl\OpenGLVertexShader.cpp" />
+    <ClCompile Include="src\platform\opengl\GLBindIndexBufferCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLBindVertexBufferCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLBufferWrapper.cpp" />
+    <ClCompile Include="src\platform\opengl\GLCommandList.cpp" />
+    <ClCompile Include="src\platform\opengl\GLCommandQueue.cpp" />
+    <ClCompile Include="src\platform\opengl\GLCreateBufferCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLDeleteBufferCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLDownloadBuffer.cpp" />
+    <ClCompile Include="src\platform\opengl\GLDrawIndexedCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLHelperMethods.cpp" />
+    <ClCompile Include="src\platform\opengl\GLContext.cpp" />
+    <ClCompile Include="src\platform\opengl\GLFragmentShader.cpp" />
+    <ClCompile Include="src\platform\opengl\GLIndexBuffer.cpp" />
+    <ClCompile Include="src\platform\opengl\GLRenderer.cpp" />
+    <ClCompile Include="src\platform\opengl\GLShaderProgram.cpp" />
+    <ClCompile Include="src\platform\opengl\GLUILayer.cpp" />
+    <ClCompile Include="src\platform\opengl\GLVertexArray.cpp" />
+    <ClCompile Include="src\platform\opengl\GLVertexBuffer.cpp" />
+    <ClCompile Include="src\platform\opengl\GLVertexShader.cpp" />
+    <ClCompile Include="src\platform\opengl\GLSetBufferDataCommand.cpp" />
     <ClCompile Include="src\platform\vulkan\VkBufferWrapper.cpp" />
     <ClCompile Include="src\platform\vulkan\VkCommand.cpp" />
     <ClCompile Include="src\platform\vulkan\VkCommandList.cpp" />
@@ -319,45 +333,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\platform\win64\DefaultWndClass.cpp" />
-    <ClCompile Include="src\vendor\glfw\glfwcontext.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\init.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\input.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\monitor.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\vulkan.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\wgl_context.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\win32_init.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\win32_joystick.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\win32_monitor.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\win32_time.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\win32_tls.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\win32_window.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="src\vendor\glfw\glfwwindow.c">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="src\vendor\imgui\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
@@ -395,20 +370,29 @@
     <ClInclude Include="src\graphics\ApiBufferWrapper.h" />
     <ClInclude Include="src\graphics\BindIndexBufferCommand.h" />
     <ClInclude Include="src\graphics\BindVertexBufferCommand.h" />
+    <ClInclude Include="src\graphics\BindVertexLayoutCommand.h" />
     <ClInclude Include="src\graphics\Buffer.h" />
     <ClInclude Include="src\graphics\BufferHelpers.h" />
     <ClInclude Include="src\graphics\BufferUsage.h" />
+    <ClInclude Include="src\graphics\ClearDepthStencilCommand.h" />
+    <ClInclude Include="src\graphics\ClearRenderTargetCommand.h" />
     <ClInclude Include="src\graphics\Command.h" />
     <ClInclude Include="src\graphics\CommandList.h" />
     <ClInclude Include="src\graphics\CommandQueue.h" />
+    <ClInclude Include="src\graphics\CopyBufferCommand.h" />
+    <ClInclude Include="src\graphics\CreateBufferCommand.h" />
     <ClInclude Include="src\graphics\CullMode.h" />
+    <ClInclude Include="src\graphics\DeleteBufferCommand.h" />
     <ClInclude Include="src\graphics\DescriptorHeap.h" />
     <ClInclude Include="src\graphics\DownloadBuffer.h" />
+    <ClInclude Include="src\graphics\DrawIndexedCommand.h" />
     <ClInclude Include="src\graphics\FillMode.h" />
     <ClInclude Include="src\graphics\FrontFaceOrientation.h" />
     <ClInclude Include="src\graphics\GraphicsResource.h" />
     <ClInclude Include="src\graphics\MapBufferCommand.h" />
     <ClInclude Include="src\graphics\RasterizerSettings.h" />
+    <ClInclude Include="src\graphics\SetBufferDataCommand.h" />
+    <ClInclude Include="src\graphics\SetRenderTargetCommand.h" />
     <ClInclude Include="src\graphics\UnmapBufferCommand.h" />
     <ClInclude Include="src\platform\directx11\Dx11BufferWrapper.h" />
     <ClInclude Include="src\platform\directx11\Dx11CommandList.h" />
@@ -491,21 +475,27 @@
     <ClInclude Include="src\platform\directx12\Dx12VertexLayout.h" />
     <ClInclude Include="src\platform\directx12\Dx12VertexShader.h" />
     <ClInclude Include="src\platform\directx12\Dx12RenderTargetViewDescriptorHeap.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLBindIndexBufferCommand.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLBufferWrapper.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLCommandList.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLCommandQueue.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLDownloadBuffer.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLHelperMethods.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLContext.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLFragmentShader.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLIndexBuffer.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLRenderer.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLShaderProgram.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLUILayer.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLVertexArray.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLVertexBuffer.h" />
-    <ClInclude Include="src\platform\opengl\OpenGLVertexShader.h" />
+    <ClInclude Include="src\platform\opengl\GLBindIndexBufferCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLBindVertexBufferCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLBufferWrapper.h" />
+    <ClInclude Include="src\platform\opengl\GLCommandList.h" />
+    <ClInclude Include="src\platform\opengl\GLCommandQueue.h" />
+    <ClInclude Include="src\platform\opengl\GLCommands.h" />
+    <ClInclude Include="src\platform\opengl\GLCreateBufferCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLDeleteBufferCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLDownloadBuffer.h" />
+    <ClInclude Include="src\platform\opengl\GLDrawIndexedCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLHelperMethods.h" />
+    <ClInclude Include="src\platform\opengl\GLContext.h" />
+    <ClInclude Include="src\platform\opengl\GLFragmentShader.h" />
+    <ClInclude Include="src\platform\opengl\GLIndexBuffer.h" />
+    <ClInclude Include="src\platform\opengl\GLRenderer.h" />
+    <ClInclude Include="src\platform\opengl\GLSetBufferDataCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLShaderProgram.h" />
+    <ClInclude Include="src\platform\opengl\GLUILayer.h" />
+    <ClInclude Include="src\platform\opengl\GLVertexArray.h" />
+    <ClInclude Include="src\platform\opengl\GLVertexBuffer.h" />
+    <ClInclude Include="src\platform\opengl\GLVertexShader.h" />
     <ClInclude Include="src\platform\vulkan\VkCommandPoolWrapper.h" />
     <ClInclude Include="src\platform\vulkan\VkDefaultDevice.h" />
     <ClInclude Include="src\platform\vulkan\VkDescriptorPoolWrapper.h" />
@@ -553,12 +543,6 @@
     <ClInclude Include="src\scenegraph\UIObject.h" />
     <ClInclude Include="src\stdafx.h" />
     <ClInclude Include="src\platform\win64\DefaultWndClass.h" />
-    <ClInclude Include="src\vendor\glfw\egl_context.h" />
-    <ClInclude Include="src\vendor\glfw\glfw3.h" />
-    <ClInclude Include="src\vendor\glfw\internal.h" />
-    <ClInclude Include="src\vendor\glfw\wgl_context.h" />
-    <ClInclude Include="src\vendor\glfw\win32_joystick.h" />
-    <ClInclude Include="src\vendor\glfw\win32_platform.h" />
     <ClInclude Include="src\vendor\imgui\imconfig.h" />
     <ClInclude Include="src\vendor\imgui\imgui.h" />
     <ClInclude Include="src\vendor\imgui\imgui_impl_dx11.h" />
