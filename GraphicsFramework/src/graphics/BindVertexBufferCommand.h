@@ -4,7 +4,7 @@
 
 class VertexBuffer;
 
-class BindVertexBufferCommand : Command
+class BindVertexBufferCommand : public Command
 {
 public:
 	BindVertexBufferCommand(const VertexBuffer* vb);
@@ -12,6 +12,6 @@ public:
 
 	virtual void Execute() = 0;
 
-private:
+protected:
 	const VertexBuffer* m_vertex_buffer;
 };

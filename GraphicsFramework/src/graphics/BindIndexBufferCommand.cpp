@@ -2,7 +2,8 @@
 
 #include "BindIndexBufferCommand.h"
 
-BindIndexBufferCommand::BindIndexBufferCommand(const IndexBuffer* ib)
+BindIndexBufferCommand::BindIndexBufferCommand(const IndexBuffer* ib):
+	m_index_buffer(ib)
 {
 
 }
