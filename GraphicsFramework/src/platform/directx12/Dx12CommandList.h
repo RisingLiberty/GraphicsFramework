@@ -2,16 +2,11 @@
 
 #include "graphics/CommandList.h"
 
-class Dx12Command;
-
 class Dx12CommandList : public CommandList
 {
 public:
 	Dx12CommandList();
 	virtual ~Dx12CommandList();
-
-	void Push(std::unique_ptr<Dx12Command> command);
-	virtual void Execute();
 
 	void SetDescriptorHeaps(ID3D12DescriptorHeap* heap);
 	void SetGraphicsRootSignature(ID3D12RootSignature* rootsignature);
@@ -37,7 +32,6 @@ public:
 	bool IsClosed() const;
 
 protected:
-	std::vector<std::unique_ptr<Dx12Command>> m_commands;
 	ComPtr<ID3D12GraphicsCommandList> m_list;
 	ComPtr<ID3D12CommandAllocator> m_cmd_alloc;
 

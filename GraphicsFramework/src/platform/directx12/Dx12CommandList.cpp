@@ -2,7 +2,6 @@
 
 #include "Dx12HelperMethods.h"
 #include "Dx12CommandList.h"
-#include "Dx12Command.h"
 
 Dx12CommandList::Dx12CommandList()
 {
@@ -69,17 +68,6 @@ void Dx12CommandList::SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY topology)
 void Dx12CommandList::SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW vbView)
 {
 	m_list->IASetVertexBuffers(0, 1, &vbView);
-}
-
-void Dx12CommandList::Push(std::unique_ptr<Dx12Command> command)
-{
-	m_commands.push_back(std::move(command));
-}
-
-void Dx12CommandList::Execute()
-{
-	for (std::unique_ptr<Dx12Command>& command : m_commands)
-		command->Execute();
 }
 
 void Dx12CommandList::SetPipelineState(ComPtr<ID3D12PipelineState> pipelineState)

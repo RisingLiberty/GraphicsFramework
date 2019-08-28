@@ -10,7 +10,7 @@ public:
 	Dx12DirectCommandList(const Dx12CommandQueue* queue);
 	virtual ~Dx12DirectCommandList();
 
-	void Execute() override;
+	void Execute();
 
 private:
 	const Dx12CommandQueue* m_queue;
