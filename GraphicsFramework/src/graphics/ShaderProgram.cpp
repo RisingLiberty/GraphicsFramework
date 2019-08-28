@@ -5,7 +5,7 @@
 #include "Context.h"
 #include "controllers/ShaderController.h"
 
-#include "platform/opengl/OpenGLShaderProgram.h"
+#include "platform/opengl/GLShaderProgram.h"
 #include "platform/directx11/Dx11ShaderProgram.h"
 #include "platform/directx12/Dx12ShaderProgram.h"
 #include "platform/vulkan/VkShaderProgram.h"
@@ -23,7 +23,7 @@ ShaderProgram* ShaderProgram::Create(VertexShader* vs, FragmentShader* fs)
 	{
 	case API::OPENGL:
 	{
-		unique_program = std::make_unique<OpenGLShaderProgram>(vs, fs);
+		unique_program = std::make_unique<GLShaderProgram>(vs, fs);
 		program = unique_program.get();
 		shader_controller->PushShaderProgram(unique_program);
 		break;

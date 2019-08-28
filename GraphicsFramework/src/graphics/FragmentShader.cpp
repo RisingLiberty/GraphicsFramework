@@ -3,7 +3,7 @@
 #include "FragmentShader.h"
 #include "Context.h"
 
-#include "platform/opengl/OpenGLFragmentShader.h"
+#include "platform/opengl/GLFragmentShader.h"
 #include "platform/directx11/Dx11FragmentShader.h"
 #include "platform/directx12/Dx12FragmentShader.h"
 #include "platform/vulkan/VkFragmentShader.h"
@@ -42,7 +42,7 @@ FragmentShader* FragmentShader::Create(const std::string& shaderName)
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case API::OPENGL:
-		unique_shader = std::make_unique<OpenGLFragmentShader>(path);
+		unique_shader = std::make_unique<GLFragmentShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushFragmentShader(unique_shader);
 		break;

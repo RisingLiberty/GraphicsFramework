@@ -2,7 +2,7 @@
 
 #include "VertexBuffer.h"
 
-#include "platform/opengl/OpenGLVertexBuffer.h"
+#include "platform/opengl/GLVertexBuffer.h"
 #include "platform/directx11/Dx11VertexBuffer.h"
 #include "platform/directx12/Dx12VertexBuffer.h"
 #include "platform/vulkan/VkVertexBuffer.h"
@@ -23,7 +23,7 @@ VertexBuffer* VertexBuffer::Create(unsigned int size, BufferUsage usage, void* d
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case API::OPENGL:		unique_vb = std::make_unique<OpenGLVertexBuffer>(size, usage, data); break;
+	case API::OPENGL:		unique_vb = std::make_unique<GLVertexBuffer>(size, usage, data); break;
 	case API::DIRECTX11:	unique_vb = std::make_unique<Dx11VertexBuffer>(size, usage, data); break;
 	case API::DIRECTX12:	unique_vb = std::make_unique<Dx12VertexBuffer>(size, usage, data); break;
 	case API::VULKAN:		unique_vb = std::make_unique<VkVertexBuffer>(size, usage, data); break;

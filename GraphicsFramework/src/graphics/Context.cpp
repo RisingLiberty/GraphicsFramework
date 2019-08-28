@@ -4,7 +4,7 @@
 #include "Renderer.h"
 #include "CommandQueue.h"
 
-#include "platform/opengl/OpenGLContext.h"
+#include "platform/opengl/GLContext.h"
 #include "platform/directx11/Dx11Context.h"
 #include "platform/directx12/Dx12Context.h"
 #include "platform/vulkan/VkContext.h"
@@ -58,7 +58,7 @@ Context* Context::Create(API api, Window* window)
 	{
 	case API::DIRECTX11: s_current = new Dx11Context(window); break;
 	case API::DIRECTX12: s_current = new Dx12Context(window); break;
-	case API::OPENGL: s_current = new OpenGLContext(window); break;
+	case API::OPENGL: s_current = new GLContext(window); break;
 	case API::VULKAN: s_current = new VkContext(window); break;
 	}
 
@@ -74,7 +74,7 @@ Context* Context::Switch(API api, Window* window)
 	{
 	case API::DIRECTX11: s_current = new Dx11Context(window); break;
 	case API::DIRECTX12: s_current = new Dx12Context(window); break;
-	case API::OPENGL: s_current = new OpenGLContext(window); break;
+	case API::OPENGL: s_current = new GLContext(window); break;
 	case API::VULKAN: s_current = new VkContext(window); break;
 	}
 

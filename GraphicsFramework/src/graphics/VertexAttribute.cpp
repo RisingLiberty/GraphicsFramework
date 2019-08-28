@@ -30,7 +30,7 @@ unsigned int VertexAttribute::GetSize() const
 	return 0;
 }
 
-unsigned int VertexAttribute::GetOpenGLDataType() const
+unsigned int VertexAttribute::GetGLDataType() const
 {
 	switch (data_type)
 	{

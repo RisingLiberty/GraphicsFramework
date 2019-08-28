@@ -2,7 +2,7 @@
 
 #include "IndexBuffer.h"
 
-#include "platform/opengl/OpenGLIndexBuffer.h"
+#include "platform/opengl/GLIndexBuffer.h"
 #include "platform/directx11/Dx11IndexBuffer.h"
 #include "platform/directx12/Dx12IndexBuffer.h"
 #include "platform/vulkan/VkIndexBuffer.h"
@@ -46,7 +46,7 @@ IndexBuffer* IndexBuffer::Create(unsigned int count, Format format, Topology top
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case API::OPENGL:		unique_ib = std::make_unique<OpenGLIndexBuffer>(count, format, topology, usage, data); break;
+	case API::OPENGL:		unique_ib = std::make_unique<GLIndexBuffer>(count, format, topology, usage, data); break;
 	case API::DIRECTX11:	unique_ib = std::make_unique<Dx11IndexBuffer>(count, format, topology, usage, data); break;
 	case API::DIRECTX12:	unique_ib = std::make_unique<Dx12IndexBuffer>(count, format, topology, usage, data); break;
 	case API::VULKAN:		unique_ib = std::make_unique<VkIndexBuffer>(count, format, topology, usage, data); break;
@@ -69,7 +69,7 @@ IndexBuffer::IndexBuffer(unsigned int count, Format format, Topology topology):
 		// calling spdlog::warn 3 times to display message
 		// below on another.
 		spdlog::warn("Index buffer has unsigned byte format");
-		spdlog::warn("This is only available on with OpenGL api");
+		spdlog::warn("This is only available on with GL api");
 		spdlog::warn("Using this format can cause undefined behaviour or crashes.");
 	}
 }

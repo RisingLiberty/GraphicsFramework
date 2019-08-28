@@ -4,7 +4,7 @@
 
 #include "Context.h"
 
-#include "platform/opengl/OpenGLVertexShader.h"
+#include "platform/opengl/GLVertexShader.h"
 #include "platform/directx11/Dx11VertexShader.h"
 #include "platform/directx12/Dx12VertexShader.h"
 #include "platform/vulkan/VkVertexShader.h"
@@ -54,7 +54,7 @@ VertexShader* VertexShader::Create(const std::string& shaderName)
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case API::OPENGL:
-		unique_shader = std::make_unique<OpenGLVertexShader>(path);
+		unique_shader = std::make_unique<GLVertexShader>(path);
 		shader = unique_shader.get();
 		shader_controller->PushVertexShader(unique_shader);
 		break;

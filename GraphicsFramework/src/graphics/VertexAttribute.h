@@ -25,7 +25,7 @@ public:
 	VertexAttribute(const VertexAttributeType attributeType, VertexAttributeDataType dataType, bool isNormalized, unsigned int count = 1);
 
 	unsigned int GetSize() const;
-	unsigned int GetOpenGLDataType() const;
+	unsigned int GetGLDataType() const;
 	VkFormat GetVulkanDataType() const;
 public:
 

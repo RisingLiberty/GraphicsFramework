@@ -5,7 +5,7 @@
 
 #include "controllers/VertexArrayController.h"
 
-#include "platform/opengl/OpenGLVertexArray.h"
+#include "platform/opengl/GLVertexArray.h"
 #include "platform/directx11/Dx11VertexArray.h"
 #include "platform/directx12/Dx12VertexArray.h"
 #include "platform/vulkan/VkVertexArray.h"
@@ -43,7 +43,7 @@ VertexArray* VertexArray::Create(const VertexBuffer* vb, const VertexLayout* lay
 	switch (Context::GetCurrent()->GetApiType())
 	{
 	case API::OPENGL:
-		unique_array = std::make_unique<OpenGLVertexArray>(vb, layout);
+		unique_array = std::make_unique<GLVertexArray>(vb, layout);
 		vertex_array = unique_array.get();
 		vertex_array_controller->PushVertexArray(unique_array);
 		break;
