@@ -2,11 +2,16 @@
 
 #include "Command.h"
 
+class VertexLayout;
+
 class BindVertexLayoutCommand : public Command
 {
 public:
-	BindVertexLayoutCommand();
+	BindVertexLayoutCommand(const VertexLayout* vertexLayout);
 	virtual ~BindVertexLayoutCommand();
 
-	void Execute() = 0;
+	virtual void Execute() override = 0;
+
+protected:
+	const VertexLayout* m_vertex_layout;
 };

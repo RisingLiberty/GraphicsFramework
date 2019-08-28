@@ -8,5 +8,5 @@ public:
 	CopyBufferCommand();
 	virtual ~CopyBufferCommand();
 
-	void Execute() = 0;
+	void Execute() override = 0;
 };

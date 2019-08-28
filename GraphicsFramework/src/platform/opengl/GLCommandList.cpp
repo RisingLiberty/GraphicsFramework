@@ -42,10 +42,10 @@ unsigned int GLCommandList::CreateVertexArray()
 	return id;
 }
 
-void GLCommandList::DeleteBuffer(unsigned int id)
-{
-	GLCALL(glDeleteBuffers(1, &id));
-}
+//void GLCommandList::DeleteBuffer(unsigned int id)
+//{
+//	GLCALL(glDeleteBuffers(1, &id));
+//}
 
 void GLCommandList::DeleteShader(unsigned int id)
 {
@@ -204,20 +204,20 @@ unsigned int GLCommandList::GetUniformLocation(unsigned int id, const char * nam
 	return glGetUniformLocation(id, name);
 }
 
-void GLCommandList::BindVertexBuffer(unsigned int id)
-{
-	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, id));
-}
-
-void GLCommandList::BindVertexArray(unsigned int id)
-{
-	GLCALL(glBindVertexArray(id));
-}
-
-void GLCommandList::BindIndexBuffer(unsigned int id)
-{
-	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
-}
+//void GLCommandList::BindVertexBuffer(unsigned int id)
+//{
+//	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, id));
+//}
+//
+//void GLCommandList::BindVertexArray(unsigned int id)
+//{
+//	GLCALL(glBindVertexArray(id));
+//}
+//
+//void GLCommandList::BindIndexBuffer(unsigned int id)
+//{
+//	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
+//}
 
 void GLCommandList::BindShaderProgram(unsigned int id)
 {

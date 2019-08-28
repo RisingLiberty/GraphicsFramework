@@ -381,9 +381,6 @@
     <ClCompile Include="src\platform\directx12\Dx12CommandList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\platform\directx12\Dx12Command.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\platform\vulkan\VkCommandList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -568,6 +565,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\platform\opengl\GLBindVertexBufferCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\BindVertexArrayCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\opengl\GLBindVertexArrayCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\opengl\GLBindVertexLayoutCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -953,9 +959,6 @@
     <ClInclude Include="src\platform\directx12\Dx12CommandList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\platform\directx12\Dx12Command.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\platform\vulkan\VkCommandList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1146,6 +1149,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\opengl\GLBindVertexBufferCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\BindVertexArrayCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\opengl\GLBindVertexArrayCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\opengl\GLBindVertexLayoutCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

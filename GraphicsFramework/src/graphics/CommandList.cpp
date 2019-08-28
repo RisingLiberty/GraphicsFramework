@@ -28,6 +28,9 @@ void CommandList::Push(std::unique_ptr<Command> command)
 	ASSERT(m_is_open, "Trying to push a command on a closed command list");
 
 	m_commands.push(std::move(command));
+
+	std::string command_type = typeid(command.get()).name();
+	spdlog::info("command of type {} added", command_type);
 }
 
 void CommandList::Execute()

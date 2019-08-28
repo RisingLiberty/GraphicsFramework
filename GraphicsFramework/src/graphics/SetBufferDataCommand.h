@@ -11,7 +11,7 @@ public:
 	SetBufferDataCommand(ApiBufferWrapper* buffer, unsigned int size, const void* data, BufferUsage usage);
 	virtual ~SetBufferDataCommand();
 
-	virtual void Execute() = 0;
+	virtual void Execute() override = 0;
 
 protected:
 	ApiBufferWrapper* m_buffer;

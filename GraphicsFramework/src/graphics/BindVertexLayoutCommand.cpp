@@ -2,7 +2,8 @@
 
 #include "BindVertexLayoutCommand.h"
 
-BindVertexLayoutCommand::BindVertexLayoutCommand()
+BindVertexLayoutCommand::BindVertexLayoutCommand(const VertexLayout* vertexLayout):
+	m_vertex_layout(vertexLayout)
 {
 
 }

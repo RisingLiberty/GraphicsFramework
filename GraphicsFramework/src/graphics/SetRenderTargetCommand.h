@@ -8,5 +8,5 @@ public:
 	SetRenderTargetCommand();
 	virtual ~SetRenderTargetCommand();
 
-	void Execute() = 0;
+	void Execute() override = 0;
 };

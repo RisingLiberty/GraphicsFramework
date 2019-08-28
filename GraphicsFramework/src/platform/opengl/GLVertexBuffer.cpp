@@ -30,6 +30,5 @@ std::unique_ptr<byte> GLVertexBuffer::GetData() const
 
 void GLVertexBuffer::GLBind() const
 {
-	GetGLCommandList()->BindVertexBuffer(m_id);
-	//GetGLCommandList()->Push(std::make_unique<GLBindVertexBufferCommand>(this));
+	GetGLCommandList()->Push(std::make_unique<GLBindVertexBufferCommand>(this));
 }

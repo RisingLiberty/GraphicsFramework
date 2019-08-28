@@ -10,7 +10,7 @@ public:
 	DrawIndexedCommand(unsigned int count, Topology topology, Format format);
 	virtual ~DrawIndexedCommand();
 
-	void Execute() = 0;
+	void Execute() override = 0;
 
 protected:
 	unsigned int m_count;

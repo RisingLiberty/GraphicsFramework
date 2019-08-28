@@ -8,5 +8,5 @@ public:
 	ClearRenderTargetCommand();
 	virtual ~ClearRenderTargetCommand();
 
-	void Execute() = 0;
+	void Execute() override = 0;
 };

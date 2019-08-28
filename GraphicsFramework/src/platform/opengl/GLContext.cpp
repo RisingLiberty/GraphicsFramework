@@ -45,7 +45,11 @@ GLContext::GLContext(Window* window):
 
 GLContext::~GLContext()
 {
+	m_command_list->Open();
 	this->CleanUp();
+	m_command_list->Close();
+	m_command_list->Execute();
+
 	wglMakeCurrent(NULL, NULL);
 	ReleaseDC((HWND)m_window->GetHandle(), m_hdc);
 	wglDeleteContext(m_hglrc);
@@ -97,8 +101,7 @@ GLCommandList* GLContext::GetCommandList() const
 
 void GLContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	m_command_list->As<GLCommandList>()->BindIndexBuffer(indexBuffer->As<GLIndexBuffer>()->GetId());
-	//m_command_list->Push(std::make_unique<GLBindIndexBufferCommand>(indexBuffer));
+	m_command_list->Push(std::make_unique<GLBindIndexBufferCommand>(indexBuffer));
 }
 
 void GLContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
@@ -108,13 +111,12 @@ void GLContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
 
 void GLContext::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	vertexArray->GetVertexBuffer()->As<GLVertexBuffer>()->GLBind();
-	m_command_list->As<GLCommandList>()->BindVertexArray(vertexArray->As<GLVertexArray>()->GetId());
+	m_command_list->Push(std::make_unique<GLBindVertexArrayCommand>(vertexArray));
 }
 
 void GLContext::UnbindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	m_command_list->As<GLCommandList>()->BindVertexArray(0);
+	//m_command_list->As<GLCommandList>()->BindVertexArray(0);
 }
 
 void GLContext::BindShaderProgramInternal(const ShaderProgram* shaderProgram)

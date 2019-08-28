@@ -8,5 +8,5 @@ public:
 	ClearDepthStencilCommand();
 	virtual ~ClearDepthStencilCommand();
 
-	void Execute() = 0;
+	void Execute() override = 0;
 };

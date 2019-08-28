@@ -14,7 +14,7 @@ public:
 	unsigned int CreateProgram();
 	unsigned int CreateVertexArray();
 
-	void DeleteBuffer(unsigned int id);
+	//void DeleteBuffer(unsigned int id);
 	void DeleteShader(unsigned int id);
 	void DeleteProgram(unsigned int id);
 	void DeleteVertexArray(unsigned int id);
@@ -45,9 +45,9 @@ public:
 
 	unsigned int GetUniformLocation(unsigned int id, const char* name);
 
-	void BindVertexBuffer(unsigned int id);
-	void BindVertexArray(unsigned int id);
-	void BindIndexBuffer(unsigned int id);
+	//void BindVertexBuffer(unsigned int id);
+	//void BindVertexArray(unsigned int id);
+	//void BindIndexBuffer(unsigned int id);
 	void BindShaderProgram(unsigned int id);
 
 	//void DrawElements(unsigned int topology, unsigned int count, unsigned int format);

@@ -161,6 +161,7 @@
     <ClCompile Include="src\events\SwitchApiEvent.cpp" />
     <ClCompile Include="src\graphics\ApiBufferWrapper.cpp" />
     <ClCompile Include="src\graphics\BindIndexBufferCommand.cpp" />
+    <ClCompile Include="src\graphics\BindVertexArrayCommand.cpp" />
     <ClCompile Include="src\graphics\BindVertexBufferCommand.cpp" />
     <ClCompile Include="src\graphics\BindVertexLayoutCommand.cpp" />
     <ClCompile Include="src\graphics\Buffer.cpp" />
@@ -235,7 +236,6 @@
     <ClCompile Include="src\platform\directx11\Dx11HelperMethods.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12BufferWrapper.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12CbvSrvUavDescriptorHeap.cpp" />
-    <ClCompile Include="src\platform\directx12\Dx12Command.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12CommandList.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12CommandQueue.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12DepthStencilBuffer.cpp" />
@@ -265,7 +265,9 @@
     <ClCompile Include="src\platform\directx12\Dx12VertexLayout.cpp" />
     <ClCompile Include="src\platform\directx12\Dx12VertexShader.cpp" />
     <ClCompile Include="src\platform\opengl\GLBindIndexBufferCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLBindVertexArrayCommand.cpp" />
     <ClCompile Include="src\platform\opengl\GLBindVertexBufferCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLBindVertexLayoutCommand.cpp" />
     <ClCompile Include="src\platform\opengl\GLBufferWrapper.cpp" />
     <ClCompile Include="src\platform\opengl\GLCommandList.cpp" />
     <ClCompile Include="src\platform\opengl\GLCommandQueue.cpp" />
@@ -369,6 +371,7 @@
     <ClInclude Include="src\graphics\API.h" />
     <ClInclude Include="src\graphics\ApiBufferWrapper.h" />
     <ClInclude Include="src\graphics\BindIndexBufferCommand.h" />
+    <ClInclude Include="src\graphics\BindVertexArrayCommand.h" />
     <ClInclude Include="src\graphics\BindVertexBufferCommand.h" />
     <ClInclude Include="src\graphics\BindVertexLayoutCommand.h" />
     <ClInclude Include="src\graphics\Buffer.h" />
@@ -444,7 +447,6 @@
     <ClInclude Include="src\platform\directx11\Dx11Renderer.h" />
     <ClInclude Include="src\platform\directx11\Dx11HelperMethods.h" />
     <ClInclude Include="src\platform\directx11\Dx11ShaderParser.h" />
-    <ClInclude Include="src\platform\directx12\Dx12Command.h" />
     <ClInclude Include="src\platform\directx12\Dx12CommandList.h" />
     <ClInclude Include="src\platform\directx12\Dx12CommandQueue.h" />
     <ClInclude Include="src\platform\directx12\Dx12BufferWrapper.h" />
@@ -476,7 +478,9 @@
     <ClInclude Include="src\platform\directx12\Dx12VertexShader.h" />
     <ClInclude Include="src\platform\directx12\Dx12RenderTargetViewDescriptorHeap.h" />
     <ClInclude Include="src\platform\opengl\GLBindIndexBufferCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLBindVertexArrayCommand.h" />
     <ClInclude Include="src\platform\opengl\GLBindVertexBufferCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLBindVertexLayoutCommand.h" />
     <ClInclude Include="src\platform\opengl\GLBufferWrapper.h" />
     <ClInclude Include="src\platform\opengl\GLCommandList.h" />
     <ClInclude Include="src\platform\opengl\GLCommandQueue.h" />

@@ -13,14 +13,14 @@ GLBufferWrapper::GLBufferWrapper(unsigned int size, BufferUsage usage, BufferTyp
 	ApiBufferWrapper(usage),
 	m_type(type)
 {
-	//GetGLCommandList()->Push(std::make_unique<GLCreateBufferCommand>(&m_id));
-	m_id = GetGLCommandList()->CreateBuffer();
+	GetGLCommandList()->Push(std::make_unique<GLCreateBufferCommand>(&m_id));
+	//m_id = GetGLCommandList()->CreateBuffer();
 }
 
 GLBufferWrapper::~GLBufferWrapper()
 {
-	//GetGLCommandList()->Push(std::make_unique<GLDeleteBufferCommand>(m_id));
-	GetGLCommandList()->DeleteBuffer(m_id);
+	GetGLCommandList()->Push(std::make_unique<GLDeleteBufferCommand>(m_id));
+	//GetGLCommandList()->DeleteBuffer(m_id);
 }
 
 BufferType GLBufferWrapper::GetType() const
