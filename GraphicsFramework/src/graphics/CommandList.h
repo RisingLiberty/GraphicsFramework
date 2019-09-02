@@ -18,7 +18,7 @@ public:
 
 	void Push(std::unique_ptr<Command> command);
 
-	void Execute();
+	virtual void Execute();
 
 private:
 	std::queue<std::unique_ptr<Command>> m_commands;
