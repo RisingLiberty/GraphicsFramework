@@ -16,7 +16,7 @@
 #include "GLShaderProgram.h"
 
 #include "GLCommandQueue.h"
-#include "GLCommandList.h"
+#include "GLDirectCommandList.h"
 
 #include "GLCommands.h"
 
@@ -82,6 +82,7 @@ void GLContext::End()
 {
 	m_command_list->Close();
 	m_command_list->Execute();
+	std::unique_ptr<byte> data = m_bound_index_buffer->GetData();
 }
 
 API GLContext::GetApiType() const
@@ -97,6 +98,11 @@ void GLContext::InitializeRasterizer()
 GLCommandList* GLContext::GetCommandList() const
 {
 	return m_command_list->As<GLCommandList>();
+}
+
+std::unique_ptr<GLDirectCommandList> GLContext::CreateDirectCommandList() const
+{
+	return m_command_queue->As<GLCommandQueue>()->CreateDirectCommandList();
 }
 
 void GLContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)

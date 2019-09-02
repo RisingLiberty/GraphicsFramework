@@ -3,6 +3,7 @@
 #include "graphics/CommandQueue.h"
 
 class GLCommandList;
+class GLDirectCommandList;
 
 class GLCommandQueue : public CommandQueue
 {
@@ -11,5 +12,6 @@ public:
 	virtual ~GLCommandQueue();
 
 	GLCommandList* GetCommandList() const;
+	std::unique_ptr<GLDirectCommandList> CreateDirectCommandList() const;
 
 };

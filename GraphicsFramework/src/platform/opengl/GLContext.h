@@ -5,6 +5,7 @@
 class Window;
 class GLCommandQueue;
 class GLCommandList;
+class GLDirectCommandList;
 
 using HandleGLRenderingContext = HGLRC;
 
@@ -25,6 +26,7 @@ public:
 	void InitializeRasterizer();
 
 	GLCommandList* GetCommandList() const;
+	std::unique_ptr<GLDirectCommandList> CreateDirectCommandList() const;
 
 protected:
 	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;

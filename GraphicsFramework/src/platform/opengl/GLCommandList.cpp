@@ -18,13 +18,6 @@ GLCommandList::~GLCommandList()
 
 }
 
-unsigned int GLCommandList::CreateBuffer()
-{
-	unsigned int id;
-	GLCALL(glGenBuffers(1, &id));
-	return id;
-}
-
 unsigned int GLCommandList::CreateShader(unsigned int type)
 {
 	return glCreateShader(type);
@@ -41,11 +34,6 @@ unsigned int GLCommandList::CreateVertexArray()
 	GLCALL(glGenVertexArrays(1, &id));
 	return id;
 }
-
-//void GLCommandList::DeleteBuffer(unsigned int id)
-//{
-//	GLCALL(glDeleteBuffers(1, &id));
-//}
 
 void GLCommandList::DeleteShader(unsigned int id)
 {
@@ -71,26 +59,6 @@ void GLCommandList::SetClearColor(float r, float g, float b, float a)
 {
 	glClearColor(r, g, b, a);
 }
-
-//void GLCommandList::SetVertexBufferDataDynamic(const void* data, unsigned int size, unsigned int usage)
-//{
-//	GLCALL(glBufferData(GL_ARRAY_BUFFER, size, data, usage));
-//}
-//
-//void GLCommandList::SetIndexBufferDataDynamic(const void* data, unsigned int size, unsigned int usage)
-//{
-//	GLCALL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage))
-//}
-//
-//void GLCommandList::SetVertexBufferDataStatic(const void* data, unsigned int size, unsigned int usage)
-//{
-//	GLCALL(glBufferStorage(GL_ARRAY_BUFFER, size, data, usage));
-//}
-//
-//void GLCommandList::SetIndexBufferDataStatic(const void* data, unsigned int size, unsigned int usage)
-//{
-//	GLCALL(glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, size, data, usage));
-//}
 
 void GLCommandList::SetShaderSource(unsigned int id, const char* code)
 {
@@ -199,47 +167,26 @@ std::string GLCommandList::GetProgramInfoLog(unsigned int id)
 	return message;
 }
 
-unsigned int GLCommandList::GetUniformLocation(unsigned int id, const char * name)
+unsigned int GLCommandList::GetUniformLocation(unsigned int id, const char* name)
 {
 	return glGetUniformLocation(id, name);
 }
-
-//void GLCommandList::BindVertexBuffer(unsigned int id)
-//{
-//	GLCALL(glBindBuffer(GL_ARRAY_BUFFER, id));
-//}
-//
-//void GLCommandList::BindVertexArray(unsigned int id)
-//{
-//	GLCALL(glBindVertexArray(id));
-//}
-//
-//void GLCommandList::BindIndexBuffer(unsigned int id)
-//{
-//	GLCALL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id));
-//}
 
 void GLCommandList::BindShaderProgram(unsigned int id)
 {
 	GLCALL(glUseProgram(id));
 }
 
-//void GLCommandList::DrawElements(unsigned int topology, unsigned int count, unsigned int format)
-//{
-//	unsigned int* offset = NULL_OFFSET;
-//	GLCALL(glDrawElements(topology, count, format, offset));
-//}
-
-void* GLCommandList::MapVertexBuffer(unsigned int size, unsigned int usage)
+void* GLCommandList::MapVertexBuffer(unsigned int size, unsigned int flags)
 {
 	unsigned int offset = 0;
-	return glMapBufferRange(GL_ARRAY_BUFFER, offset, size, usage);
+	return glMapBufferRange(GL_ARRAY_BUFFER, offset, size, flags);
 }
 
-void* GLCommandList::MapIndexBuffer(unsigned int size, unsigned int usage)
+void* GLCommandList::MapIndexBuffer(unsigned int size, unsigned int flags)
 {
 	unsigned int offset = 0;
-	return glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, offset, size, usage);
+	return glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, offset, size, flags);
 }
 
 void GLCommandList::UnmapVertexBuffer()
