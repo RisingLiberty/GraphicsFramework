@@ -10,10 +10,11 @@ public:
 
 	virtual void Download(const ApiBufferWrapper* buffer) = 0;
 
-	void* GetData() const;
+	void* GetCpuAddress() const;
 	unsigned int GetSize() const;
 
 protected:
 	unsigned int m_size;
-	void* m_data;
+	void* m_cpu_address;
+	void* m_gpu_address;
 };

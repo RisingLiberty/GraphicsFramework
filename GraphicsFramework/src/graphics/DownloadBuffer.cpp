@@ -5,17 +5,17 @@
 DownloadBuffer::DownloadBuffer(unsigned int size):
 	m_size(size)
 {
-	m_data = malloc(m_size);
+	m_cpu_address = malloc(m_size);
 }
 
 DownloadBuffer::~DownloadBuffer()
 {
-	delete m_data;
+	delete m_cpu_address;
 }
 
-void* DownloadBuffer::GetData() const
+void* DownloadBuffer::GetCpuAddress() const
 {
-	return m_data;
+	return m_cpu_address;
 }
 
 unsigned int DownloadBuffer::GetSize() const
