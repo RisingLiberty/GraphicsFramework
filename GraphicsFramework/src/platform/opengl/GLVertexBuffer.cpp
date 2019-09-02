@@ -5,9 +5,9 @@
 
 #include "GLBindVertexBufferCommand.h"
 
-GLVertexBuffer::GLVertexBuffer(unsigned int size, BufferUsage usage, const void* data) :
+GLVertexBuffer::GLVertexBuffer(unsigned int size, BufferUsage usage, BufferAccess access, const void* data) :
 	VertexBuffer(size),
-	GLBufferWrapper(size, usage, BufferType::VERTEX, data)
+	GLBufferWrapper(size, usage, access, BufferType::VERTEX, data)
 {
 	if (data)
 		this->SetData(data);

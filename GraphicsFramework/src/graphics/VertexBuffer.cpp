@@ -11,7 +11,7 @@
 
 #include "Context.h"
 
-VertexBuffer* VertexBuffer::Create(unsigned int size, BufferUsage usage, void* data)
+VertexBuffer* VertexBuffer::Create(unsigned int size, BufferUsage usage, BufferAccess access, void* data)
 {
 	VertexBufferController* vertex_buffer_controller = Context::GetCurrent()->GetVertexBufferController();
 	VertexBuffer* vb = vertex_buffer_controller->Get(size, usage);
@@ -23,10 +23,10 @@ VertexBuffer* VertexBuffer::Create(unsigned int size, BufferUsage usage, void* d
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case API::OPENGL:		unique_vb = std::make_unique<GLVertexBuffer>(size, usage, data); break;
-	case API::DIRECTX11:	unique_vb = std::make_unique<Dx11VertexBuffer>(size, usage, data); break;
-	case API::DIRECTX12:	unique_vb = std::make_unique<Dx12VertexBuffer>(size, usage, data); break;
-	case API::VULKAN:		unique_vb = std::make_unique<VkVertexBuffer>(size, usage, data); break;
+	case API::OPENGL:		unique_vb = std::make_unique<GLVertexBuffer>(size, usage, access, data); break;
+	case API::DIRECTX11:	unique_vb = std::make_unique<Dx11VertexBuffer>(size, usage, access, data); break;
+	case API::DIRECTX12:	unique_vb = std::make_unique<Dx12VertexBuffer>(size, usage, access, data); break;
+	case API::VULKAN:		unique_vb = std::make_unique<VkVertexBuffer>(size, usage, access, data); break;
 	}
 
 	vb = unique_vb.get();

@@ -6,7 +6,7 @@
 class GLVertexBuffer : public VertexBuffer, public GLBufferWrapper
 {
 public:
-	GLVertexBuffer(unsigned int size, BufferUsage usage, const void* data);
+	GLVertexBuffer(unsigned int size, BufferUsage usage, BufferAccess access, const void* data);
 	virtual ~GLVertexBuffer();
 
 	void GLBind() const override;

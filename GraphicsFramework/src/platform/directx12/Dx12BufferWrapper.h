@@ -5,7 +5,7 @@
 class Dx12BufferWrapper : public ApiBufferWrapper
 {
 public:
-	Dx12BufferWrapper(unsigned int size, BufferUsage usage, const void* data);
+	Dx12BufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, const void* data);
 	virtual ~Dx12BufferWrapper();
 
 	ID3D12Resource* GetBufferGpu() const;

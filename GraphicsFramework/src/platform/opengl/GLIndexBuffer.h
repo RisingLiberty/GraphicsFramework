@@ -6,7 +6,7 @@
 class GLIndexBuffer : public IndexBuffer, public GLBufferWrapper
 {
 public:
-	GLIndexBuffer(unsigned int  count, Format format, Topology topology, BufferUsage usage, void* data);
+	GLIndexBuffer(unsigned int  count, Format format, Topology topology, BufferUsage usage, BufferAccess access, void* data);
 	virtual ~GLIndexBuffer();
 
 	void GLBind() const override;

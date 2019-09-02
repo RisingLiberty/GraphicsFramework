@@ -6,7 +6,7 @@
 class VkVertexBuffer : public VertexBuffer, public VkBufferWrapper
 {
 public:
-	VkVertexBuffer(unsigned int size, BufferUsage usage, const void* data);
+	VkVertexBuffer(unsigned int size, BufferUsage usage, BufferAccess access, const void* data);
 	virtual ~VkVertexBuffer();
 
 	std::unique_ptr<byte> GetData() const override;

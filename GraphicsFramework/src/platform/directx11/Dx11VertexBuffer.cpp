@@ -5,9 +5,9 @@
 #include "Dx11HelperMethods.h"
 #include "Dx11DownloadBuffer.h"
 
-Dx11VertexBuffer::Dx11VertexBuffer(unsigned int size, BufferUsage usage, void* data):
+Dx11VertexBuffer::Dx11VertexBuffer(unsigned int size, BufferUsage usage, BufferAccess access, void* data):
 	VertexBuffer(size),
-	Dx11BufferWrapper(size, usage, BufferType::VERTEX, data)
+	Dx11BufferWrapper(size, usage, access, BufferType::VERTEX, data)
 {
 }
 

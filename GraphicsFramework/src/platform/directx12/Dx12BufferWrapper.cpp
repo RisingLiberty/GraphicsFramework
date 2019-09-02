@@ -4,8 +4,8 @@
 #include "Dx12HelperMethods.h"
 #include "Dx12DownloadBuffer.h"
 
-Dx12BufferWrapper::Dx12BufferWrapper(unsigned int size, BufferUsage usage, const void* data):
-	ApiBufferWrapper(usage)
+Dx12BufferWrapper::Dx12BufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, const void* data):
+	ApiBufferWrapper(usage, access)
 {
 	if (data)
 	{

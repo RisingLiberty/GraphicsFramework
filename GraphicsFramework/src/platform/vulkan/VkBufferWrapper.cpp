@@ -46,8 +46,8 @@
 //	}
 //}
 
-VkBufferWrapper::VkBufferWrapper(unsigned int size, BufferUsage usage, const void* data):
-	ApiBufferWrapper(usage)
+VkBufferWrapper::VkBufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, const void* data):
+	ApiBufferWrapper(usage, access)
 {
 	if (data)
 		this->SetDataInternal(data, size);

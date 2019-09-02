@@ -5,7 +5,7 @@
 class Dx11BufferWrapper : public ApiBufferWrapper
 {
 public:
-	Dx11BufferWrapper(unsigned int size, BufferUsage usage, BufferType type, const void* data);
+	Dx11BufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, BufferType type, const void* data);
 	virtual ~Dx11BufferWrapper();
 
 	ID3D11Buffer* GetBuffer() const;

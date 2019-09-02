@@ -34,7 +34,7 @@ namespace
 	}
 }
 
-IndexBuffer* IndexBuffer::Create(unsigned int count, Format format, Topology topology, BufferUsage usage, void* data)
+IndexBuffer* IndexBuffer::Create(unsigned int count, Format format, Topology topology, BufferUsage usage, BufferAccess access, void* data)
 {
 	IndexBufferController* index_buffer_controller = Context::GetCurrent()->GetIndexBufferController();
 	IndexBuffer* ib = nullptr;// = index_buffer_controller->Get(count, usage);
@@ -46,10 +46,10 @@ IndexBuffer* IndexBuffer::Create(unsigned int count, Format format, Topology top
 
 	switch (Context::GetCurrent()->GetApiType())
 	{
-	case API::OPENGL:		unique_ib = std::make_unique<GLIndexBuffer>(count, format, topology, usage, data); break;
-	case API::DIRECTX11:	unique_ib = std::make_unique<Dx11IndexBuffer>(count, format, topology, usage, data); break;
-	case API::DIRECTX12:	unique_ib = std::make_unique<Dx12IndexBuffer>(count, format, topology, usage, data); break;
-	case API::VULKAN:		unique_ib = std::make_unique<VkIndexBuffer>(count, format, topology, usage, data); break;
+	case API::OPENGL:		unique_ib = std::make_unique<GLIndexBuffer>(count, format, topology, usage, access, data); break;
+	case API::DIRECTX11:	unique_ib = std::make_unique<Dx11IndexBuffer>(count, format, topology, usage, access, data); break;
+	case API::DIRECTX12:	unique_ib = std::make_unique<Dx12IndexBuffer>(count, format, topology, usage, access, data); break;
+	case API::VULKAN:		unique_ib = std::make_unique<VkIndexBuffer>(count, format, topology, usage, access, data); break;
 	}
 
 	ib = unique_ib.get();

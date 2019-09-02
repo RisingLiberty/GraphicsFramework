@@ -2,9 +2,9 @@
 
 #include "Dx12VertexBuffer.h"
 
-Dx12VertexBuffer::Dx12VertexBuffer(unsigned int size, BufferUsage usage, const void* data):
+Dx12VertexBuffer::Dx12VertexBuffer(unsigned int size, BufferUsage usage, BufferAccess access, const void* data):
 	VertexBuffer(size),
-	Dx12BufferWrapper(size, usage, data)
+	Dx12BufferWrapper(size, usage, access, data)
 {
 }
 

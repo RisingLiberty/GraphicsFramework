@@ -7,9 +7,9 @@
 
 #include "GLContext.h"
 
-GLIndexBuffer::GLIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, void* data):
+GLIndexBuffer::GLIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, BufferAccess access, void* data):
 	IndexBuffer(count, format, topology),
-	GLBufferWrapper(m_size, usage, BufferType::INDEX, data)
+	GLBufferWrapper(m_size, usage, access, BufferType::INDEX, data)
 {
 	if (data)
 		this->SetData(data);

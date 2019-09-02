@@ -5,9 +5,9 @@
 #include "Dx12Context.h"
 
 
-Dx12IndexBuffer::Dx12IndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, const void* data) :
+Dx12IndexBuffer::Dx12IndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, BufferAccess access, const void* data) :
 	IndexBuffer(count, format, topology),
-	Dx12BufferWrapper(m_size, usage, data)
+	Dx12BufferWrapper(m_size, usage, access, data)
 {
 }
 

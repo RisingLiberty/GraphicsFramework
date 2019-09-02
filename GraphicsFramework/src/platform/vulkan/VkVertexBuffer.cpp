@@ -4,9 +4,9 @@
 #include "VkHelperMethods.h"
 #include "VkDownloadBuffer.h"
 
-VkVertexBuffer::VkVertexBuffer(unsigned int size, BufferUsage usage, const void* data) :
+VkVertexBuffer::VkVertexBuffer(unsigned int size, BufferUsage usage, BufferAccess access, const void* data) :
 	VertexBuffer(size),
-	VkBufferWrapper(size, usage, data)
+	VkBufferWrapper(size, usage, access, data)
 {
 }
 

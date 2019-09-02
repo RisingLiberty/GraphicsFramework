@@ -5,9 +5,9 @@
 
 #include "VkContext.h"
 
-VkIndexBuffer::VkIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, const void* data):
+VkIndexBuffer::VkIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, BufferAccess access, const void* data):
 	IndexBuffer(count, format, topology),
-	VkBufferWrapper(m_size, usage, data)
+	VkBufferWrapper(m_size, usage, access, data)
 {
 	if (data)
 		this->Bind();

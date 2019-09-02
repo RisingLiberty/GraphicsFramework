@@ -4,9 +4,9 @@
 #include "Dx11Context.h"
 #include "Dx11HelperMethods.h"
 
-Dx11IndexBuffer::Dx11IndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, void* data):
+Dx11IndexBuffer::Dx11IndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, BufferAccess access, void* data):
 	IndexBuffer(count, format, topology),
-	Dx11BufferWrapper(m_size, usage, BufferType::INDEX, data)
+	Dx11BufferWrapper(m_size, usage, access, BufferType::INDEX, data)
 {
 }
 

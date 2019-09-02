@@ -6,8 +6,8 @@
 
 #include "Dx11CommandList.h"
 
-Dx11BufferWrapper::Dx11BufferWrapper(unsigned int size, BufferUsage usage, BufferType type, const void* data):
-	ApiBufferWrapper(usage)
+Dx11BufferWrapper::Dx11BufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, BufferType type, const void* data):
+	ApiBufferWrapper(usage, access)
 {
 	D3D11_BUFFER_DESC desc;
 	desc.BindFlags = type == BufferType::VERTEX ? D3D11_BIND_VERTEX_BUFFER : D3D11_BIND_INDEX_BUFFER;

@@ -8,8 +8,11 @@ class DownloadBuffer;
 class ApiBufferWrapper : public GraphicsResource<ApiBufferWrapper>
 {
 public:
-	ApiBufferWrapper(BufferUsage usage);
+	ApiBufferWrapper(BufferUsage usage, BufferAccess access);
 	virtual ~ApiBufferWrapper();
+
+	BufferUsage GetUsage() const;
+	BufferAccess GetAccess() const;
 
 protected:
 	std::unique_ptr<byte> GetDataInternal(unsigned int size) const;
@@ -18,4 +21,5 @@ protected:
 
 protected:
 	BufferUsage m_usage;
+	BufferAccess m_access;
 };

@@ -3,7 +3,33 @@
 enum class BufferType
 {
 	VERTEX,
-	INDEX
+	INDEX,
+	COPY_SOURCE,
+	COPY_DESTINATION
+};
+
+enum class EBufferAccess
+{
+	UNDEFINED	= -1,
+	NO_ACCESS	= 0,
+	READ		= 1,
+	WRITE		= 2,
+	PERSISTENT	= 4,
+	COHERENT	= 8,
+	COUNT		= COHERENT / 2
+};
+
+struct BufferAccess
+{
+public:
+	BufferAccess(EBufferAccess enumValue = EBufferAccess::NO_ACCESS);
+
+	unsigned int ToOpenGL() const;
+
+	operator EBufferAccess() const;
+
+public:
+	EBufferAccess enum_value;
 };
 
 enum class EBufferStage

@@ -25,6 +25,6 @@ void VkDownloadBuffer::Download(const ApiBufferWrapper* buffer)
 
 	void* data;
 	vkMapMemory(GetVkDevice(), m_buffer_memory, 0, m_size, 0, &data);
-	memcpy(m_data, data, (size_t)m_size);
+	memcpy(m_cpu_address, data, (size_t)m_size);
 	vkUnmapMemory(GetVkDevice(), m_buffer_memory);
 }

@@ -12,7 +12,7 @@ public:
 	VertexBuffer(unsigned int size);
 	virtual ~VertexBuffer();
 		
-	static VertexBuffer* Create(unsigned int size, BufferUsage usage = EBufferUsage::STATIC, void* data = nullptr);
+	static VertexBuffer* Create(unsigned int size, BufferUsage usage = EBufferUsage::STATIC, BufferAccess access = EBufferAccess::NO_ACCESS, void* data = nullptr);
 
 	bool operator==(const VertexBuffer* other) const;
 

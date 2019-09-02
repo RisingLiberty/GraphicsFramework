@@ -30,6 +30,6 @@ void Dx11DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 
 	D3D11_MAPPED_SUBRESOURCE mapped_subresource;
 	GetDx11CommandList()->Map(m_buffer.Get(), D3D11_MAP_READ, mapped_subresource);
-	memcpy(m_data, mapped_subresource.pData, m_size);
+	memcpy(m_cpu_address, mapped_subresource.pData, m_size);
 	GetDx11CommandList()->Unmap(m_buffer.Get());
 }

@@ -16,7 +16,7 @@ public:
 	Format GetFormat() const;
 	Topology GetTopology() const;
 
-	static IndexBuffer* Create(unsigned int count, Format format, Topology topology, BufferUsage usage = EBufferUsage::STATIC, void* data = nullptr);
+	static IndexBuffer* Create(unsigned int count, Format format, Topology topology, BufferUsage usage = EBufferUsage::STATIC, BufferAccess access = EBufferAccess::NO_ACCESS, void* data = nullptr);
 
 protected:
 	unsigned int m_count;

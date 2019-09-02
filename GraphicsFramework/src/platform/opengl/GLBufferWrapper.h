@@ -5,7 +5,7 @@
 class GLBufferWrapper : public ApiBufferWrapper
 {
 public:
-	GLBufferWrapper(unsigned int size, BufferUsage usage, BufferType type, const void* data);
+	GLBufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, BufferType type, const void* data);
 	virtual ~GLBufferWrapper();
 
 	BufferType GetType() const;

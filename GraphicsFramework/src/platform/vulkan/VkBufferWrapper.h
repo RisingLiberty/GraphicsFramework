@@ -7,7 +7,7 @@ class DownloadBuffer;
 class VkBufferWrapper : public ApiBufferWrapper
 {
 public:
-	VkBufferWrapper(unsigned int size, BufferUsage usage, const void* data);
+	VkBufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, const void* data);
 	virtual ~VkBufferWrapper();
 	
 	VkBuffer GetBufferGpu() const;

@@ -6,7 +6,7 @@
 class Dx11VertexBuffer : public VertexBuffer, public Dx11BufferWrapper
 {
 public:
-	Dx11VertexBuffer(unsigned int size, BufferUsage usage, void* data);
+	Dx11VertexBuffer(unsigned int size, BufferUsage usage, BufferAccess access, void* data);
 	virtual ~Dx11VertexBuffer();
 
 	void SetData(const void* data) override;

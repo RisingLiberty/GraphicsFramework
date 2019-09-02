@@ -6,7 +6,7 @@
 class Dx11IndexBuffer : public IndexBuffer, public Dx11BufferWrapper
 {
 public:
-	Dx11IndexBuffer(unsigned int  count, Format format, Topology topology, BufferUsage usage, void* data);
+	Dx11IndexBuffer(unsigned int  count, Format format, Topology topology, BufferUsage usage, BufferAccess access, void* data);
 	virtual ~Dx11IndexBuffer();
 
 	std::unique_ptr<byte> GetData() const override;

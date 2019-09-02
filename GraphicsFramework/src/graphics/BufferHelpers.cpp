@@ -2,6 +2,44 @@
 
 #include "BufferHelpers.h"
 
+EBufferAccess operator&(const EBufferAccess& a, const EBufferAccess& b)
+{
+	return EBufferAccess((unsigned int)a & (unsigned int)b);
+}
+
+BufferAccess::BufferAccess(EBufferAccess enumValue):
+	enum_value(enumValue)
+{
+
+}
+
+unsigned int BufferAccess::ToOpenGL() const
+{
+	unsigned int flags = 0;
+
+	if (enum_value == EBufferAccess::NO_ACCESS)
+		return flags;
+
+	if ((unsigned int)enum_value & (unsigned int)EBufferAccess::READ)
+		flags |= GL_MAP_READ_BIT;
+
+	if ((unsigned int)enum_value & (unsigned int)EBufferAccess::WRITE)
+		flags |= GL_MAP_WRITE_BIT;
+
+	if ((unsigned int)enum_value & (unsigned int)EBufferAccess::PERSISTENT)
+		flags |= GL_MAP_PERSISTENT_BIT;
+
+	if ((unsigned int)enum_value & (unsigned int)EBufferAccess::COHERENT)
+		flags |= GL_MAP_COHERENT_BIT;
+	   	 	
+	return flags;
+}
+
+BufferAccess::operator EBufferAccess() const
+{
+	return enum_value;
+}
+
 BufferStage::BufferStage(EBufferStage enumValue):
 	enum_value(enumValue)
 {

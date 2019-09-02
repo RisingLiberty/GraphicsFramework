@@ -54,7 +54,7 @@ void Dx12DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 	);
 		
 	// Code goes here to access the data via pReadbackBufferData.
-	memcpy(m_data, pReadbackBufferData, m_size);
+	memcpy(m_cpu_address, pReadbackBufferData, m_size);
 
 	D3D12_RANGE emptyRange{ 0, 0 };
 	m_buffer->Unmap

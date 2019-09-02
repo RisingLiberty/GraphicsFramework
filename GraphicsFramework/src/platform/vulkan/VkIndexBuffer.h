@@ -6,7 +6,7 @@
 class VkIndexBuffer : public IndexBuffer, public VkBufferWrapper
 {
 public:
-	VkIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, const void* data);
+	VkIndexBuffer(unsigned int count, Format format, Topology topology, BufferUsage usage, BufferAccess access, const void* data);
 	virtual ~VkIndexBuffer();
 
 	std::unique_ptr<byte> GetData() const override;
