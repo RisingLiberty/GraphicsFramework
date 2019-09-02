@@ -11,6 +11,7 @@ public:
 	virtual ~BindVertexLayoutCommand();
 
 	virtual void Execute() override = 0;
+	virtual std::string ToString() const override;
 
 protected:
 	const VertexLayout* m_vertex_layout;

@@ -11,3 +11,8 @@ CreateBufferCommand::~CreateBufferCommand()
 {
 
 }
+
+std::string CreateBufferCommand::ToString() const
+{
+	return "Create buffer";
+}

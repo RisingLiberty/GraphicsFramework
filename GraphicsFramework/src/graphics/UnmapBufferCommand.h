@@ -10,6 +10,8 @@ public:
 	UnmapBufferCommand(const ApiBufferWrapper* buffer);
 	virtual ~UnmapBufferCommand();
 
-private:
+	virtual std::string ToString() const override;
+
+protected:
 	const ApiBufferWrapper* m_buffer;
 };

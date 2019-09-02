@@ -12,3 +12,8 @@ BindVertexLayoutCommand::~BindVertexLayoutCommand()
 {
 
 }
+
+std::string BindVertexLayoutCommand::ToString() const
+{
+	return "Bind vertex layout";
+}

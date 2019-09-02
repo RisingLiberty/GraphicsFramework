@@ -11,3 +11,8 @@ SetRenderTargetCommand::~SetRenderTargetCommand()
 {
 
 }
+
+std::string SetRenderTargetCommand::ToString() const
+{
+	return "Set render target";
+}

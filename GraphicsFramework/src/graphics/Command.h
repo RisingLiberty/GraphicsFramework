@@ -9,4 +9,6 @@ public:
 	virtual ~Command();
 
 	virtual void Execute() = 0;
+
+	virtual std::string ToString() const = 0;
 };

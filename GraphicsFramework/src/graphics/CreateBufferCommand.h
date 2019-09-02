@@ -9,4 +9,5 @@ public:
 	virtual ~CreateBufferCommand();
 
 	virtual void Execute() override = 0;
+	virtual std::string ToString() const override;
 };

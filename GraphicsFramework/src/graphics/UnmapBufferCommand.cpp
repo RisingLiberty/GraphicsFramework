@@ -12,3 +12,8 @@ UnmapBufferCommand::~UnmapBufferCommand()
 {
 
 }
+
+std::string UnmapBufferCommand::ToString() const
+{
+	return "Unmap buffer";
+}

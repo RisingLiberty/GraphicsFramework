@@ -12,3 +12,8 @@ BindIndexBufferCommand::~BindIndexBufferCommand()
 {
 
 }
+
+std::string BindIndexBufferCommand::ToString() const
+{
+	return "Bind index buffer";
+}

@@ -14,3 +14,8 @@ DrawIndexedCommand::~DrawIndexedCommand()
 {
 
 }
+
+std::string DrawIndexedCommand::ToString() const
+{
+	return "Draw indexed";
+}

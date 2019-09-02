@@ -11,3 +11,8 @@ BindVertexBufferCommand::~BindVertexBufferCommand()
 {
 
 }
+
+std::string BindVertexBufferCommand::ToString() const
+{
+	return "Bind vertex buffer";
+}

@@ -11,3 +11,8 @@ DeleteBufferCommand::~DeleteBufferCommand()
 {
 
 }
+
+std::string DeleteBufferCommand::ToString() const
+{
+	return "Delete buffer";
+}

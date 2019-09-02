@@ -11,6 +11,7 @@ public:
 	virtual ~BindVertexBufferCommand();
 
 	virtual void Execute() override = 0;
+	virtual std::string ToString() const override;
 
 protected:
 	const VertexBuffer* m_vertex_buffer;
