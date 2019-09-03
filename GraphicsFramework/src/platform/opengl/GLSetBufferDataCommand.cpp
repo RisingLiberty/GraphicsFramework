@@ -27,12 +27,7 @@ void GLSetBufferDataCommand::Execute()
 		case BufferType::VERTEX: GLCALL(glBufferStorage(GL_ARRAY_BUFFER, m_size, m_data, m_buffer->GetAccess().ToOpenGL())); break;
 		case BufferType::INDEX: GLCALL(glBufferStorage(GL_ELEMENT_ARRAY_BUFFER, m_size, m_data, m_buffer->GetAccess().ToOpenGL())); break;			
 		case BufferType::COPY_SOURCE: GLCALL(glBufferStorage(GL_COPY_READ_BUFFER, m_size, m_data, m_buffer->GetAccess().ToOpenGL()));
-		case BufferType::COPY_DESTINATION: 
-		{
-			int id;
-			glGetIntegerv(GL_COPY_WRITE_BUFFER, &id);
-			GLCALL(glBufferStorage(GL_COPY_WRITE_BUFFER, m_size, m_data, m_buffer->GetAccess().ToOpenGL()));
-		}
+		case BufferType::COPY_DESTINATION: GLCALL(glBufferStorage(GL_COPY_WRITE_BUFFER, m_size, m_data, m_buffer->GetAccess().ToOpenGL()));
 		}
 		break;
 	case EBufferUsage::DYNAMIC:

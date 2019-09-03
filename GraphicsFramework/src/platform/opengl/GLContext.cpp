@@ -82,7 +82,6 @@ void GLContext::End()
 {
 	m_command_list->Close();
 	m_command_list->Execute();
-	std::unique_ptr<byte> data = m_bound_index_buffer->GetData();
 }
 
 API GLContext::GetApiType() const
