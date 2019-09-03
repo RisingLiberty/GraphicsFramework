@@ -483,9 +483,6 @@
     <ClCompile Include="src\graphics\DrawIndexedCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\graphics\ClearDepthStencilCommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\graphics\ClearRenderTargetCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -601,6 +598,27 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\platform\opengl\GLDirectCommandList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\ClearDepthStencilBufferCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\opengl\GLClearRenderTargetCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\ClearDepthBufferCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\graphics\ClearStencilBufferCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\opengl\GLClearStencilBufferCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\opengl\GLClearDepthBufferCommand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\platform\opengl\GLClearDepthStencilBufferCommand.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1088,9 +1106,6 @@
     <ClInclude Include="src\graphics\ClearRenderTargetCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\graphics\ClearDepthStencilCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\graphics\DrawIndexedCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1212,6 +1227,27 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\platform\opengl\GLDirectCommandList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\ClearDepthStencilBufferCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\opengl\GLClearRenderTargetCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\ClearDepthBufferCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\graphics\ClearStencilBufferCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\opengl\GLClearStencilBufferCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\opengl\GLClearDepthBufferCommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\platform\opengl\GLClearDepthStencilBufferCommand.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

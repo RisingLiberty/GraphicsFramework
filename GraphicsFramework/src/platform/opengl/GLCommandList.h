@@ -41,12 +41,6 @@ public:
 
 	void BindShaderProgram(unsigned int id);
 
-	void* MapVertexBuffer(unsigned int size, unsigned int flags = GL_MAP_READ_BIT);
-	void* MapIndexBuffer(unsigned int size, unsigned int flags = GL_MAP_READ_BIT);
-
-	void UnmapVertexBuffer();
-	void UnmapIndexBuffer();
-
 	void ClearColorBuffer();
 	void ClearDepthStencilBuffer();
 	void ClearDepthBuffer();

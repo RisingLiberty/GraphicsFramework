@@ -2,7 +2,8 @@
 
 #include "ClearRenderTargetCommand.h"
 
-ClearRenderTargetCommand::ClearRenderTargetCommand()
+ClearRenderTargetCommand::ClearRenderTargetCommand(const std::array<float, 4>& clearColor):
+	m_clear_color(clearColor)
 {
 
 }

@@ -168,8 +168,10 @@
     <ClCompile Include="src\graphics\BindVertexLayoutCommand.cpp" />
     <ClCompile Include="src\graphics\Buffer.cpp" />
     <ClCompile Include="src\graphics\BufferHelpers.cpp" />
-    <ClCompile Include="src\graphics\ClearDepthStencilCommand.cpp" />
+    <ClCompile Include="src\graphics\ClearDepthBufferCommand.cpp" />
+    <ClCompile Include="src\graphics\ClearDepthStencilBufferCommand.cpp" />
     <ClCompile Include="src\graphics\ClearRenderTargetCommand.cpp" />
+    <ClCompile Include="src\graphics\ClearStencilBufferCommand.cpp" />
     <ClCompile Include="src\graphics\Command.cpp" />
     <ClCompile Include="src\graphics\CommandList.cpp" />
     <ClCompile Include="src\graphics\CommandQueue.cpp" />
@@ -274,6 +276,10 @@
     <ClCompile Include="src\platform\opengl\GLBindVertexBufferCommand.cpp" />
     <ClCompile Include="src\platform\opengl\GLBindVertexLayoutCommand.cpp" />
     <ClCompile Include="src\platform\opengl\GLBufferWrapper.cpp" />
+    <ClCompile Include="src\platform\opengl\GLClearDepthBufferCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLClearDepthStencilBufferCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLClearRenderTargetCommand.cpp" />
+    <ClCompile Include="src\platform\opengl\GLClearStencilBufferCommand.cpp" />
     <ClCompile Include="src\platform\opengl\GLCommandList.cpp" />
     <ClCompile Include="src\platform\opengl\GLCommandQueue.cpp" />
     <ClCompile Include="src\platform\opengl\GLCopyBufferCommand.cpp" />
@@ -388,8 +394,10 @@
     <ClInclude Include="src\graphics\Buffer.h" />
     <ClInclude Include="src\graphics\BufferHelpers.h" />
     <ClInclude Include="src\graphics\BufferUsage.h" />
-    <ClInclude Include="src\graphics\ClearDepthStencilCommand.h" />
+    <ClInclude Include="src\graphics\ClearDepthBufferCommand.h" />
+    <ClInclude Include="src\graphics\ClearDepthStencilBufferCommand.h" />
     <ClInclude Include="src\graphics\ClearRenderTargetCommand.h" />
+    <ClInclude Include="src\graphics\ClearStencilBufferCommand.h" />
     <ClInclude Include="src\graphics\Command.h" />
     <ClInclude Include="src\graphics\CommandList.h" />
     <ClInclude Include="src\graphics\CommandQueue.h" />
@@ -496,6 +504,10 @@
     <ClInclude Include="src\platform\opengl\GLBindVertexBufferCommand.h" />
     <ClInclude Include="src\platform\opengl\GLBindVertexLayoutCommand.h" />
     <ClInclude Include="src\platform\opengl\GLBufferWrapper.h" />
+    <ClInclude Include="src\platform\opengl\GLClearDepthBufferCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLClearDepthStencilBufferCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLClearRenderTargetCommand.h" />
+    <ClInclude Include="src\platform\opengl\GLClearStencilBufferCommand.h" />
     <ClInclude Include="src\platform\opengl\GLCommandList.h" />
     <ClInclude Include="src\platform\opengl\GLCommandQueue.h" />
     <ClInclude Include="src\platform\opengl\GLCommands.h" />

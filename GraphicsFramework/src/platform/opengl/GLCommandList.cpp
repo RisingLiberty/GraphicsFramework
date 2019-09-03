@@ -177,28 +177,6 @@ void GLCommandList::BindShaderProgram(unsigned int id)
 	GLCALL(glUseProgram(id));
 }
 
-void* GLCommandList::MapVertexBuffer(unsigned int size, unsigned int flags)
-{
-	unsigned int offset = 0;
-	return glMapBufferRange(GL_ARRAY_BUFFER, offset, size, flags);
-}
-
-void* GLCommandList::MapIndexBuffer(unsigned int size, unsigned int flags)
-{
-	unsigned int offset = 0;
-	return glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, offset, size, flags);
-}
-
-void GLCommandList::UnmapVertexBuffer()
-{
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-}
-
-void GLCommandList::UnmapIndexBuffer()
-{
-	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-}
-
 void GLCommandList::ClearColorBuffer()
 {
 	glClear(GL_COLOR_BUFFER_BIT);

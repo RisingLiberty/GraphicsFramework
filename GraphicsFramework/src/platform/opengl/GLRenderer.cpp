@@ -18,6 +18,11 @@
 
 #include "GLDrawIndexedCommand.h"
 
+#include "GLClearRenderTargetCommand.h"
+#include "GLClearDepthStencilBufferCommand.h"
+#include "GLClearDepthBufferCommand.h"
+#include "GLClearStencilBufferCommand.h"
+
 namespace
 {
 	unsigned int* NULL_OFFSET = nullptr;
@@ -25,7 +30,6 @@ namespace
 
 GLRenderer::GLRenderer()
 {
-	GetGLCommandList()->SetClearColor(m_clear_color);
 	ImGui_ImplOpenGL3_Init("#version 330");
 }
 
@@ -58,28 +62,28 @@ void GLRenderer::Draw()
 
 void GLRenderer::ClearAllBuffers()
 {
-	GetGLCommandList()->ClearColorBuffer();
-	GetGLCommandList()->ClearDepthStencilBuffer();
+	GetGLCommandList()->Push(std::make_unique<GLClearRenderTargetCommand>(m_clear_color));
+	GetGLCommandList()->Push(std::make_unique<GLClearDepthStencilBufferCommand>(1.0f, 0));
 }
 
 void GLRenderer::ClearColorBuffer()
 {
-	GetGLCommandList()->ClearColorBuffer();
+	GetGLCommandList()->Push(std::make_unique<GLClearRenderTargetCommand>(m_clear_color));
 }
 
 void GLRenderer::ClearDepthStencilBuffer()
 {
-	GetGLCommandList()->ClearDepthStencilBuffer();
+	GetGLCommandList()->Push(std::make_unique<GLClearDepthStencilBufferCommand>(1.0f, 0));
 }
 
 void GLRenderer::ClearDepthBuffer()
 {
-	GetGLCommandList()->ClearDepthBuffer();
+	GetGLCommandList()->Push(std::make_unique<GLClearDepthBufferCommand>(1.0f));
 }
 
 void GLRenderer::ClearStencilBuffer()
 {
-	GetGLCommandList()->ClearStencilBuffer();
+	GetGLCommandList()->Push(std::make_unique<GLClearStencilBufferCommand>(0));
 }
 
 void GLRenderer::RenderImgui()
