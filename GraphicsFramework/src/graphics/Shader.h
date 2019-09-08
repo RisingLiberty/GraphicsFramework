@@ -15,7 +15,7 @@ public:
 	const std::string& GetPath() const;
 	virtual Type GetType() const = 0;
 protected:
-	virtual int Compile() = 0;
+	virtual void Compile() = 0;
 
 protected:
 	std::string m_path;

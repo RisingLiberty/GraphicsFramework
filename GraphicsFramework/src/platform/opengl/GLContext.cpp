@@ -91,7 +91,7 @@ API GLContext::GetApiType() const
 
 void GLContext::InitializeRasterizer()
 {
-	m_command_list->As<GLCommandList>()->SetRasterizerState(m_rasterizer_settings);
+	m_command_list->Push(std::make_unique<GLSetRasterizerCommand>(m_rasterizer_settings));
 }
 
 GLCommandList* GLContext::GetCommandList() const
@@ -126,7 +126,8 @@ void GLContext::UnbindVertexArrayInternal(const VertexArray* vertexArray)
 
 void GLContext::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
-	m_command_list->As<GLCommandList>()->BindShaderProgram(shaderProgram->As<GLShaderProgram>()->GetId());
+	m_command_list->Push(std::make_unique<GLBindShaderProgramCommand>(shaderProgram->As<GLShaderProgram>()->GetId()));
+//	m_command_list->As<GLCommandList>()->BindShaderProgram(shaderProgram->As<GLShaderProgram>()->GetId());
 }
 
 void GLContext::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram)

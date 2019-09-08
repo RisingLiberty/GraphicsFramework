@@ -13,7 +13,7 @@ public:
 
 
 protected:
-	int Compile();
+	virtual void Compile();
 
 private:
 	VkShaderModule m_module;

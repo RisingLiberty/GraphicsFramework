@@ -3,8 +3,8 @@
 enum class UniformDataType
 {
 	UNSPECIFIED,
-
 	INT,
+	UNSIGNED_INT,
 	FLOAT,
 	VEC2,
 	VEC3,

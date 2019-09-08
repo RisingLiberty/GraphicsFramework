@@ -11,7 +11,7 @@ public:
 	unsigned int GetId() const;
 
 protected:
-	int Compile() override;
+	void Compile() override;
 
 private:
 	unsigned int m_id;

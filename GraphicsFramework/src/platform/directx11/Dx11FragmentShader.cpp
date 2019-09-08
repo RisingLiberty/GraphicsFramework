@@ -55,7 +55,7 @@ ID3D11PixelShader* Dx11FragmentShader::GetShader() const
 	return m_shader.Get();
 }
 
-int Dx11FragmentShader::Compile()
+void Dx11FragmentShader::Compile()
 {
 	unsigned int compile_flags = 0;
 #if defined _DEBUG
@@ -69,6 +69,4 @@ int Dx11FragmentShader::Compile()
 	ASSERT(!error_blob, (char*)error_blob->GetBufferPointer());
 
 	DXCALL(GetDx11Context()->GetDevice()->CreatePixelShader(m_compiled_code->GetBufferPointer(), m_compiled_code->GetBufferSize(), NULL, m_shader.ReleaseAndGetAddressOf()));
-
-	return S_OK;
 }

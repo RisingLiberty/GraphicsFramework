@@ -134,8 +134,8 @@ void Context::BindVertexArray(const VertexArray* vertexArray)
 	{
 		const IndexBuffer* ib = m_bound_index_buffer;
 		this->UnbindIndexBuffer(m_bound_index_buffer);
-		//m_bound_index_buffer = nullptr; // reset index buffer
 		m_bound_vertex_array = vertexArray;
+
 		if (ib)
 			this->BindIndexBuffer(ib);
 		this->BindVertexArrayInternal(vertexArray);

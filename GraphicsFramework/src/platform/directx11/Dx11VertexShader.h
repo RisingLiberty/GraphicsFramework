@@ -13,7 +13,7 @@ public:
 	ID3D11VertexShader* GetShader() const;
 
 protected:
-	int Compile() override;
+	virtual void Compile() override;
 
 private:
 	ComPtr<ID3DBlob> m_compiled_code;

@@ -39,7 +39,7 @@ Dx12VertexShader::~Dx12VertexShader()
 
 }
 
-int Dx12VertexShader::Compile()
+void Dx12VertexShader::Compile()
 {
 	UINT compiler_flags = 0;
 #ifdef _DEBUG
@@ -47,13 +47,11 @@ int Dx12VertexShader::Compile()
 #endif // _DEBUG
 
 	ComPtr<ID3DBlob> errors;
-	std::wstring wide_code(m_path.begin(), m_path.end());
-	DXCALL(D3DCompileFromFile(wide_code.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VSMain", "vs_5_0", compiler_flags, 0, m_compiled_code.ReleaseAndGetAddressOf(), errors.GetAddressOf()));
+	std::wstring wide_path(m_path.begin(), m_path.end());
+	DXCALL(D3DCompileFromFile(wide_path.c_str(), NULL, D3D_COMPILE_STANDARD_FILE_INCLUDE, "VSMain", "vs_5_0", compiler_flags, 0, m_compiled_code.ReleaseAndGetAddressOf(), errors.GetAddressOf()));
 
 	if (errors)
 		spdlog::error("error compiling shader: {}", (char*)errors->GetBufferPointer());
-
-	return S_OK;
 }
 
 const std::string& Dx12VertexShader::GetCode() const

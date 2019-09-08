@@ -50,9 +50,8 @@ VkFragmentShader::~VkFragmentShader()
 	vkDestroyShaderModule(GetVkDevice(), m_module, GetVkAllocationCallbacks());
 }
 
-int VkFragmentShader::Compile()
+void VkFragmentShader::Compile()
 {
-	return 0;
 }
 
 const std::string& VkFragmentShader::GetCode() const

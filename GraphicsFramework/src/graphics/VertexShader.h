@@ -14,5 +14,5 @@ public:
 
 	Type GetType() const override final;
 protected:
-	virtual int Compile() override = 0;
+	virtual void Compile() override = 0;
 };

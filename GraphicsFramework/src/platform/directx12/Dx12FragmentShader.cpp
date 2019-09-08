@@ -39,7 +39,7 @@ Dx12FragmentShader::~Dx12FragmentShader()
 
 }
 
-int Dx12FragmentShader::Compile()
+void Dx12FragmentShader::Compile()
 {
 	UINT compiler_flags = 0;
 #ifdef _DEBUG
@@ -52,9 +52,6 @@ int Dx12FragmentShader::Compile()
 
 	if (errors)
 		spdlog::error("error compiling shader: {}", (char*)errors->GetBufferPointer());
-
-	return S_OK;
-
 }
 
 const std::string& Dx12FragmentShader::GetCode() const

@@ -48,9 +48,8 @@ VkVertexShader::~VkVertexShader()
 	vkDestroyShaderModule(GetVkDevice(), m_module, GetVkAllocationCallbacks());
 }
 
-int VkVertexShader::Compile()
+void VkVertexShader::Compile()
 {
-	return 0;
 }
 
 const std::string& VkVertexShader::GetCode() const

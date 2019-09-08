@@ -12,7 +12,7 @@ public:
 	const VkPipelineShaderStageCreateInfo& GetPipelineShaderStageCreateInfo() const;
 
 protected:
-	virtual int Compile() override;
+	virtual void Compile() override;
 
 private:
 	VkShaderModule m_module;
