@@ -8,10 +8,10 @@
 
 #include <GL/glew.h>
 
-#include "GLBindVertexLayoutCommand.h"
+#include "commands/GLBindVertexLayoutCommand.h"
 
-#include "GLCreateVertexArrayCommand.h"
-#include "GLDeleteVertexArrayCommand.h"
+#include "commands/GLCreateVertexArrayCommand.h"
+#include "commands/GLDeleteVertexArrayCommand.h"
 
 GLVertexArray::GLVertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	VertexArray(vb, layout)

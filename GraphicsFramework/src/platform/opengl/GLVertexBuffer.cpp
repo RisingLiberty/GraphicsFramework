@@ -3,7 +3,7 @@
 #include "GLVertexBuffer.h"
 #include "GLHelperMethods.h"
 
-#include "GLBindVertexBufferCommand.h"
+#include "commands/GLBindVertexBufferCommand.h"
 
 GLVertexBuffer::GLVertexBuffer(unsigned int size, BufferUsage usage, BufferAccess access, const void* data) :
 	VertexBuffer(size),

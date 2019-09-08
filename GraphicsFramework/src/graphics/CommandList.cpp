@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "CommandList.h"
-#include "Command.h"
+#include "commands/Command.h"
 
 CommandList::CommandList():
 	m_is_open(false)

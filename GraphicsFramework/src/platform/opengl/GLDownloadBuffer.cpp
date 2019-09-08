@@ -4,19 +4,19 @@
 #include "GLVertexBuffer.h"
 #include "GLHelperMethods.h"
 
-#include "GLCreateBufferCommand.h"
-#include "GLBindCopyDestBufferCommand.h"
-#include "GLSetBufferDataCommand.h"
+#include "commands/GLCreateBufferCommand.h"
+#include "commands/GLBindCopyDestBufferCommand.h"
+#include "commands/GLSetBufferDataCommand.h"
 
-#include "GLBindCopySrcBufferCommand.h"
-#include "GLBindCopyDestBufferCommand.h"
-#include "GLCopyBufferCommand.h"
+#include "commands/GLBindCopySrcBufferCommand.h"
+#include "commands/GLBindCopyDestBufferCommand.h"
+#include "commands/GLCopyBufferCommand.h"
 
-#include "GLDeleteBufferCommand.h"
+#include "commands/GLDeleteBufferCommand.h"
 
-#include "GLMapBufferCommand.h"
-#include "graphics/CopyToPointerCommand.h"
-#include "GLUnmapBufferCommand.h"
+#include "commands/GLMapBufferCommand.h"
+#include "graphics/commands/CopyToPointerCommand.h"
+#include "commands/GLUnmapBufferCommand.h"
 
 #include "GLDirectCommandList.h"
 

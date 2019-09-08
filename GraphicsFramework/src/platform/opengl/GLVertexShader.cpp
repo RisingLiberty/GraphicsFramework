@@ -3,10 +3,10 @@
 #include "GLVertexShader.h"
 #include "GLHelperMethods.h"
 
-#include "GLCreateShaderCommand.h"
-#include "GLCompileShaderCommand.h"
-#include "GLSetShaderSourceCommand.h"
-#include "GLDeleteShaderCommand.h"
+#include "commands/GLCreateShaderCommand.h"
+#include "commands/GLCompileShaderCommand.h"
+#include "commands/GLSetShaderSourceCommand.h"
+#include "commands/GLDeleteShaderCommand.h"
 
 #include "GLDirectCommandList.h"
 

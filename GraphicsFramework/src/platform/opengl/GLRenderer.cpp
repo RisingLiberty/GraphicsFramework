@@ -16,12 +16,12 @@
 #include "GLVertexShader.h"
 #include "GLFragmentShader.h"
 
-#include "GLDrawIndexedCommand.h"
+#include "commands/GLDrawIndexedCommand.h"
 
-#include "GLClearRenderTargetCommand.h"
-#include "GLClearDepthStencilBufferCommand.h"
-#include "GLClearDepthBufferCommand.h"
-#include "GLClearStencilBufferCommand.h"
+#include "commands/GLClearRenderTargetCommand.h"
+#include "commands/GLClearDepthStencilBufferCommand.h"
+#include "commands/GLClearDepthBufferCommand.h"
+#include "commands/GLClearStencilBufferCommand.h"
 
 #include "GLDirectCommandList.h"
 

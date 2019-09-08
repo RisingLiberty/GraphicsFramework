@@ -4,19 +4,19 @@
 #include "GLVertexShader.h"
 #include "GLFragmentShader.h"
 
-#include "GLAttachShaderCommand.h"
-#include "GLLinkProgramCommand.h"
-#include "GLValidateProgramCommand.h"
-#include "GLDetachShaderCommand.h"
-#include "GLLoadUniformsCommand.h"
+#include "commands/GLAttachShaderCommand.h"
+#include "commands/GLLinkProgramCommand.h"
+#include "commands/GLValidateProgramCommand.h"
+#include "commands/GLDetachShaderCommand.h"
+#include "commands/GLLoadUniformsCommand.h"
 
-#include "GLCreateShaderProgramCommand.h"
-#include "GLDeleteShaderProgramCommand.h"
+#include "commands/GLCreateShaderProgramCommand.h"
+#include "commands/GLDeleteShaderProgramCommand.h"
 
-#include "GLBindShaderProgramCommand.h"
-#include "GLUploadUniformCommand.h"
+#include "commands/GLBindShaderProgramCommand.h"
+#include "commands/GLUploadUniformCommand.h"
 
-#include "GLGetUniformLocationCommand.h"
+#include "commands/GLGetUniformLocationCommand.h"
 #include "GLDirectCommandList.h"
 
 GLShaderProgram::GLShaderProgram(VertexShader* vs, FragmentShader* fs) :

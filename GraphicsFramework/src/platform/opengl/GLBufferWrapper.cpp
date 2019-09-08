@@ -5,10 +5,10 @@
 #include "GLDownloadBuffer.h"
 
 #include "GLDirectCommandList.h"
-#include "GLCreateBufferCommand.h"
-#include "GLBindIndexBufferCommand.h"
-#include "GLSetBufferDataCommand.h"
-#include "GLDeleteBufferCommand.h"
+#include "commands/GLCreateBufferCommand.h"
+#include "commands/GLBindIndexBufferCommand.h"
+#include "commands/GLSetBufferDataCommand.h"
+#include "commands/GLDeleteBufferCommand.h"
 
 GLBufferWrapper::GLBufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, BufferType type, const void* data) :
 	ApiBufferWrapper(usage, access),
