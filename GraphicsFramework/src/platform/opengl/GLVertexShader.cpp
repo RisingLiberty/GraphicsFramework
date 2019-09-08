@@ -3,8 +3,10 @@
 #include "GLVertexShader.h"
 #include "GLHelperMethods.h"
 
+#include "GLCreateShaderCommand.h"
 #include "GLCompileShaderCommand.h"
 #include "GLSetShaderSourceCommand.h"
+#include "GLDeleteShaderCommand.h"
 
 #include "GLDirectCommandList.h"
 
@@ -36,14 +38,13 @@ namespace
 GLVertexShader::GLVertexShader(const std::string& path) :
 	VertexShader(path)
 {
-	std::unique_ptr<GLDirectCommandList> direct_cmd_list = GetGLContext()->CreateDirectCommandList();
-	m_id = direct_cmd_list->CreateShader(GL_VERTEX_SHADER);
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLCreateShaderCommand>(ShaderType::VERTEX, &m_id));
 	this->Compile();
 }
 
 GLVertexShader::~GLVertexShader()
 {
-	GetGLCommandList()->DeleteShader(m_id);
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLDeleteShaderCommand>(m_id));
 }
 
 void GLVertexShader::Compile()
@@ -55,8 +56,6 @@ void GLVertexShader::Compile()
 
 	direct_cmd_list->Push(std::make_unique<GLSetShaderSourceCommand>(m_id, source));
 	direct_cmd_list->Push(std::make_unique<GLCompileShaderCommand>(m_id));
-	//GetGLCommandList()->SetShaderSource(m_id, code);
-	//GetGLCommandList()->CompileShader(m_id);
 }
 
 unsigned int GLVertexShader::GetId() const

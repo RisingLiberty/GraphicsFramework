@@ -38,10 +38,10 @@ std::array<VkPipelineShaderStageCreateInfo, 2> VkShaderProgram::GetPipelineShade
 void VkShaderProgram::UploadVariables() const
 {
 	unsigned int offset = 0;
+	byte* data;
 	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
 	{
-		byte* data;
-		vkMapMemory(GetVkDevice(), m_uniform_buffer_memory, 0, uniform->size, 0, (void**)&data);
+		vkMapMemory(GetVkDevice(), m_uniform_buffer_memory, offset, uniform->size, 0, (void**)&data);
 		memcpy(&data[offset], uniform->data, uniform->size);
 		vkUnmapMemory(GetVkDevice(), m_uniform_buffer_memory);
 		offset += uniform->size;

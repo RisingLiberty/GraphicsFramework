@@ -3,8 +3,10 @@
 #include "GLFragmentShader.h"
 #include "GLHelperMethods.h"
 
+#include "GLCreateShaderCommand.h"
 #include "GLCompileShaderCommand.h"
 #include "GLSetShaderSourceCommand.h"
+#include "GLDeleteShaderCommand.h"
 
 #include "GLDirectCommandList.h"
 
@@ -36,14 +38,13 @@ namespace
 GLFragmentShader::GLFragmentShader(const std::string& path):
 	FragmentShader(path)
 {
-	std::unique_ptr<GLDirectCommandList> direct_cmd_list = GetGLContext()->CreateDirectCommandList();
-	m_id = direct_cmd_list->CreateShader(GL_FRAGMENT_SHADER);
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLCreateShaderCommand>(ShaderType::FRAGMENT, &m_id));
 	this->Compile();
 }
 
 GLFragmentShader::~GLFragmentShader()
 {
-	GetGLCommandList()->DeleteShader(m_id);
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLDeleteShaderCommand>(m_id));
 }
 
 void GLFragmentShader::Compile()

@@ -2,7 +2,8 @@
 
 #include "GLDirectCommandList.h"
 
-GLDirectCommandList::GLDirectCommandList()
+GLDirectCommandList::GLDirectCommandList():
+	m_has_executed(false)
 {
 	this->Open();
 }
@@ -10,5 +11,12 @@ GLDirectCommandList::GLDirectCommandList()
 GLDirectCommandList::~GLDirectCommandList()
 {
 	this->Close();
-	this->Execute();
+	if (!m_has_executed)
+		this->Execute();
+}
+
+void GLDirectCommandList::Execute()
+{
+	GLCommandList::Execute();
+	m_has_executed = true;
 }

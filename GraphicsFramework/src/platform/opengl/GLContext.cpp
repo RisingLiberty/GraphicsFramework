@@ -104,6 +104,12 @@ std::unique_ptr<GLDirectCommandList> GLContext::CreateDirectCommandList() const
 	return m_command_queue->As<GLCommandQueue>()->CreateDirectCommandList();
 }
 
+void GLContext::ExecuteDirectCommand(std::unique_ptr<Command> command) const
+{
+	std::unique_ptr<GLDirectCommandList> direct_cmd_list = this->CreateDirectCommandList();
+	direct_cmd_list->Push(std::move(command));
+}
+
 void GLContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
 	m_command_list->Push(std::make_unique<GLBindIndexBufferCommand>(indexBuffer));
@@ -132,5 +138,5 @@ void GLContext::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
 
 void GLContext::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
-	m_command_list->As<GLCommandList>()->BindShaderProgram(0);
+	//m_command_list->As<GLCommandList>()->BindShaderProgram(0);
 }

@@ -24,6 +24,22 @@ SceneObject::~SceneObject()
 void SceneObject::Update(float dTime)
 {
 	UNREFERENCED_PARAMETER(dTime);
+	static float direction = 1.0f;
+	static float color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	color[1] += dTime * direction;
+
+	if (color[1] >= 1.0f)
+	{
+		color[1] = 1.0f;
+		direction *= -1;
+	}
+	else if (color[1] <= 0.0f)
+	{
+		color[1] = 0.0f;
+		direction *= -1;
+	}
+
+	m_material->SetParameter("u_Color", color);
 }
 
 void SceneObject::Draw()

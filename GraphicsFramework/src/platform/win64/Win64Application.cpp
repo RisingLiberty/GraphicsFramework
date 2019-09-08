@@ -140,9 +140,9 @@ void Win64Application::Draw()
 	Context::GetCurrent()->GetRenderer()->Begin();
 	m_scene_controller->Draw();
 	Context::GetCurrent()->GetRenderer()->Draw();
-	Context::GetCurrent()->GetRenderer()->RenderImgui();
 	Context::GetCurrent()->GetRenderer()->End();
 	Context::GetCurrent()->End();
+	Context::GetCurrent()->GetRenderer()->RenderImgui();
 }
 
 void Win64Application::OnEvent(const Event& event)

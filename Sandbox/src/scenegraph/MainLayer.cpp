@@ -34,5 +34,5 @@ MainLayer::~MainLayer()
 
 void MainLayer::Update(float dTime)
 {
-
+	Layer3D::Update(dTime);
 }

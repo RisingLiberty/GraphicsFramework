@@ -10,9 +10,13 @@
 #include "GLDetachShaderCommand.h"
 #include "GLLoadUniformsCommand.h"
 
+#include "GLCreateShaderProgramCommand.h"
+#include "GLDeleteShaderProgramCommand.h"
+
 #include "GLBindShaderProgramCommand.h"
 #include "GLUploadUniformCommand.h"
 
+#include "GLGetUniformLocationCommand.h"
 #include "GLDirectCommandList.h"
 
 GLShaderProgram::GLShaderProgram(VertexShader* vs, FragmentShader* fs) :
@@ -31,19 +35,19 @@ GLShaderProgram::GLShaderProgram(VertexShader* vs, FragmentShader* fs) :
 
 GLShaderProgram::~GLShaderProgram()
 {
-	GetGLCommandList()->DeleteProgram(m_id);
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLDeleteShaderProgramCommand>(m_id));
 }
 
 void GLShaderProgram::LoadUniforms()
 {
-	std::unique_ptr<GLDirectCommandList> direct_cmd_list = GetGLContext()->CreateDirectCommandList();
-	direct_cmd_list->Push(std::make_unique<GLLoadUniformsCommand>(m_id, m_uniforms));
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLLoadUniformsCommand>(m_id, m_uniforms));
 }
 
 void GLShaderProgram::Create(const std::vector<unsigned int>& shaderIDs)
 {
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLCreateShaderProgramCommand>(&m_id));
+
 	std::unique_ptr<GLDirectCommandList> direct_cmd_list = GetGLContext()->CreateDirectCommandList();
-	m_id = direct_cmd_list->CreateProgram();
 
 	for (unsigned int id : shaderIDs)
 		direct_cmd_list->Push(std::make_unique<GLAttachShaderCommand>(m_id, id));
@@ -69,7 +73,9 @@ int GLShaderProgram::GetUniformLocation(const std::string& name) const
 	if (m_uniform_location_cache.find(name) != m_uniform_location_cache.end())
 		return m_uniform_location_cache[name];
 
-	int location = GetGLCommandList()->GetUniformLocation(m_id, name.c_str());
+	int location;
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLGetUniformLocationCommand>(m_id, name, &location));
+
 	if (location == -1)
 	{
 		spdlog::warn("Uniform '{}' not found in shader or doesn't exists", name);

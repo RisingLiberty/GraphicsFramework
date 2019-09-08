@@ -6,6 +6,7 @@ class Window;
 class GLCommandQueue;
 class GLCommandList;
 class GLDirectCommandList;
+class Command;
 
 using HandleGLRenderingContext = HGLRC;
 
@@ -27,6 +28,7 @@ public:
 
 	GLCommandList* GetCommandList() const;
 	std::unique_ptr<GLDirectCommandList> CreateDirectCommandList() const;
+	void ExecuteDirectCommand(std::unique_ptr<Command> command) const;
 
 protected:
 	void BindIndexBufferInternal(const IndexBuffer* indexBuffer) override;

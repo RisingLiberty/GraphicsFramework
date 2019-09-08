@@ -23,6 +23,8 @@
 #include "GLClearDepthBufferCommand.h"
 #include "GLClearStencilBufferCommand.h"
 
+#include "GLDirectCommandList.h"
+
 namespace
 {
 	unsigned int* NULL_OFFSET = nullptr;

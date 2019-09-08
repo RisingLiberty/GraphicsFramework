@@ -4,6 +4,7 @@
 #include "GLHelperMethods.h"
 #include "GLDownloadBuffer.h"
 
+#include "GLDirectCommandList.h"
 #include "GLCreateBufferCommand.h"
 #include "GLBindIndexBufferCommand.h"
 #include "GLSetBufferDataCommand.h"
@@ -13,14 +14,12 @@ GLBufferWrapper::GLBufferWrapper(unsigned int size, BufferUsage usage, BufferAcc
 	ApiBufferWrapper(usage, access),
 	m_type(type)
 {
-	GLCALL(glGenBuffers(1, &m_id));
-	//GetGLCommandList()->Push(std::make_unique<GLCreateBufferCommand>(&m_id));
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLCreateBufferCommand>(&m_id));
 }
 
 GLBufferWrapper::~GLBufferWrapper()
 {
-	GLCALL(glDeleteBuffers(1, &m_id));
-	//GetGLCommandList()->Push(std::make_unique<GLDeleteBufferCommand>(m_id));
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLDeleteBufferCommand>(m_id));
 }
 
 BufferType GLBufferWrapper::GetType() const

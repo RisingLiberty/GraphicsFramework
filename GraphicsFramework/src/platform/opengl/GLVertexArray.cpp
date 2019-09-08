@@ -10,17 +10,19 @@
 
 #include "GLBindVertexLayoutCommand.h"
 
+#include "GLCreateVertexArrayCommand.h"
+#include "GLDeleteVertexArrayCommand.h"
+
 GLVertexArray::GLVertexArray(const VertexBuffer* vb, const VertexLayout* layout):
 	VertexArray(vb, layout)
 {
-	m_id = GetGLCommandList()->CreateVertexArray();
-
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLCreateVertexArrayCommand>(&m_id));
 	this->EnableAttributes();
 }
 
 GLVertexArray::~GLVertexArray()
 {
-	GetGLCommandList()->DeleteVertexArray(m_id);
+	GetGLContext()->ExecuteDirectCommand(std::make_unique<GLDeleteVertexArrayCommand>(&m_id));
 }
 
 unsigned int GLVertexArray::GetId() const
