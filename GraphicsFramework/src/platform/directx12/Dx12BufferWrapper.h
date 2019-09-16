@@ -2,6 +2,8 @@
 
 #include "graphics/ApiBufferWrapper.h"
 
+class Dx12Resource;
+
 class Dx12BufferWrapper : public ApiBufferWrapper
 {
 public:
@@ -16,6 +18,6 @@ protected:
 
 private:
 	ComPtr<ID3DBlob> m_buffer_cpu;
-	ComPtr<ID3D12Resource> m_buffer_gpu;
+	std::unique_ptr<Dx12Resource> m_buffer_gpu;
 	ComPtr<ID3D12Resource> m_upload_buffer;
 };

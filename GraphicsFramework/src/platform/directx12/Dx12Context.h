@@ -29,6 +29,8 @@ class Dx12Swapchain;
 class Dx12DepthStencilBuffer;
 class Dx12PipelineState;
 
+class Dx12CommandList;
+
 class Dx12Context : public Context
 {
 public:
@@ -43,8 +45,8 @@ public:
 	virtual API GetApiType() const override;
 
 	ID3D12Device* GetDevice() const;
-	ID3D12CommandQueue* GetCommandQueue() const;
-	ID3D12GraphicsCommandList* GetCommandList() const;
+	Dx12CommandQueue* GetCommandQueue() const;
+	Dx12CommandList* GetCommandList() const;
 	IDXGIFactory* GetDxgiFactory() const;
 	std::unique_ptr<Dx12CommandList> CreateDirectCommandList() const;
 

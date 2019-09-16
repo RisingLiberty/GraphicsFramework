@@ -12,6 +12,11 @@
 #include "Dx11HelperMethods.h"
 #include "Dx11CommandList.h"
 
+#include "commands/Dx11MapBufferCommand.h"
+#include "commands/Dx11UnmapBufferCommand.h"
+#include "commands/Dx11SetVsConstantBufferCommand.h"
+#include "commands/Dx11SetPsConstantBufferCommand.h"
+
 Dx11ShaderProgram::Dx11ShaderProgram(VertexShader* vs, FragmentShader* fs):
 	ShaderProgram(vs, fs)
 {
@@ -75,11 +80,13 @@ void Dx11ShaderProgram::UploadVertexConstantBuffer() const
 	D3D11_MAPPED_SUBRESOURCE msr;
 	ZeroMemory(&msr, sizeof(msr));
 
-	GetDx11CommandList()->Map(m_vs_constant_buffer->buffer.Get(), D3D11_MAP_WRITE_DISCARD, msr);
+	std::unique_ptr<Dx11CommandList> direct_cmd_list = GetDx11Context()->CreateDirectCommandList();
+	direct_cmd_list->Push(std::make_unique<Dx11MapBufferCommand>(m_vs_constant_buffer.get(), D3D11_MAP_WRITE_DISCARD, &msr, 0, 0));
+	direct_cmd_list->Execute();
 	memcpy(msr.pData, vertex_constant_buffer, m_vs_constant_buffer->size);
-	GetDx11CommandList()->Unmap(m_vs_constant_buffer->buffer.Get());
+	GetDx11CommandList()->Push(std::make_unique<Dx11UnmapBufferCommand>(m_vs_constant_buffer.get()));
 
-	GetDx11CommandList()->SetVSConstantBuffer(m_vs_constant_buffer->reg, 1, m_vs_constant_buffer->buffer.Get());
+	GetDx11CommandList()->Push(std::make_unique<Dx11SetVsConstantBufferCommand>(m_vs_constant_buffer->reg, m_vs_constant_buffer->buffer.Get()));
 }
 
 void Dx11ShaderProgram::UploadFragmentConstantBuffer() const
@@ -104,9 +111,17 @@ void Dx11ShaderProgram::UploadFragmentConstantBuffer() const
 	D3D11_MAPPED_SUBRESOURCE msr;
 	ZeroMemory(&msr, sizeof(msr));
 
-	GetDx11CommandList()->Map(m_fs_constant_buffer->buffer.Get(), D3D11_MAP_WRITE_DISCARD, msr);
-	memcpy(msr.pData, fragment_constant_buffer, m_fs_constant_buffer->size);
-	GetDx11CommandList()->Unmap(m_fs_constant_buffer->buffer.Get());
+	std::unique_ptr<Dx11CommandList> direct_cmd_list = GetDx11Context()->CreateDirectCommandList();
+	direct_cmd_list->Push(std::make_unique<Dx11MapBufferCommand>(m_fs_constant_buffer.get(), D3D11_MAP_WRITE_DISCARD, &msr, 0, 0));
+	direct_cmd_list->Close();
+	direct_cmd_list->Execute();
 
-	GetDx11CommandList()->SetPSConstantBuffer(m_fs_constant_buffer->reg, 1, m_fs_constant_buffer->buffer.Get());
+	memcpy(msr.pData, fragment_constant_buffer, m_fs_constant_buffer->size);
+
+	direct_cmd_list = GetDx11Context()->CreateDirectCommandList();
+	direct_cmd_list->Push(std::make_unique<Dx11UnmapBufferCommand>(m_fs_constant_buffer.get()));
+	direct_cmd_list->Push(std::make_unique<Dx11SetPsConstantBufferCommand>(m_fs_constant_buffer->reg, m_fs_constant_buffer->buffer.Get()));
+	direct_cmd_list->Close();
+	direct_cmd_list->Execute();
+
 }

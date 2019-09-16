@@ -47,3 +47,8 @@ void CommandList::Execute()
 		m_commands.pop();
 	}
 }
+
+bool CommandList::IsOpen() const
+{
+    return m_is_open;
+}

@@ -4,6 +4,8 @@ class Window;
 
 #include "graphics/BufferHelpers.h"
 
+class Dx12Resource;
+
 class Dx12Swapchain
 {
 public:
@@ -20,7 +22,8 @@ public:
 	DXGI_SWAP_CHAIN_DESC GetDesc() const;
 
 private:
-	std::vector<ComPtr<ID3D12Resource>> m_swapchain_buffers;
+    
+	std::vector<std::unique_ptr<Dx12Resource>> m_swapchain_buffers;
 	ComPtr<IDXGISwapChain> m_swapchain;
 	unsigned int m_buffer_count;
 	bool m_is_v_sync;

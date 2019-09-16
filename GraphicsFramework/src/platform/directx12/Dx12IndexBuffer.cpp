@@ -26,7 +26,7 @@ void Dx12IndexBuffer::SetData(const void* data)
 	this->SetDataInternal(data, m_size);
 }
 
-D3D12_INDEX_BUFFER_VIEW Dx12IndexBuffer::GetIndexBufferView() const
+D3D12_INDEX_BUFFER_VIEW Dx12IndexBuffer::GetBufferView() const
 {
 	D3D12_INDEX_BUFFER_VIEW ib_view;
 	ib_view.BufferLocation = this->GetBufferGpu()->GetGPUVirtualAddress();

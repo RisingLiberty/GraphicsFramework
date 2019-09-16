@@ -41,6 +41,13 @@ Dx11Swapchain::~Dx11Swapchain()
 
 }
 
+DXGI_SWAP_CHAIN_DESC Dx11Swapchain::GetDesc() const
+{
+	DXGI_SWAP_CHAIN_DESC desc;
+	m_swapchain->GetDesc(&desc);
+	return desc;
+}
+
 IDXGISwapChain* Dx11Swapchain::GetSwapchain() const
 {
 	return m_swapchain.Get();

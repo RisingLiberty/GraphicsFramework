@@ -1,12 +1,14 @@
 #pragma once
 
+#include "Dx12CommandQueue.h"
+#include "Dx12CommandList.h"
+
 bool CheckD3D12Error(HRESULT result);
 class Dx12Context* GetDx12Context();
 ID3D12Device* GetDx12Device();
-ID3D12CommandQueue* GetDx12CommandQueue();
-ID3D12GraphicsCommandList* GetDx12CommandList();
+Dx12CommandQueue* GetDx12CommandQueue();
+Dx12CommandList* GetDx12CommandList();
 IDXGIFactory* GetDxgiFactory();
-ComPtr<ID3D12Resource> CreateDefaultBuffer(const void* data, unsigned int size, ComPtr<ID3D12Resource>& uploadBuffer);
 
 #ifndef DXCALL
 #define DXCALL(function)\

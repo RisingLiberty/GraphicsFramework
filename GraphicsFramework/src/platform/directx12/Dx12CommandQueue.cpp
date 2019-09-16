@@ -65,7 +65,7 @@ void Dx12CommandQueue::Execute()
 	for (unsigned int i = 0; i < m_command_lists.size(); ++i)
 	{
 		Dx12CommandList* command_list = m_command_lists[i]->As<Dx12CommandList>();
-		if (!command_list->IsClosed())
+		if (command_list->IsOpen())
 			command_list->Close();
 		command_list->Execute();
 		

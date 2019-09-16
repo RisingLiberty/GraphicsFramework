@@ -2,7 +2,9 @@
 
 #include "graphics/DownloadBuffer.h"
 
-class Dx11DownloadBuffer : public DownloadBuffer
+#include "Dx11BufferWrapper.h"
+
+class Dx11DownloadBuffer : public DownloadBuffer, public Dx11BufferWrapper
 {
 public:
 	Dx11DownloadBuffer(unsigned int size);

@@ -5,13 +5,13 @@
 class ClearDepthStencilBufferCommand : public Command
 {
 public:
-	ClearDepthStencilBufferCommand(float depthValue, unsigned int stencilValue);
+	ClearDepthStencilBufferCommand(const float depthValue, const unsigned int stencilValue);
 	virtual ~ClearDepthStencilBufferCommand();
 
 	virtual void Execute() = 0;
 	virtual std::string ToString() const override;
 
 protected:
-	float m_depth_value;
-	unsigned int m_stencil_value;
+	const float m_depth_value;
+	const unsigned int m_stencil_value;
 };

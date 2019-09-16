@@ -5,11 +5,8 @@
 class GLBindShaderProgramCommand : public BindShaderProgramCommand
 {
 public:
-	GLBindShaderProgramCommand(unsigned int programId);
+	GLBindShaderProgramCommand(const ShaderProgram* shaderProgram);
 	virtual ~GLBindShaderProgramCommand();
 
 	virtual void Execute() override;
-
-protected:
-	unsigned int m_program_id;
 };

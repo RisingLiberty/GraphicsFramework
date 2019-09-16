@@ -2,7 +2,7 @@
 
 #include "ClearDepthBufferCommand.h"
 
-ClearDepthBufferCommand::ClearDepthBufferCommand(float depthValue) :
+ClearDepthBufferCommand::ClearDepthBufferCommand(const float depthValue) :
 	m_depth_value(depthValue)
 {
 

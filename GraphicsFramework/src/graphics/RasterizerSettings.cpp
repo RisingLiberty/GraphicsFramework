@@ -10,7 +10,6 @@ void RasterizerSettings::InitializeAsDefault()
 	line_width = 1.0f;
 	cull_mode = ECullMode::NONE;
 	front_face_orientation = EFrontFaceOrientation::CLOCK_WISE;
-	enable_depth_bias = false;
 	depth_bias_constant_factor = 0.0f;
 	depth_bias_clamp = 0.0f;
 	depth_bias_slope_factor = 0.0f;

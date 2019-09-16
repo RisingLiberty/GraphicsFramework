@@ -5,12 +5,12 @@
 class ClearDepthBufferCommand : public Command
 {
 public:
-	ClearDepthBufferCommand(float depthValue);
+	ClearDepthBufferCommand(const float depthValue);
 	virtual ~ClearDepthBufferCommand();
 
 	virtual void Execute() override = 0;
 	virtual std::string ToString() const override;
 
 protected:
-	float m_depth_value;
+	const float m_depth_value;
 };

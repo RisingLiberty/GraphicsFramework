@@ -8,8 +8,10 @@ namespace
 	unsigned int* NULL_OFFSET = nullptr;
 }
 
-GLDrawIndexedCommand::GLDrawIndexedCommand(unsigned int count, Topology topology, Format format):
-	DrawIndexedCommand(count, topology, format)
+GLDrawIndexedCommand::GLDrawIndexedCommand(unsigned int count, const Topology topology, const Format format):
+	DrawIndexedCommand(count),
+	m_topology(topology),
+	m_format(format)
 {
 
 }

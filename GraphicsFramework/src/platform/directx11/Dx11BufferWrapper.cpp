@@ -6,6 +6,9 @@
 
 #include "Dx11CommandList.h"
 
+#include "commands/Dx11MapBufferCommand.h"
+#include "commands/Dx11UnmapBufferCommand.h"
+
 Dx11BufferWrapper::Dx11BufferWrapper(unsigned int size, BufferUsage usage, BufferAccess access, BufferType type, const void* data):
 	ApiBufferWrapper(usage, access)
 {
@@ -50,9 +53,9 @@ void Dx11BufferWrapper::SetDataInternal(const void* data, unsigned int size)
 	this->SetDataInternal(data, size);
 	D3D11_MAPPED_SUBRESOURCE mapped_subresource;
 
-	GetDx11CommandList()->Map(m_buffer.Get(), D3D11_MAP_WRITE_NO_OVERWRITE, mapped_subresource);
+	GetDx11CommandList()->Push(std::make_unique<Dx11MapBufferCommand>(this, D3D11_MAP_WRITE_NO_OVERWRITE, &mapped_subresource));
 	memcpy(mapped_subresource.pData, data, size);
-	GetDx11CommandList()->Unmap(m_buffer.Get());
+	GetDx11CommandList()->Push(std::make_unique<Dx11UnmapBufferCommand>(this));
 }
 
 std::unique_ptr<DownloadBuffer> Dx11BufferWrapper::DownloadDataToBuffer(unsigned int size) const

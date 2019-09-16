@@ -62,7 +62,7 @@ void GLShaderProgram::Create(const std::vector<unsigned int>& shaderIDs)
 void GLShaderProgram::UploadVariables() const
 {
 	std::unique_ptr<GLDirectCommandList> direct_cmd_list = GetGLContext()->CreateDirectCommandList();
-	direct_cmd_list->Push(std::make_unique<GLBindShaderProgramCommand>(m_id));
+	direct_cmd_list->Push(std::make_unique<GLBindShaderProgramCommand>(this));
 
 	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
 		direct_cmd_list->Push(std::make_unique<GLUploadUniformCommand>(GetUniformLocation(uniform->name), uniform.get()));

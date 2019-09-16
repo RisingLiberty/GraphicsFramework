@@ -7,7 +7,7 @@ class ApiBufferWrapper;
 class MapBufferCommand : public Command
 {
 public:
-	MapBufferCommand(const ApiBufferWrapper* buffer, void** data);
+	MapBufferCommand(const ApiBufferWrapper* buffer);
 	virtual ~MapBufferCommand();
 
 	virtual void Execute() override = 0;
@@ -15,5 +15,4 @@ public:
 
 protected:
 	const ApiBufferWrapper* m_buffer;
-	void** m_data;
 };

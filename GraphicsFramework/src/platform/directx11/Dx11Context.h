@@ -29,8 +29,11 @@ public:
 	virtual API GetApiType() const override;
 
 	ID3D11Device* GetDevice() const;
+	ID3D11DeviceContext* GetDeviceContext() const;
 	Dx11CommandList* GetCommandList() const;
 	
+	std::unique_ptr<Dx11CommandList> CreateDirectCommandList() const;
+
 	const Dx11VertexShader* GetBoundVertexShader() const;
 
 protected:

@@ -139,7 +139,7 @@ void Dx12Context::PreInitialize()
 	this->OnResize(sd.BufferDesc.Width, sd.BufferDesc.Height);
 
 	// Reset the command list to prep for initialization commands.
-	m_command_list->As<Dx12CommandList>()->Reset();
+	m_command_list->As<Dx12CommandList>()->Open();
 }
 
 void Dx12Context::Initialize()
@@ -221,7 +221,7 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 	assert(m_device);
 	assert(m_swapchain);
 
-	m_command_list->As<Dx12CommandList>()->Reset();
+	m_command_list->As<Dx12CommandList>()->Open();
 
 	// Release the previous resources we will be recreating.
 	m_depth_stencil_buffer.reset();
@@ -295,14 +295,14 @@ ID3D12Device* Dx12Context::GetDevice() const
 	return m_device.Get();
 }
 
-ID3D12CommandQueue* Dx12Context::GetCommandQueue() const
+Dx12CommandQueue* Dx12Context::GetCommandQueue() const
 {
-	return m_command_queue->As<Dx12CommandQueue>()->GetApiQueue();
+	return m_command_queue->As<Dx12CommandQueue>();
 }
 
-ID3D12GraphicsCommandList* Dx12Context::GetCommandList() const
+Dx12CommandList* Dx12Context::GetCommandList() const
 {
-	return m_command_queue->As<Dx12CommandQueue>()->GetApiCommandList()->GetApiCommandList();
+	return m_command_list->As<Dx12CommandList>();
 }
 
 IDXGIFactory* Dx12Context::GetDxgiFactory() const
@@ -330,7 +330,7 @@ void Dx12Context::BindImgui()
 void Dx12Context::Begin()
 {
 	m_command_list->As<Dx12CommandList>()->ResetAlloc();
-	m_command_list->As<Dx12CommandList>()->Reset();
+	m_command_list->As<Dx12CommandList>()->Open();
 
 	if (m_pipeline_state)
 		m_command_list->As<Dx12CommandList>()->SetPipelineState(m_pipeline_state->GetPipelineState());
@@ -388,7 +388,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE Dx12Context::GetDepthStencilView() const
 
 void Dx12Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	D3D12_INDEX_BUFFER_VIEW ib_view = m_bound_index_buffer->As<Dx12IndexBuffer>()->GetIndexBufferView();
+	D3D12_INDEX_BUFFER_VIEW ib_view = m_bound_index_buffer->As<Dx12IndexBuffer>()->GetBufferView();
 	m_command_list->As<Dx12CommandList>()->SetIndexBuffer(ib_view);
 	m_command_list->As<Dx12CommandList>()->SetPrimitiveTopology(m_bound_index_buffer->GetTopology().ToDirectX());
 

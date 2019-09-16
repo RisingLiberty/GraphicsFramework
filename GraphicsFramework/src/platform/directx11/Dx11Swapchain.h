@@ -10,6 +10,8 @@ public:
 
 	IDXGISwapChain* GetSwapchain() const;
 
+	DXGI_SWAP_CHAIN_DESC GetDesc() const;
+
 private:
 	ComPtr<IDXGISwapChain> m_swapchain;
 };

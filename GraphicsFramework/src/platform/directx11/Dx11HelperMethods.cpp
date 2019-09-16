@@ -2,8 +2,6 @@
 
 #include "Dx11HelperMethods.h"
 
-#include "Dx11Context.h"
-
 bool CheckD3D11Error(HRESULT result)
 {
 	if (result == S_OK)
@@ -57,6 +55,11 @@ Dx11Context* GetDx11Context()
 ID3D11Device* GetDx11Device()
 {
 	return GetDx11Context()->GetDevice();
+}
+
+ID3D11DeviceContext* GetDx11DeviceContext()
+{
+	return GetDx11Context()->GetDeviceContext();
 }
 
 class Dx11CommandList* GetDx11CommandList()

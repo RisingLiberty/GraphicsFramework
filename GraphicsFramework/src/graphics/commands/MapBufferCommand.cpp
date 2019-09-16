@@ -2,9 +2,8 @@
 
 #include "MapBufferCommand.h"
 
-MapBufferCommand::MapBufferCommand(const ApiBufferWrapper* buffer, void** data) :
-	m_buffer(buffer),
-	m_data(data)
+MapBufferCommand::MapBufferCommand(const ApiBufferWrapper* buffer) :
+	m_buffer(buffer)
 {
 
 }

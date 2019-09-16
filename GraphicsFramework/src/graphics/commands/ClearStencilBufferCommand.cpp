@@ -2,7 +2,8 @@
 
 #include "ClearStencilBufferCommand.h"
 
-ClearStencilBufferCommand::ClearStencilBufferCommand(unsigned int stencilValue)
+ClearStencilBufferCommand::ClearStencilBufferCommand(const unsigned int stencilValue):
+	m_stencil_value(stencilValue)
 {
 
 }

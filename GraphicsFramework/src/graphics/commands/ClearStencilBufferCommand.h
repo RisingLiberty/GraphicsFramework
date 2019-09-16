@@ -5,12 +5,12 @@
 class ClearStencilBufferCommand : public Command
 {
 public:
-	ClearStencilBufferCommand(unsigned int stencilValue);
+	ClearStencilBufferCommand(const unsigned int stencilValue);
 	virtual ~ClearStencilBufferCommand();
 
 	virtual void Execute() override = 0;
 	virtual std::string ToString() const override;
 
 protected:
-	unsigned int m_stencil_value;
+	const unsigned int m_stencil_value;
 };

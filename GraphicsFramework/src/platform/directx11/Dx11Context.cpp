@@ -20,6 +20,14 @@
 #include "Dx11CommandList.h"
 #include "Dx11Swapchain.h"
 
+#include "Dx11DirectCommandList.h"
+
+#include "commands/Dx11SetRenderTargetCommand.h"
+#include "commands/Dx11BindIndexBufferCommand.h"
+#include "commands/Dx11BindShaderProgramCommand.h"
+#include "commands/Dx11BindVertexArrayCommand.h"
+
+
 Dx11Context::Dx11Context(Window* window):
 	m_window(window)
 {
@@ -55,8 +63,7 @@ void Dx11Context::InitD3D(Window* window)
 
 	// Swapchain can't use window's width and height directly cause they'll scale incorectly.
 	// instead get swapchain's desc after creation and use these width and height values.
-	DXGI_SWAP_CHAIN_DESC swapchain_desc;
-	m_swapchain->GetSwapchain()->GetDesc(&swapchain_desc);
+	DXGI_SWAP_CHAIN_DESC swapchain_desc = m_swapchain->GetDesc();
 
 	this->ResizeBuffers(swapchain_desc.BufferDesc.Width, swapchain_desc.BufferDesc.Height);
 }
@@ -85,7 +92,7 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 
 	DXCALL(m_command_queue->As<Dx11CommandQueue>()->GetDevice()->CreateTexture2D(&depth_stencil_desc, 0, m_depth_stencil_buffer.ReleaseAndGetAddressOf()));
 	DXCALL(m_command_queue->As<Dx11CommandQueue>()->GetDevice()->CreateDepthStencilView(m_depth_stencil_buffer.Get(), 0, m_depth_stencil_view.ReleaseAndGetAddressOf()));
-	m_command_list->As<Dx11CommandList>()->SetRenderTarget(m_render_target_view.Get(), m_depth_stencil_view.Get());
+	m_command_list->Push(std::make_unique<Dx11SetRenderTargetCommand>(m_render_target_view.Get(), m_depth_stencil_view.Get()));
 
 	m_viewport.TopLeftX = 0;
 	m_viewport.TopLeftY = 0;
@@ -102,8 +109,10 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 
 void Dx11Context::Begin()
 {
+	m_command_list->Close();
+	m_command_list->Execute();
 	m_command_list = m_command_queue->As<Dx11CommandQueue>()->GetCommandList();
-	m_command_list->As<Dx11CommandList>()->SetRenderTarget(m_render_target_view.Get(), m_depth_stencil_view.Get());
+	m_command_list->Push(std::make_unique<Dx11SetRenderTargetCommand>(m_render_target_view.Get(), m_depth_stencil_view.Get()));
 }
 
 void Dx11Context::Present()
@@ -121,9 +130,19 @@ ID3D11Device* Dx11Context::GetDevice() const
 	return m_command_queue->As<Dx11CommandQueue>()->GetDevice();
 }
 
+ID3D11DeviceContext* Dx11Context::GetDeviceContext() const
+{
+	return m_command_queue->As<Dx11CommandQueue>()->GetDeviceContext();
+}
+
 Dx11CommandList* Dx11Context::GetCommandList() const
 {
 	return m_command_list->As<Dx11CommandList>();
+}
+
+std::unique_ptr<Dx11CommandList> Dx11Context::CreateDirectCommandList() const
+{
+	return m_command_queue->As<Dx11CommandQueue>()->CreateDirectCommandList();
 }
 
 const Dx11VertexShader* Dx11Context::GetBoundVertexShader() const
@@ -136,55 +155,35 @@ const Dx11VertexShader* Dx11Context::GetBoundVertexShader() const
 
 void Dx11Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	const Dx11IndexBuffer* dx_ib = indexBuffer->As<Dx11IndexBuffer>();
-	const unsigned int offset = 0;
-
-	m_command_list->As<Dx11CommandList>()->SetPrimitiveTopology(dx_ib->GetTopology().ToDirectX());
-	m_command_list->As<Dx11CommandList>()->SetIndexBuffer(dx_ib->GetBuffer(), dx_ib->GetFormat().ToDirectX(), offset);
+	m_command_list->Push(std::make_unique<Dx11BindIndexBufferCommand>(indexBuffer));
 }
 
 void Dx11Context::UnbindIndexBufferInternal(const IndexBuffer * indexBuffer)
 {
-	m_command_list->As<Dx11CommandList>()->SetPrimitiveTopology(Topology(ETopology::UNDEFINED).ToDirectX());
-	m_command_list->As<Dx11CommandList>()->SetIndexBuffer(nullptr, Format(EFormat::UNKNOWN).ToDirectX(), 0);
+	//m_command_list->As<Dx11CommandList>()->SetPrimitiveTopology(Topology(ETopology::UNDEFINED).ToDirectX());
+	//m_command_list->As<Dx11CommandList>()->SetIndexBuffer(nullptr, Format(EFormat::UNKNOWN).ToDirectX(), 0);
 }
 
 void Dx11Context::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
 	// Currently can only bind 1 vertex buffer at a time
-
-	const Dx11VertexLayout* dx_layout = vertexArray->GetVertexLayout()->As<Dx11VertexLayout>();
-	const Dx11VertexBuffer* dx_vb = vertexArray->GetVertexBuffer()->As<Dx11VertexBuffer>();
-
-	unsigned int offset = 0;
-	unsigned int stride = dx_layout->GetSize();
-
-	ID3D11Buffer* buffer = dx_vb->GetBuffer();
-
-	unsigned int input_slot = 0;
-
-	m_command_list->As<Dx11CommandList>()->SetVertexBuffer(buffer, stride);
-	m_command_list->As<Dx11CommandList>()->SetInputLayout(dx_layout->GetLayout());
+	m_command_list->Push(std::make_unique<Dx11BindVertexArrayCommand>(vertexArray));
 }
 
 void Dx11Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	m_command_list->As<Dx11CommandList>()->SetVertexBuffer(nullptr, 0);
-	m_command_list->As<Dx11CommandList>()->SetInputLayout(nullptr);
+	//m_command_list->As<Dx11CommandList>()->SetVertexBuffer(nullptr, 0);
+	//m_command_list->As<Dx11CommandList>()->SetInputLayout(nullptr);
 }
 
 void Dx11Context::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
-	const Dx11VertexShader* dx_vs = shaderProgram->GetVertexShader()->As<Dx11VertexShader>();
-	const Dx11FragmentShader* dx_fs = shaderProgram->GetFragmentShader()->As<Dx11FragmentShader>();
-
-	m_command_list->As<Dx11CommandList>()->SetVertexShader(dx_vs->GetShader());
-	m_command_list->As<Dx11CommandList>()->SetPixelShader(dx_fs->GetShader());
+	m_command_list->Push(std::make_unique<Dx11BindShaderProgramCommand>(shaderProgram));
 }
 
 void Dx11Context::UnbindShaderProgramInternal(const ShaderProgram * shaderProgram)
 {
-	m_command_list->As<Dx11CommandList>()->SetVertexShader(nullptr);
-	m_command_list->As<Dx11CommandList>()->SetPixelShader(nullptr);
+	//m_command_list->As<Dx11CommandList>()->SetVertexShader(nullptr);
+	//m_command_list->As<Dx11CommandList>()->SetPixelShader(nullptr);
 }
 

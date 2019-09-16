@@ -2,6 +2,7 @@
 
 #include "Dx12Swapchain.h"
 #include "Dx12HelperMethods.h"
+#include "Dx12Resource.h"
 
 #include "graphics/Window.h"
 
@@ -29,12 +30,16 @@ Dx12Swapchain::Dx12Swapchain(Window* window, Format format, unsigned int bufferC
 	desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	desc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
-	DXCALL(GetDxgiFactory()->CreateSwapChain(GetDx12CommandQueue(), &desc, m_swapchain.GetAddressOf()));
+	DXCALL(GetDxgiFactory()->CreateSwapChain(GetDx12CommandQueue()->GetApiQueue(), &desc, m_swapchain.GetAddressOf()));
 
 	m_swapchain_buffers.resize(m_buffer_count);
 
-	for (UINT i = 0; i < m_buffer_count; i++)
-		DXCALL(m_swapchain->GetBuffer(i, IID_PPV_ARGS(&m_swapchain_buffers[i])));
+    for (UINT i = 0; i < m_buffer_count; i++)
+    {
+        ComPtr<ID3D12Resource> buffer;
+		DXCALL(m_swapchain->GetBuffer(i, IID_PPV_ARGS(buffer.GetAddressOf())));
+        m_swapchain_buffers[i] = std::make_unique<Dx12Resource>(buffer);
+    }
 }
 
 Dx12Swapchain::~Dx12Swapchain()
@@ -50,12 +55,16 @@ void Dx12Swapchain::Present()
 void Dx12Swapchain::ResizeBuffers(unsigned int width, unsigned int height, Format format, DXGI_SWAP_CHAIN_FLAG flags)
 {
 	for (unsigned int i = 0; i < m_buffer_count; ++i)
-		m_swapchain_buffers[i].Reset();
+		m_swapchain_buffers[i].reset();
 
 	DXCALL(m_swapchain->ResizeBuffers(m_buffer_count, width, height, format.ToDirectX(), flags));
 
-	for (UINT i = 0; i < m_buffer_count; i++)
-		DXCALL(m_swapchain->GetBuffer(i, IID_PPV_ARGS(&m_swapchain_buffers[i])));
+    for (UINT i = 0; i < m_buffer_count; i++)
+    {
+        ID3D12Resource* buffer;
+		DXCALL(m_swapchain->GetBuffer(i, IID_PPV_ARGS(&buffer)));
+        m_swapchain_buffers[i] = std::make_unique<Dx12Resource>(buffer);
+    }
 
 }
 
@@ -66,7 +75,7 @@ IDXGISwapChain* Dx12Swapchain::GetSwapchain() const
 
 ID3D12Resource* Dx12Swapchain::GetBuffer(unsigned int index) const
 {
-	return m_swapchain_buffers[index].Get();
+	return m_swapchain_buffers[index]->GetApiResource();
 }
 
 DXGI_SWAP_CHAIN_DESC Dx12Swapchain::GetDesc() const

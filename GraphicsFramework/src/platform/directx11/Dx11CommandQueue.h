@@ -14,6 +14,7 @@ public:
 	ID3D11DeviceContext* GetDeviceContext() const;
 
 	Dx11CommandList* GetCommandList() const;
+	std::unique_ptr<Dx11CommandList> CreateDirectCommandList() const;
 
 private:
 	ComPtr<ID3D11Device> m_device;

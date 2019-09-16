@@ -2,10 +2,8 @@
 
 #include "DrawIndexedCommand.h"
 
-DrawIndexedCommand::DrawIndexedCommand(unsigned int count, Topology topology, Format format):
-	m_count(count),
-	m_topology(topology),
-	m_format(format)
+DrawIndexedCommand::DrawIndexedCommand(const unsigned int count):
+	m_count(count)
 {
 
 }

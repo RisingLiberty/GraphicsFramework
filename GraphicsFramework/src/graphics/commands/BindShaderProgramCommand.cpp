@@ -2,7 +2,8 @@
 
 #include "BindShaderProgramCommand.h"
 
-BindShaderProgramCommand::BindShaderProgramCommand()
+BindShaderProgramCommand::BindShaderProgramCommand(const ShaderProgram* shaderProgram):
+	m_shader_program(shaderProgram)
 {
 
 }

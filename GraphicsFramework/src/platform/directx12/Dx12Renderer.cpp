@@ -10,6 +10,9 @@
 #include "graphics/Material.h"
 #include "scenegraph/SceneObject.h"
 
+#include "Dx12CommandList.h"
+#include "Dx12CommandQueue.h"
+
 
 Dx12Renderer::Dx12Renderer()
 {
@@ -43,7 +46,7 @@ void Dx12Renderer::Draw()
 		mesh->GetIndices()->Bind();
 
 		GetDx12Context()->BindResourcesToPipeline();
-		GetDx12CommandList()->DrawIndexedInstanced((unsigned int)mesh->GetIndices()->GetCount(), 1, 0, 0, 0);
+		GetDx12CommandList()->GetApiCommandList()->DrawIndexedInstanced((unsigned int)mesh->GetIndices()->GetCount(), 1, 0, 0, 0);
 	}
 
 	m_scene_objects.clear();
@@ -57,37 +60,33 @@ void Dx12Renderer::ClearAllBuffers()
 
 void Dx12Renderer::ClearColorBuffer()
 {
-	GetDx12CommandList()->ClearRenderTargetView(GetDx12Context()->GetCurrentBackBufferView(), m_clear_color.data(), 0, nullptr);
+	GetDx12CommandList()->GetApiCommandList()->ClearRenderTargetView(GetDx12Context()->GetCurrentBackBufferView(), m_clear_color.data(), 0, nullptr);
 }
 
 void Dx12Renderer::ClearDepthStencilBuffer()
 {
-	GetDx12CommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	GetDx12CommandList()->GetApiCommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 }
 
 void Dx12Renderer::ClearDepthBuffer()
 {
-	GetDx12CommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	GetDx12CommandList()->GetApiCommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
 void Dx12Renderer::ClearStencilBuffer()
 {
-	GetDx12CommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+	GetDx12CommandList()->GetApiCommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
 }
-
-//void Dx12Renderer::Begin()
-//{
-//	GetDx12Context()->Begin();
-//}
-//
-//void Dx12Renderer::End()
-//{
-//	GetDx12Context()->End();
-//}
 
 void Dx12Renderer::RenderImgui()
 {
+	GetDx12CommandList()->Open();
 	GetDx12Context()->BindImgui();
 	ImGui::Render();
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx12CommandList());
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), GetDx12CommandList()->GetApiCommandList());
+	GetDx12CommandList()->Close();  
+    
+    GetDx12CommandQueue()->Execute(GetDx12CommandList());
+    GetDx12CommandQueue()->Flush();
+
 }

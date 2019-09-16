@@ -13,14 +13,16 @@ public:
 	CommandList();
 	virtual ~CommandList();
 
-	void Open();
-	void Close();
+	virtual void Open();
+	virtual void Close();
 
 	void Push(std::unique_ptr<Command> command);
 
 	virtual void Execute();
 
-private:
+    bool IsOpen() const;
+
+protected:
 	std::queue<std::unique_ptr<Command>> m_commands;
 	bool m_is_open;
 };
