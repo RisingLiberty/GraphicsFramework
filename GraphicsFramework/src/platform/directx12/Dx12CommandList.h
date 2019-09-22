@@ -2,6 +2,13 @@
 
 #include "graphics/CommandList.h"
 
+class Dx12Resource;
+class Dx12DescriptorHeap;
+class Dx12PipelineState;
+
+class VertexArray;
+class IndexBuffer;
+
 class Dx12CommandList : public CommandList
 {
 public:
@@ -10,22 +17,6 @@ public:
 
     void Open() override;
     void Close() override;
-
-	//void SetDescriptorHeaps(ID3D12DescriptorHeap* heap);
-	//void SetGraphicsRootSignature(ID3D12RootSignature* rootsignature);
-	//void SetGraphicsRootDescriptorTable(D3D12_GPU_DESCRIPTOR_HANDLE gpu_handle);
-
-	//void SwitchResourceToRenderTarget(ID3D12Resource* resource);
-	//void SwitchResourceToPresent(ID3D12Resource* resource);
-	//void SetViewport(D3D12_VIEWPORT viewport);
-	//void SetScissorRects(D3D12_RECT rect);
-	//void SetRenderTargets(D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView, D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView);
-
-	//void SetIndexBuffer(D3D12_INDEX_BUFFER_VIEW ibView);
-	//void SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY topology);
-	//void SetVertexBuffer(D3D12_VERTEX_BUFFER_VIEW vbView);
-
-	//void SetPipelineState(ComPtr<ID3D12PipelineState> pipelineState);
 
 	void ResetAlloc();
 

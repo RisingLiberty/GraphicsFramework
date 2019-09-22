@@ -29,6 +29,23 @@
 #include "Dx12DepthStencilBuffer.h"
 #include "Dx12PipelineState.h"
 
+#include "Dx12Resource.h"
+
+#include "commands/Dx12SwitchResourceStateCommand.h"
+
+#include "commands/Dx12SetViewportCommand.h"
+#include "commands/Dx12SetScissorRectCommand.h"
+#include "commands/Dx12SetRenderTargetCommand.h"
+
+#include "commands/Dx12SetDescriptorHeapsCommand.h"
+#include "commands/Dx12BindIndexBufferCommand.h"
+#include "commands/Dx12BindVertexArrayCommand.h"
+
+#include "commands/Dx12SetGraphicsRootDescTableCommand.h"
+#include "commands/Dx12SetGraphicsRootSignatureCommand.h"
+
+#include "commands/Dx12SetPipelineStateCommand.h"
+
 namespace
 {
 	const int SWAPCHAIN_BUFFER_COUNT = 2;
@@ -237,7 +254,7 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 	for (UINT i = 0; i < SWAPCHAIN_BUFFER_COUNT; i++)
 	{
 		//m_swapchain_buffers[i] = m_swapchain->GetBuffer(i);
-		m_device->CreateRenderTargetView(m_swapchain->GetBuffer(i), nullptr, rtvHeapHandle);
+		m_device->CreateRenderTargetView(m_swapchain->GetBuffer(i)->GetApiResource(), nullptr, rtvHeapHandle);
 		rtvHeapHandle.Offset(1, m_rtv_descriptor_size);
 	}
 
@@ -264,7 +281,6 @@ void Dx12Context::OnResize(unsigned int width, unsigned int height)
 
 	m_scissor_rect = { 0, 0, (LONG)width, (LONG)height};
 }
-
 
 void Dx12Context::BuildPSO()
 {
@@ -317,14 +333,18 @@ std::unique_ptr<Dx12CommandList> Dx12Context::CreateDirectCommandList() const
 
 void Dx12Context::BindResourcesToPipeline()
 {
-	m_command_list->As<Dx12CommandList>()->SetDescriptorHeaps(m_cbv_heap->GetHeap());
-	m_command_list->As<Dx12CommandList>()->SetGraphicsRootSignature(m_bound_shader_program->As<Dx12ShaderProgram>()->GetRootSignature());
-	m_command_list->As<Dx12CommandList>()->SetGraphicsRootDescriptorTable(m_cbv_heap->GetGpuView());
+    std::vector<Dx12DescriptorHeap*> heap = { m_cbv_heap.get() };
+    m_command_list->Push<Dx12SetDescriptorHeapsCommand>(heap);
+    m_command_list->Push<Dx12SetGraphicsRootSignatureCommand>(m_bound_shader_program->As<Dx12ShaderProgram>()->GetRootSignature());
+    m_command_list->Push<Dx12SetGraphicsRootDescTableCommand>(m_cbv_heap->GetGpuView());
+
 }
 
 void Dx12Context::BindImgui()
 {
-	m_command_list->As<Dx12CommandList>()->SetDescriptorHeaps(m_cbv_imgui_heap->GetHeap());
+    std::vector<Dx12DescriptorHeap*> heaps = { m_cbv_imgui_heap.get() };
+    auto direct_cmd_list = this->CreateDirectCommandList();
+    direct_cmd_list->Push<Dx12SetDescriptorHeapsCommand>(heaps);
 }
 
 void Dx12Context::Begin()
@@ -333,12 +353,15 @@ void Dx12Context::Begin()
 	m_command_list->As<Dx12CommandList>()->Open();
 
 	if (m_pipeline_state)
-		m_command_list->As<Dx12CommandList>()->SetPipelineState(m_pipeline_state->GetPipelineState());
-	m_command_list->As<Dx12CommandList>()->SwitchResourceToRenderTarget(this->GetCurrentBackBuffer());
-	m_command_list->As<Dx12CommandList>()->SetViewport(m_viewport);
-	m_command_list->As<Dx12CommandList>()->SetScissorRects(m_scissor_rect);
-	m_command_list->As<Dx12CommandList>()->SetRenderTargets(this->GetCurrentBackBufferView(), this->GetDepthStencilView());
-	m_command_list->As<Dx12CommandList>()->SetDescriptorHeaps(m_cbv_heap->GetHeap());
+        m_command_list->Push<Dx12SetPipelineStateCommand>(m_pipeline_state.get());
+
+    m_command_list->Push<Dx12SwitchResourceStateCommand>(this->GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET);
+    m_command_list->Push<Dx12SetViewportCommand>(m_viewport);
+    m_command_list->Push<Dx12SetScissorRectCommand>(m_scissor_rect);
+    m_command_list->Push<Dx12SetRenderTargetCommand>(this->GetCurrentBackBufferView(), this->GetDepthStencilView());
+
+    std::vector<Dx12DescriptorHeap*> heaps = { m_cbv_heap.get() };
+	m_command_list->Push<Dx12SetDescriptorHeapsCommand>(heaps);
 }
 
 void Dx12Context::Present()
@@ -350,12 +373,12 @@ void Dx12Context::Present()
 void Dx12Context::End()
 {
 	// Indicate a state transition on the resource usage.
-	m_command_list->As<Dx12CommandList>()->SwitchResourceToPresent(this->GetCurrentBackBuffer());
-
-	m_current_back_buffer_index = (m_current_back_buffer_index + 1) % SWAPCHAIN_BUFFER_COUNT;
+    m_command_list->Push<Dx12SwitchResourceStateCommand>(this->GetCurrentBackBuffer(), D3D12_RESOURCE_STATE_PRESENT);
 
 	m_command_queue->As<Dx12CommandQueue>()->Execute();
 	m_command_queue->As<Dx12CommandQueue>()->Flush();
+
+	m_current_back_buffer_index = (m_current_back_buffer_index + 1) % SWAPCHAIN_BUFFER_COUNT;
 }
 
 unsigned int Dx12Context::GetNrOfFrameResources() const
@@ -388,9 +411,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE Dx12Context::GetDepthStencilView() const
 
 void Dx12Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	D3D12_INDEX_BUFFER_VIEW ib_view = m_bound_index_buffer->As<Dx12IndexBuffer>()->GetBufferView();
-	m_command_list->As<Dx12CommandList>()->SetIndexBuffer(ib_view);
-	m_command_list->As<Dx12CommandList>()->SetPrimitiveTopology(m_bound_index_buffer->GetTopology().ToDirectX());
+    m_command_list->Push<Dx12BindIndexBufferCommand>(indexBuffer);
 
 	if (m_bound_vertex_array && m_bound_shader_program)
 		this->BuildPSO();
@@ -404,9 +425,7 @@ void Dx12Context::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
 
 void Dx12Context::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	const Dx12VertexArray* dx_va = m_bound_vertex_array->As<Dx12VertexArray>();
-	D3D12_VERTEX_BUFFER_VIEW vb_view = dx_va->GetVertexBufferView();
-	m_command_list->As<Dx12CommandList>()->SetVertexBuffer(vb_view);
+    m_command_list->Push<Dx12BindVertexArrayCommand>(vertexArray);
 
 	if (m_bound_shader_program && m_bound_index_buffer)
 		this->BuildPSO();
@@ -438,7 +457,7 @@ void Dx12Context::UnbindShaderProgramInternal(const ShaderProgram* shaderProgram
 {
 }
 
-ID3D12Resource* Dx12Context::GetCurrentBackBuffer() const
+Dx12Resource* Dx12Context::GetCurrentBackBuffer() const
 {
 	return m_swapchain->GetBuffer(m_current_back_buffer_index);
 }

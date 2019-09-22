@@ -15,6 +15,11 @@ Dx12SetScissorRectCommand::~Dx12SetScissorRectCommand()
 
 }
 
+std::string Dx12SetScissorRectCommand::ToString() const
+{
+    return "Set scissor rect";
+}
+
 void Dx12SetScissorRectCommand::Execute()
 {
     GetDx12CommandList()->GetApiCommandList()->RSSetScissorRects(1, &m_rect);

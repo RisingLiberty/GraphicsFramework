@@ -24,5 +24,8 @@ std::string Dx12SwitchResourceStateCommand::ToString() const
 
 void Dx12SwitchResourceStateCommand::Execute()
 {
-    GetDx12CommandList()->GetApiCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_resource->GetApiResource(), m_resource->GetCurrentState(), m_resource_state));
+    //ASSERT(m_resource->GetCurrentState() == m_resource_state, "SAME RESOURCE STATE!!");
+
+    if(m_resource->GetCurrentState() != m_resource_state)
+        GetDx12CommandList()->GetApiCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_resource->GetApiResource(), m_resource->GetCurrentState(), m_resource_state));
 }

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "Dx12SetGraphicsRootDescriptorTableCommand.h"
+#include "Dx12SetGraphicsRootDescTableCommand.h"
 
 #include "../Dx12HelperMethods.h"
 

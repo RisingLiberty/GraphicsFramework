@@ -13,6 +13,12 @@
 #include "Dx12CommandList.h"
 #include "Dx12CommandQueue.h"
 
+#include "commands/Dx12DrawIndexedCommand.h"
+
+#include "commands/Dx12ClearRenderTargetCommand.h"
+#include "commands/Dx12ClearDepthBufferCommand.h"
+#include "commands/Dx12ClearDepthStencilBufferCommand.h"
+#include "commands/Dx12ClearStencilBufferCommand.h"
 
 Dx12Renderer::Dx12Renderer()
 {
@@ -46,7 +52,7 @@ void Dx12Renderer::Draw()
 		mesh->GetIndices()->Bind();
 
 		GetDx12Context()->BindResourcesToPipeline();
-		GetDx12CommandList()->GetApiCommandList()->DrawIndexedInstanced((unsigned int)mesh->GetIndices()->GetCount(), 1, 0, 0, 0);
+        GetDx12CommandList()->Push<Dx12DrawIndexedCommand>(mesh->GetIndices()->GetCount());
 	}
 
 	m_scene_objects.clear();
@@ -60,22 +66,26 @@ void Dx12Renderer::ClearAllBuffers()
 
 void Dx12Renderer::ClearColorBuffer()
 {
-	GetDx12CommandList()->GetApiCommandList()->ClearRenderTargetView(GetDx12Context()->GetCurrentBackBufferView(), m_clear_color.data(), 0, nullptr);
+    auto direct_cmd_list = GetDx12Context()->CreateDirectCommandList();
+    direct_cmd_list->Push<Dx12ClearRenderTargetCommand>(m_clear_color, GetDx12Context()->GetCurrentBackBufferView());
 }
 
 void Dx12Renderer::ClearDepthStencilBuffer()
 {
-	GetDx12CommandList()->GetApiCommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+    auto direct_cmd_list = GetDx12Context()->CreateDirectCommandList();
+    direct_cmd_list->Push<Dx12ClearDepthStencilBufferCommand>(1.0f, 0, GetDx12Context()->GetDepthStencilView());
 }
 
 void Dx12Renderer::ClearDepthBuffer()
 {
-	GetDx12CommandList()->GetApiCommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+    auto direct_cmd_list = GetDx12Context()->CreateDirectCommandList();
+    direct_cmd_list->Push<Dx12ClearDepthBufferCommand>(1.0f, GetDx12Context()->GetDepthStencilView());
 }
 
 void Dx12Renderer::ClearStencilBuffer()
 {
-	GetDx12CommandList()->GetApiCommandList()->ClearDepthStencilView(GetDx12Context()->GetDepthStencilView(), D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, nullptr);
+    auto direct_cmd_list = GetDx12Context()->CreateDirectCommandList();
+    direct_cmd_list->Push<Dx12ClearStencilBufferCommand>(0, GetDx12Context()->GetDepthStencilView());
 }
 
 void Dx12Renderer::RenderImgui()

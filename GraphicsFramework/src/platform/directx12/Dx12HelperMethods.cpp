@@ -2,8 +2,6 @@
 
 #include "Dx12HelperMethods.h"
 
-#include "Dx12Context.h"
-#include "Dx12CommandList.h"
 #include "Dx12Resource.h"
 
 #ifndef D3D12_ERROR_FILE_NOT_FOUND

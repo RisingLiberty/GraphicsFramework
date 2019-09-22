@@ -55,6 +55,8 @@ std::unique_ptr<Dx12CommandList> Dx12CommandQueue::CreateDirectCommandList() con
 
 void Dx12CommandQueue::Execute(Dx12CommandList* cmdList) const
 {
+    ID3D12GraphicsCommandList* gfx_cmd_list = cmdList->GetApiCommandList();
+    gfx_cmd_list->Close();
 	ID3D12CommandList* cmd_list[] = { cmdList->GetApiCommandList() };
 	m_queue->ExecuteCommandLists(1, cmd_list);
 }
@@ -65,11 +67,15 @@ void Dx12CommandQueue::Execute()
 	for (unsigned int i = 0; i < m_command_lists.size(); ++i)
 	{
 		Dx12CommandList* command_list = m_command_lists[i]->As<Dx12CommandList>();
+
 		if (command_list->IsOpen())
 			command_list->Close();
-		command_list->Execute();
+
+        command_list->Execute();
 		
-		cmds_lists[i] = (command_list->GetApiCommandList());
+        ID3D12GraphicsCommandList* gfx_cmd_list = command_list->GetApiCommandList();
+        gfx_cmd_list->Close();
+        cmds_lists[i] = gfx_cmd_list;
 	}
 	m_queue->ExecuteCommandLists((unsigned int)cmds_lists.size(), cmds_lists.data());
 }

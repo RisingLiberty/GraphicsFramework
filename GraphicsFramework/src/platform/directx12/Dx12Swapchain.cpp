@@ -4,6 +4,8 @@
 #include "Dx12HelperMethods.h"
 #include "Dx12Resource.h"
 
+#include "commands/Dx12SwitchResourceStateCommand.h"
+
 #include "graphics/Window.h"
 
 Dx12Swapchain::Dx12Swapchain(Window* window, Format format, unsigned int bufferCount, bool isVSync):
@@ -38,8 +40,12 @@ Dx12Swapchain::Dx12Swapchain(Window* window, Format format, unsigned int bufferC
     {
         ComPtr<ID3D12Resource> buffer;
 		DXCALL(m_swapchain->GetBuffer(i, IID_PPV_ARGS(buffer.GetAddressOf())));
-        m_swapchain_buffers[i] = std::make_unique<Dx12Resource>(buffer);
+        m_swapchain_buffers[i] = std::make_unique<Dx12Resource>(buffer, D3D12_RESOURCE_STATE_PRESENT);
+        std::wstring buffer_name = L"Swapchain buffer" + i;
+        m_swapchain_buffers[i]->GetApiResource()->SetName(buffer_name.c_str());
     }
+
+    m_swapchain_buffers.front()->ForceSetResourceState(D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 Dx12Swapchain::~Dx12Swapchain()
@@ -63,7 +69,7 @@ void Dx12Swapchain::ResizeBuffers(unsigned int width, unsigned int height, Forma
     {
         ID3D12Resource* buffer;
 		DXCALL(m_swapchain->GetBuffer(i, IID_PPV_ARGS(&buffer)));
-        m_swapchain_buffers[i] = std::make_unique<Dx12Resource>(buffer);
+        m_swapchain_buffers[i] = std::make_unique<Dx12Resource>(buffer, D3D12_RESOURCE_STATE_COMMON);
     }
 
 }
@@ -73,9 +79,9 @@ IDXGISwapChain* Dx12Swapchain::GetSwapchain() const
 	return m_swapchain.Get();
 }
 
-ID3D12Resource* Dx12Swapchain::GetBuffer(unsigned int index) const
+Dx12Resource* Dx12Swapchain::GetBuffer(unsigned int index) const
 {
-	return m_swapchain_buffers[index]->GetApiResource();
+	return m_swapchain_buffers[index].get();
 }
 
 DXGI_SWAP_CHAIN_DESC Dx12Swapchain::GetDesc() const

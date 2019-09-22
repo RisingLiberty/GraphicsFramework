@@ -10,6 +10,7 @@ public:
     Dx12SetDescriptorHeapsCommand(const std::vector<Dx12DescriptorHeap*>& descriptorHeap);
     virtual ~Dx12SetDescriptorHeapsCommand();
 
+    std::string ToString() const override;
     void Execute() override;
 
 private:

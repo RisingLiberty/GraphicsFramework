@@ -15,6 +15,11 @@ Dx12SetViewportCommand::~Dx12SetViewportCommand()
 
 }
 
+std::string Dx12SetViewportCommand::ToString() const
+{
+    return "Set viewport";
+}
+
 void Dx12SetViewportCommand::Execute()
 {
     GetDx12CommandList()->GetApiCommandList()->RSSetViewports(1, &m_viewport);

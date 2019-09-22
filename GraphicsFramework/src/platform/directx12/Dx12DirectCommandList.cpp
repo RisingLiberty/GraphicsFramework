@@ -20,6 +20,7 @@ Dx12DirectCommandList::~Dx12DirectCommandList()
 
 void Dx12DirectCommandList::Execute()
 {
+    CommandList::Execute();
 	m_queue->Execute(this);
 	m_queue->Flush();
 	m_has_executed = true;

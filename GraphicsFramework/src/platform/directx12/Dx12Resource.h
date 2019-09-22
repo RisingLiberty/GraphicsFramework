@@ -5,7 +5,7 @@
 class Dx12Resource : public GraphicsResource<Dx12Resource>
 {
 public:
-    Dx12Resource(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES resourceState = D3D12_RESOURCE_STATES::D3D12_RESOURCE_STATE_COMMON);
+    Dx12Resource(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES resourceState);
     Dx12Resource(unsigned int size, const void* data, ID3D12Resource* uploadBuffer);
     virtual ~Dx12Resource();
 
@@ -13,6 +13,8 @@ public:
     ID3D12Resource* const* GetApiResourceAddress() const;
     ID3D12Resource** GetApiResourceAddress();
     D3D12_RESOURCE_STATES GetCurrentState() const;
+
+    void ForceSetResourceState(const D3D12_RESOURCE_STATES& state);
 
     void Transition(D3D12_RESOURCE_STATES newState);
 

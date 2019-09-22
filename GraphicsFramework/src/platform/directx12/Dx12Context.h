@@ -31,6 +31,8 @@ class Dx12PipelineState;
 
 class Dx12CommandList;
 
+class Dx12Resource;
+
 class Dx12Context : public Context
 {
 public:
@@ -78,7 +80,7 @@ private:
 
 	void BuildPSO();
 
-	ID3D12Resource* GetCurrentBackBuffer() const;
+	Dx12Resource* GetCurrentBackBuffer() const;
 
 private:
 	ComPtr<IDXGIFactory4> m_dxgi_factory;

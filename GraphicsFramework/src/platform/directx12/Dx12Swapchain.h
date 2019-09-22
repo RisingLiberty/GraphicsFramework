@@ -17,7 +17,7 @@ public:
 	void ResizeBuffers(unsigned int width, unsigned int height, Format format, DXGI_SWAP_CHAIN_FLAG flags);
 
 	IDXGISwapChain* GetSwapchain() const;
-	ID3D12Resource* GetBuffer(unsigned int index) const;
+	Dx12Resource* GetBuffer(unsigned int index) const;
 
 	DXGI_SWAP_CHAIN_DESC GetDesc() const;
 

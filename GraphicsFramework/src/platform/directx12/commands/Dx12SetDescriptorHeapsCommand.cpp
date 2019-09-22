@@ -16,6 +16,11 @@ Dx12SetDescriptorHeapsCommand::~Dx12SetDescriptorHeapsCommand()
 
 }
 
+std::string Dx12SetDescriptorHeapsCommand::ToString() const
+{
+    return "Set descriptor heaps";
+}
+
 void Dx12SetDescriptorHeapsCommand::Execute()
 {
     std::vector<ID3D12DescriptorHeap*> desc_heaps(m_descriptor_heaps.size());

@@ -5,6 +5,8 @@
 
 #include "Dx12CommandList.h"
 
+#include "commands/Dx12SwitchResourceStateCommand.h"
+
 Dx12Resource::Dx12Resource(ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES resourceState) :
     m_resource(resource),
     m_current_state(resourceState)
@@ -77,8 +79,16 @@ D3D12_RESOURCE_STATES Dx12Resource::GetCurrentState() const
     return m_current_state;
 }
 
+void Dx12Resource::ForceSetResourceState(const D3D12_RESOURCE_STATES& state)
+{
+    spdlog::warn("Force setting resource state of resource!");
+    m_current_state = state;
+}
+
 void Dx12Resource::Transition(D3D12_RESOURCE_STATES newState)
 {
+    //auto direct_cmd_list = GetDx12Context()->CreateDirectCommandList();
+    //direct_cmd_list->Push<Dx12SwitchResourceStateCommand>(this, newState);
     GetDx12CommandList()->GetApiCommandList()->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(m_resource.Get(), m_current_state, newState));
     m_current_state = newState;
 }
