@@ -56,7 +56,7 @@ void GLRenderer::Draw()
 		unsigned int count = (GLsizei)mesh->GetIndices()->GetCount();
 		Topology topology = mesh->GetIndices()->GetTopology();
 
-		GetGLCommandList()->Push(std::make_unique<GLDrawIndexedCommand>(count, topology, format));
+		GetGLCommandList()->Push<GLDrawIndexedCommand>(count, topology, format);
 	}
 
 	m_scene_objects.clear();
@@ -64,28 +64,28 @@ void GLRenderer::Draw()
 
 void GLRenderer::ClearAllBuffers()
 {
-	GetGLCommandList()->Push(std::make_unique<GLClearRenderTargetCommand>(m_clear_color));
-	GetGLCommandList()->Push(std::make_unique<GLClearDepthStencilBufferCommand>(1.0f, 0));
+	GetGLCommandList()->Push<GLClearRenderTargetCommand>(m_clear_color);
+	GetGLCommandList()->Push<GLClearDepthStencilBufferCommand>(1.0f, 0);
 }
 
 void GLRenderer::ClearColorBuffer()
 {
-	GetGLCommandList()->Push(std::make_unique<GLClearRenderTargetCommand>(m_clear_color));
+	GetGLCommandList()->Push<GLClearRenderTargetCommand>(m_clear_color);
 }
 
 void GLRenderer::ClearDepthStencilBuffer()
 {
-	GetGLCommandList()->Push(std::make_unique<GLClearDepthStencilBufferCommand>(1.0f, 0));
+	GetGLCommandList()->Push<GLClearDepthStencilBufferCommand>(1.0f, 0);
 }
 
 void GLRenderer::ClearDepthBuffer()
 {
-	GetGLCommandList()->Push(std::make_unique<GLClearDepthBufferCommand>(1.0f));
+	GetGLCommandList()->Push<GLClearDepthBufferCommand>(1.0f);
 }
 
 void GLRenderer::ClearStencilBuffer()
 {
-	GetGLCommandList()->Push(std::make_unique<GLClearStencilBufferCommand>(0));
+	GetGLCommandList()->Push<GLClearStencilBufferCommand>(0);
 }
 
 void GLRenderer::RenderImgui()

@@ -33,11 +33,11 @@ Dx11DownloadBuffer::~Dx11DownloadBuffer()
 void Dx11DownloadBuffer::Download(const ApiBufferWrapper* buffer)
 {
 	std::unique_ptr<Dx11CommandList> direct_cmd_list = GetDx11Context()->CreateDirectCommandList();
-	direct_cmd_list->Push(std::make_unique<Dx11CopyBufferCommand>(m_size, this, buffer));
+	direct_cmd_list->Push<Dx11CopyBufferCommand>(m_size, this, buffer);
 	D3D11_MAPPED_SUBRESOURCE mapped_subresource;
-	direct_cmd_list->Push(std::make_unique<Dx11MapBufferCommand>(this, D3D11_MAP_READ, &mapped_subresource));
+	direct_cmd_list->Push<Dx11MapBufferCommand>(this, D3D11_MAP_READ, &mapped_subresource);
 	direct_cmd_list->Close();
 	direct_cmd_list->Execute();
 	memcpy(m_cpu_address, mapped_subresource.pData, m_size);
-	GetDx11CommandList()->Push(std::make_unique<Dx11UnmapBufferCommand>(this));
+	GetDx11CommandList()->Push<Dx11UnmapBufferCommand>(this);
 }

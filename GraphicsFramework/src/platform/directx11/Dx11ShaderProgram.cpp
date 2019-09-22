@@ -81,12 +81,12 @@ void Dx11ShaderProgram::UploadVertexConstantBuffer() const
 	ZeroMemory(&msr, sizeof(msr));
 
 	std::unique_ptr<Dx11CommandList> direct_cmd_list = GetDx11Context()->CreateDirectCommandList();
-	direct_cmd_list->Push(std::make_unique<Dx11MapBufferCommand>(m_vs_constant_buffer.get(), D3D11_MAP_WRITE_DISCARD, &msr, 0, 0));
+	direct_cmd_list->Push<Dx11MapBufferCommand>(m_vs_constant_buffer.get(), D3D11_MAP_WRITE_DISCARD, &msr, 0, 0);
 	direct_cmd_list->Execute();
 	memcpy(msr.pData, vertex_constant_buffer, m_vs_constant_buffer->size);
-	GetDx11CommandList()->Push(std::make_unique<Dx11UnmapBufferCommand>(m_vs_constant_buffer.get()));
+	GetDx11CommandList()->Push<Dx11UnmapBufferCommand>(m_vs_constant_buffer.get());
 
-	GetDx11CommandList()->Push(std::make_unique<Dx11SetVsConstantBufferCommand>(m_vs_constant_buffer->reg, m_vs_constant_buffer->buffer.Get()));
+	GetDx11CommandList()->Push<Dx11SetVsConstantBufferCommand>(m_vs_constant_buffer->reg, m_vs_constant_buffer->buffer.Get());
 }
 
 void Dx11ShaderProgram::UploadFragmentConstantBuffer() const
@@ -112,15 +112,15 @@ void Dx11ShaderProgram::UploadFragmentConstantBuffer() const
 	ZeroMemory(&msr, sizeof(msr));
 
 	std::unique_ptr<Dx11CommandList> direct_cmd_list = GetDx11Context()->CreateDirectCommandList();
-	direct_cmd_list->Push(std::make_unique<Dx11MapBufferCommand>(m_fs_constant_buffer.get(), D3D11_MAP_WRITE_DISCARD, &msr, 0, 0));
+	direct_cmd_list->Push<Dx11MapBufferCommand>(m_fs_constant_buffer.get(), D3D11_MAP_WRITE_DISCARD, &msr, 0, 0);
 	direct_cmd_list->Close();
 	direct_cmd_list->Execute();
 
 	memcpy(msr.pData, fragment_constant_buffer, m_fs_constant_buffer->size);
 
 	direct_cmd_list = GetDx11Context()->CreateDirectCommandList();
-	direct_cmd_list->Push(std::make_unique<Dx11UnmapBufferCommand>(m_fs_constant_buffer.get()));
-	direct_cmd_list->Push(std::make_unique<Dx11SetPsConstantBufferCommand>(m_fs_constant_buffer->reg, m_fs_constant_buffer->buffer.Get()));
+	direct_cmd_list->Push<Dx11UnmapBufferCommand>(m_fs_constant_buffer.get());
+	direct_cmd_list->Push<Dx11SetPsConstantBufferCommand>(m_fs_constant_buffer->reg, m_fs_constant_buffer->buffer.Get());
 	direct_cmd_list->Close();
 	direct_cmd_list->Execute();
 

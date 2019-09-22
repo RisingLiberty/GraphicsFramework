@@ -46,7 +46,7 @@ void Dx11Renderer::Draw()
 		mesh->GetVertexArray()->Bind();
 		mesh->GetIndices()->Bind();
 
-		GetDx11CommandList()->Push(std::make_unique<Dx11DrawIndexedCommand>(mesh->GetIndices()->GetCount()));
+		GetDx11CommandList()->Push<Dx11DrawIndexedCommand>(mesh->GetIndices()->GetCount());
 	}
 
 	m_scene_objects.clear();
@@ -60,22 +60,22 @@ void Dx11Renderer::ClearAllBuffers()
 
 void Dx11Renderer::ClearColorBuffer()
 {
-	GetDx11CommandList()->Push(std::make_unique<Dx11ClearRenderTargetCommand>(m_clear_color, m_render_target_view.Get()));
+	GetDx11CommandList()->Push<Dx11ClearRenderTargetCommand>(m_clear_color, m_render_target_view.Get());
 }
 
 void Dx11Renderer::ClearDepthStencilBuffer()
 {
-	GetDx11CommandList()->Push(std::make_unique<Dx11ClearDepthStencilBufferCommand>(1.0f, 0, m_depth_stencil_view.Get()));
+	GetDx11CommandList()->Push<Dx11ClearDepthStencilBufferCommand>(1.0f, 0, m_depth_stencil_view.Get());
 }
 
 void Dx11Renderer::ClearDepthBuffer()
 {
-	GetDx11CommandList()->Push(std::make_unique<Dx11ClearDepthBufferCommand>(1.0f, m_depth_stencil_view.Get()));
+	GetDx11CommandList()->Push<Dx11ClearDepthBufferCommand>(1.0f, m_depth_stencil_view.Get());
 }
 
 void Dx11Renderer::ClearStencilBuffer()
 {
-	GetDx11CommandList()->Push(std::make_unique<Dx11ClearStencilBufferCommand>(0, m_depth_stencil_view.Get()));
+	GetDx11CommandList()->Push<Dx11ClearStencilBufferCommand>(0, m_depth_stencil_view.Get());
 }
 
 void Dx11Renderer::RenderImgui()

@@ -18,6 +18,7 @@
 #include "controllers/VertexLayoutController.h"
 #include "controllers/IndexBufferController.h"
 
+#include "CommandList.h"
 
 Context* Context::s_current = nullptr;
 
@@ -92,6 +93,16 @@ void Context::PreInitialize()
 
 void Context::PostInitialize()
 {
+}
+
+void Context::Begin()
+{
+    m_command_list->DisableCommandLogging();
+}
+
+void Context::End()
+{
+
 }
 
 void Context::Clear()

@@ -53,8 +53,8 @@ void GLFragmentShader::Compile()
 	const char* code = source.c_str();
 
 	std::unique_ptr<GLDirectCommandList> direct_cmd_list = GetGLContext()->CreateDirectCommandList();
-	direct_cmd_list->Push(std::make_unique<GLSetShaderSourceCommand>(m_id, source));
-	direct_cmd_list->Push(std::make_unique<GLCompileShaderCommand>(m_id));
+	direct_cmd_list->Push<GLSetShaderSourceCommand>(m_id, source);
+	direct_cmd_list->Push<GLCompileShaderCommand>(m_id);
 }
 
 unsigned int GLFragmentShader::GetId() const

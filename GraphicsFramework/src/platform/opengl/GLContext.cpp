@@ -91,7 +91,7 @@ API GLContext::GetApiType() const
 
 void GLContext::InitializeRasterizer()
 {
-	m_command_list->Push(std::make_unique<GLSetRasterizerCommand>(m_rasterizer_settings));
+	m_command_list->Push<GLSetRasterizerCommand>(m_rasterizer_settings);
 }
 
 GLCommandList* GLContext::GetCommandList() const
@@ -112,7 +112,7 @@ void GLContext::ExecuteDirectCommand(std::unique_ptr<Command> command) const
 
 void GLContext::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	m_command_list->Push(std::make_unique<GLBindIndexBufferCommand>(indexBuffer));
+	m_command_list->Push<GLBindIndexBufferCommand>(indexBuffer);
 }
 
 void GLContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
@@ -122,7 +122,7 @@ void GLContext::UnbindIndexBufferInternal(const IndexBuffer* indexBuffer)
 
 void GLContext::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
-	m_command_list->Push(std::make_unique<GLBindVertexArrayCommand>(vertexArray));
+	m_command_list->Push<GLBindVertexArrayCommand>(vertexArray);
 }
 
 void GLContext::UnbindVertexArrayInternal(const VertexArray* vertexArray)
@@ -132,7 +132,7 @@ void GLContext::UnbindVertexArrayInternal(const VertexArray* vertexArray)
 
 void GLContext::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
-	m_command_list->Push(std::make_unique<GLBindShaderProgramCommand>(shaderProgram));
+	m_command_list->Push<GLBindShaderProgramCommand>(shaderProgram);
 //	m_command_list->As<GLCommandList>()->BindShaderProgram(shaderProgram->As<GLShaderProgram>()->GetId());
 }
 

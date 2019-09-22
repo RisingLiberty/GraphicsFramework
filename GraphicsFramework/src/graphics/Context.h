@@ -29,8 +29,8 @@ public:
 	virtual void Initialize() = 0;
 	virtual void PostInitialize();
 
-	virtual void Begin() {};
-	virtual void End() {};
+	virtual void Begin();
+	virtual void End();
 
 	void Clear();
 

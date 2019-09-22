@@ -34,7 +34,7 @@ unsigned int GLBufferWrapper::GetId() const
 
 void GLBufferWrapper::SetDataInternal(const void* data, unsigned int size)
 {
-	GetGLCommandList()->Push(std::make_unique<GLSetBufferDataCommand>(this, size, data, m_type));
+	GetGLCommandList()->Push<GLSetBufferDataCommand>(this, size, data, m_type);
 }
 
 std::unique_ptr<DownloadBuffer> GLBufferWrapper::DownloadDataToBuffer(unsigned int size) const

@@ -28,7 +28,8 @@ void CommandList::Push(std::unique_ptr<Command> command)
 	//ASSERT(m_is_open, "Trying to push a command on a closed command list");
 	m_commands.push(std::move(command));
 
-	spdlog::info("{} command added", m_commands.back()->ToString());
+    if (m_should_log_commands)
+    	spdlog::info("{} command added", m_commands.back()->ToString());
 }
 
 void CommandList::Execute()
@@ -36,7 +37,7 @@ void CommandList::Execute()
 	if (m_is_open)
 	{
 		spdlog::error("Trying to execute command list that's still open!");
-		return;
+		//return;
 	}
 
 	while (!m_commands.empty())
@@ -51,4 +52,14 @@ void CommandList::Execute()
 bool CommandList::IsOpen() const
 {
     return m_is_open;
+}
+
+void CommandList::EnableCommandLogging()
+{
+    m_should_log_commands = true;
+}
+
+void CommandList::DisableCommandLogging()
+{
+    m_should_log_commands = false;
 }

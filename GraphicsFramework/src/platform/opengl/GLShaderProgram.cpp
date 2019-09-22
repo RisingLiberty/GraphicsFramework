@@ -50,22 +50,22 @@ void GLShaderProgram::Create(const std::vector<unsigned int>& shaderIDs)
 	std::unique_ptr<GLDirectCommandList> direct_cmd_list = GetGLContext()->CreateDirectCommandList();
 
 	for (unsigned int id : shaderIDs)
-		direct_cmd_list->Push(std::make_unique<GLAttachShaderCommand>(m_id, id));
+		direct_cmd_list->Push<GLAttachShaderCommand>(m_id, id);
 
-	direct_cmd_list->Push(std::make_unique<GLLinkProgramCommand>(m_id));
-	direct_cmd_list->Push(std::make_unique<GLValidateProgramCommand>(m_id));
+	direct_cmd_list->Push<GLLinkProgramCommand>(m_id);
+	direct_cmd_list->Push<GLValidateProgramCommand>(m_id);
 
 	for (unsigned int id : shaderIDs)
-		direct_cmd_list->Push(std::make_unique<GLDetachShaderCommand>(m_id, id));
+		direct_cmd_list->Push<GLDetachShaderCommand>(m_id, id);
 }
 
 void GLShaderProgram::UploadVariables() const
 {
 	std::unique_ptr<GLDirectCommandList> direct_cmd_list = GetGLContext()->CreateDirectCommandList();
-	direct_cmd_list->Push(std::make_unique<GLBindShaderProgramCommand>(this));
+	direct_cmd_list->Push<GLBindShaderProgramCommand>(this);
 
 	for (const std::unique_ptr<ShaderUniform>& uniform : m_uniforms)
-		direct_cmd_list->Push(std::make_unique<GLUploadUniformCommand>(GetUniformLocation(uniform->name), uniform.get()));
+		direct_cmd_list->Push<GLUploadUniformCommand>(GetUniformLocation(uniform->name), uniform.get());
 }
 
 int GLShaderProgram::GetUniformLocation(const std::string& name) const

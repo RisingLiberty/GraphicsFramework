@@ -35,5 +35,5 @@ void GLVertexArray::EnableAttributes() const
 	this->Bind();
 	m_vertex_buffer->As<GLVertexBuffer>()->GLBind();
 
-	GetGLCommandList()->Push(std::make_unique<GLBindVertexLayoutCommand>(m_vertex_layout));
+	GetGLCommandList()->Push<GLBindVertexLayoutCommand>(m_vertex_layout);
 }

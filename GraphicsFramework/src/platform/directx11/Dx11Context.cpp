@@ -92,7 +92,7 @@ void Dx11Context::ResizeBuffers(unsigned int width, unsigned int height)
 
 	DXCALL(m_command_queue->As<Dx11CommandQueue>()->GetDevice()->CreateTexture2D(&depth_stencil_desc, 0, m_depth_stencil_buffer.ReleaseAndGetAddressOf()));
 	DXCALL(m_command_queue->As<Dx11CommandQueue>()->GetDevice()->CreateDepthStencilView(m_depth_stencil_buffer.Get(), 0, m_depth_stencil_view.ReleaseAndGetAddressOf()));
-	m_command_list->Push(std::make_unique<Dx11SetRenderTargetCommand>(m_render_target_view.Get(), m_depth_stencil_view.Get()));
+	m_command_list->Push<Dx11SetRenderTargetCommand>(m_render_target_view.Get(), m_depth_stencil_view.Get());
 
 	m_viewport.TopLeftX = 0;
 	m_viewport.TopLeftY = 0;
@@ -112,7 +112,7 @@ void Dx11Context::Begin()
 	m_command_list->Close();
 	m_command_list->Execute();
 	m_command_list = m_command_queue->As<Dx11CommandQueue>()->GetCommandList();
-	m_command_list->Push(std::make_unique<Dx11SetRenderTargetCommand>(m_render_target_view.Get(), m_depth_stencil_view.Get()));
+	m_command_list->Push<Dx11SetRenderTargetCommand>(m_render_target_view.Get(), m_depth_stencil_view.Get());
 }
 
 void Dx11Context::Present()
@@ -155,7 +155,7 @@ const Dx11VertexShader* Dx11Context::GetBoundVertexShader() const
 
 void Dx11Context::BindIndexBufferInternal(const IndexBuffer* indexBuffer)
 {
-	m_command_list->Push(std::make_unique<Dx11BindIndexBufferCommand>(indexBuffer));
+	m_command_list->Push<Dx11BindIndexBufferCommand>(indexBuffer);
 }
 
 void Dx11Context::UnbindIndexBufferInternal(const IndexBuffer * indexBuffer)
@@ -167,7 +167,7 @@ void Dx11Context::UnbindIndexBufferInternal(const IndexBuffer * indexBuffer)
 void Dx11Context::BindVertexArrayInternal(const VertexArray* vertexArray)
 {
 	// Currently can only bind 1 vertex buffer at a time
-	m_command_list->Push(std::make_unique<Dx11BindVertexArrayCommand>(vertexArray));
+	m_command_list->Push<Dx11BindVertexArrayCommand>(vertexArray);
 }
 
 void Dx11Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
@@ -178,7 +178,7 @@ void Dx11Context::UnbindVertexArrayInternal(const VertexArray* vertexArray)
 
 void Dx11Context::BindShaderProgramInternal(const ShaderProgram* shaderProgram)
 {
-	m_command_list->Push(std::make_unique<Dx11BindShaderProgramCommand>(shaderProgram));
+	m_command_list->Push<Dx11BindShaderProgramCommand>(shaderProgram);
 }
 
 void Dx11Context::UnbindShaderProgramInternal(const ShaderProgram * shaderProgram)

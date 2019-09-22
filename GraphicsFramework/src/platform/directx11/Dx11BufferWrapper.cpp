@@ -53,9 +53,9 @@ void Dx11BufferWrapper::SetDataInternal(const void* data, unsigned int size)
 	this->SetDataInternal(data, size);
 	D3D11_MAPPED_SUBRESOURCE mapped_subresource;
 
-	GetDx11CommandList()->Push(std::make_unique<Dx11MapBufferCommand>(this, D3D11_MAP_WRITE_NO_OVERWRITE, &mapped_subresource));
+	GetDx11CommandList()->Push<Dx11MapBufferCommand>(this, D3D11_MAP_WRITE_NO_OVERWRITE, &mapped_subresource);
 	memcpy(mapped_subresource.pData, data, size);
-	GetDx11CommandList()->Push(std::make_unique<Dx11UnmapBufferCommand>(this));
+	GetDx11CommandList()->Push<Dx11UnmapBufferCommand>(this);
 }
 
 std::unique_ptr<DownloadBuffer> Dx11BufferWrapper::DownloadDataToBuffer(unsigned int size) const
